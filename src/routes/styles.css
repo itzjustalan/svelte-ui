@@ -105,3 +105,15 @@ button:focus:not(:focus-visible) {
 	width: 1px;
 	white-space: nowrap;
 }
+
+:root {
+	--th-cl: green;
+}
+
+[data-theme="dark"] {
+	--th-cl: red;
+}
+
+.app {
+	background-color: var(--th-cl);
+}
