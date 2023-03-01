@@ -4,12 +4,14 @@ import { getCookieValue } from "$lib/utils";
 
 const themeCookieAttributes = 'SameSite=Strict;max-age=31536000;path="/"';
 const themeCookieName = "app-theme";
+export enum Theme {
+    Dark = "dark",
+    Light = "light",
+}
 
 function createStore() {
     let initialTheme = Theme.Light;
     if (browser) {
-        // const storedTheme = localStorage.getItem(themeCookieName);
-        // const storedTheme = document.documentElement.dataset.theme;
         const storedTheme = getCookieValue(themeCookieName, document.cookie);
         if (storedTheme) {
             initialTheme = storedTheme as Theme;
@@ -39,10 +41,8 @@ function updateDocumentTheme(theme: Theme) {
     return theme;
 }
 
+// const storedTheme = localStorage.getItem(themeCookieName);
+// const storedTheme = document.documentElement.dataset.theme;
 // theme.subscribe((v) => browser && localStorage.setItem('app-theme', v));
 
 export const theme = createStore();
-export enum Theme {
-    Dark = "dark",
-    Light = "light",
-}

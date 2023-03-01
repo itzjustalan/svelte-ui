@@ -107,11 +107,11 @@ button:focus:not(:focus-visible) {
 }
 
 :root {
-	--th-cl: green;
+	--th-cl: rgb(220, 254, 220);
 }
 
 [data-theme="dark"] {
-	--th-cl: red;
+	--th-cl: rgb(161, 160, 161);
 }
 
 .app {

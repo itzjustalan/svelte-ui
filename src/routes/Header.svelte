@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import logo from '$lib/images/svelte-logo.svg';
 	import github from '$lib/images/github.svg';
-	import { Theme, theme } from '$lib/stores/theme'
+	import { theme } from '$lib/stores/theme'
 </script>
 
 <header>
@@ -34,11 +34,7 @@
 
 	<div class="corner">
 		<button on:click={theme.toggle}>
-			{#if $theme === Theme.Dark}
-				{$theme}
-			{:else}
-				{$theme}
-			{/if}
+			{$theme}
 		</button>
 	</div>
 	<div class="corner">

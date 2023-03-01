@@ -1,7 +1,10 @@
-<script>
+<script lang="ts">
 	import Counter from './Counter.svelte';
 	import welcome from '$lib/images/svelte-welcome.webp';
 	import welcome_fallback from '$lib/images/svelte-welcome.png';
+    import type { PageData } from './$types';
+	
+	export let data: PageData;
 </script>
 
 <svelte:head>
@@ -10,6 +13,7 @@
 </svelte:head>
 
 <section>
+	{data.name}
 	<h1>
 		<span class="welcome">
 			<picture>
