@@ -6,26 +6,143 @@ import {
     SURREALDB_USER,
     SURREALDB_PASS,
 } from "$env/static/private";
+import { dev } from '$app/environment';
 
-export const db = connectDB;
+export type Result<T> = {
+  time: string;
+  status: string;
+  result: T[];
+}
 
-async function connectDB() {
-    // modify this function to hold only one instance and reconnect
-    // but ig surreal does that automagically so... idk
+declare global {
+    var surrealdb: Surreal
+}
+
+// ALWAYS MAKE SURE THAT THE SURREAL DB BINARY IS RUNNING !!!
+
+// to escape hotreload
+// https://www.prisma.io/docs/guides/database/troubleshooting-orm/help-articles/nextjs-prisma-client-dev-practices
+export let db = global.surrealdb;
+export async function initDB() {
+    if (db) return;
     try {
-        // console.log('info: connecting to db.')
-        const db = new Surreal(SURREALDB_URL);
+        console.log('info: creating new connection to db.');
+        db = new Surreal(SURREALDB_URL);
         await db.signin({
             user: SURREALDB_USER,
             pass: SURREALDB_PASS,
         });
         await db.use(SURREALDB_NS, SURREALDB_DB);
-        console.log('info: connected to db.')
-        return db;
+        if (dev) global.surrealdb = db;
+        console.log('info: connected to db.');
     } catch (error) {
-        console.log('error: connecting to db.')
+        if (dev) {
+            console.log('error: connecting to db!', error);
+        } else {
+            console.log('error: connecting to db!');
+        }
     }
 }
+
+// console.log('info: connecting to db.')
+// const db = new Surreal(SURREALDB_URL);
+// await db.signin({
+//     user: SURREALDB_USER,
+//     pass: SURREALDB_PASS,
+// });
+// await db.use(SURREALDB_NS, SURREALDB_DB);
+// console.log('info: connected to db.')
+// export default db;
+
+
+
+
+// export const db = new Surreal(SURREALDB_URL);
+// export async function initDB() {
+//     try {
+//         console.log('info: connecting to db.');
+//         await Surreal.Instance.connect(SURREALDB_URL);
+//         await Surreal.Instance.signin({
+//             user: SURREALDB_USER,
+//             pass: SURREALDB_PASS,
+//         });
+//         await Surreal.Instance.use(SURREALDB_NS, SURREALDB_DB);
+//         await Surreal.Instance.wait();
+//         console.log('info: connected to db.');
+//     } catch (error) {
+//         if (dev) {
+//             console.log('error: connecting to db!', error);
+//         } else {
+//             console.log('error: connecting to db!');
+//         }
+//     }
+// }
+// export let db: Surreal;
+// export async function initDB() {
+//     console.log('info: connecting to db.');
+//     if (db) return db;
+//     try {
+//         db = new Surreal(SURREALDB_URL);
+//         await db.signin({
+//             user: SURREALDB_USER,
+//             pass: SURREALDB_PASS,
+//         });
+//         await db.use(SURREALDB_NS, SURREALDB_DB);
+//         await db.wait();
+//         console.log('info: connected to db.');
+//     } catch (error) {
+//         if (dev) {
+//             console.log('error: connecting to db!', error);
+//         } else {
+//             console.log('error: connecting to db!');
+//         }
+//     }
+// }
+// export { db };
+
+
+
+// console.log('info: connecting to db.!')
+// const db = new Surreal(SURREALDB_URL);
+
+// try {
+//     await db.signin({
+//         user: SURREALDB_USER,
+//         pass: SURREALDB_PASS,
+//     });
+//     await db.use(SURREALDB_NS, SURREALDB_DB);
+//     console.log('info: connected to db.')
+
+// } catch (error) {
+//     console.log('error: connecting to db.')
+// }
+
+// export default {
+//     db: db,
+// }
+
+
+
+// export const db = connectDB();
+
+// async function connectDB() {
+//     // modify this function to hold only one instance and reconnect
+//     // but ig surreal does that automagically so... idk
+//     try {
+//         // console.log('info: connecting to db.')
+//         const db = new Surreal(SURREALDB_URL);
+//         await db.signin({
+//             user: SURREALDB_USER,
+//             pass: SURREALDB_PASS,
+//         });
+//         await db.use(SURREALDB_NS, SURREALDB_DB);
+//         console.log('info: connected to db.')
+//         return db;
+//     } catch (error) {
+//         console.log('error: connecting to db.')
+//         return new Surreal();
+//     }
+// }
 
 // export const testDB = async () => {
 //     const db = await connectDB();

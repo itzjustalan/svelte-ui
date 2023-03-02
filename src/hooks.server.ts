@@ -1,6 +1,9 @@
+import { initDB } from "$lib/server/db";
 import type { Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 import { svelteOptimizer } from "./hooks/svelte";
+
+initDB(); // hotreload
 
 export const theme: Handle = async ({ event, resolve }) => {
   const theme = event.cookies.get("app-theme") ?? "light";
