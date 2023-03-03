@@ -1,9 +1,10 @@
-import { initDB } from "$lib/server/db";
+import { conectDB } from "$lib/server/db";
 import type { Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 import { svelteOptimizer } from "./hooks/svelte";
 
-initDB(); // hotreload
+conectDB();
+// add dependecy injection?
 
 export const theme: Handle = async ({ event, resolve }) => {
   const theme = event.cookies.get("app-theme") ?? "light";

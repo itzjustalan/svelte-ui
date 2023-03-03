@@ -3,11 +3,6 @@ import { sleep } from '$lib/utils';
 import { userSignupSchema } from '$lib/zod/user.signup';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { zfd } from 'zod-form-data';
-import type { PageServerLoad } from './$types';
-
-export const load = (async () => {
-    return {};
-}) satisfies PageServerLoad;
 
 export const actions: Actions = {
     default: async ({ request }) => {
@@ -20,11 +15,17 @@ export const actions: Actions = {
                 errors: result.error.flatten().fieldErrors,
             });
         }
+        await sleep(200);
+        // throw redirect(303, '/profile');
         const _auth = new AuthController();
-        let v = await _auth.signup(result.data);
-        // let v = _auth.signup(result.data.username, result.data.password);
-
-        // await sleep(2000);
-        throw redirect(303, '/');
+        const user = await _auth.signup(result.data);
+        if (typeof user !== 'string') {
+            throw redirect(303, '/auth/signin');
+        } else {
+            return {
+                data: Object.fromEntries(formData),
+                errors: user,
+            }
+        }
     },
 }

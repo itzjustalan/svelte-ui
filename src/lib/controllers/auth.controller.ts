@@ -1,3 +1,5 @@
+import { dev } from "$app/environment";
+import type { User } from "$lib/models/user.model";
 import { UserService } from "$lib/services/user.service";
 
 interface Credentials {
@@ -12,23 +14,21 @@ export class AuthController {
         this.userService = new UserService();
     }
 
-    async signup(credentials: Credentials): Promise<number> {
+    async signup(credentials: Credentials): Promise<User | string> {
+        // await db.create('users', { ...credentials });
         const { username, password } = credentials;
+        // console.log(username, password)
 
-        // await this.userService.createNewUser(username, password);
-        // await this.userService.findAllUsers();
-        console.log(await this.userService.findById('users:722o0i1tfyhk25czo5cr'))
-        return 0;
+        try {
+            if (await this.userService.findOneByUsername(username)) {
+                console.log('jucer exists');
+                return 'username already in use';
+            }
 
-        // check if username exists
-        // const u = await this.userService.findOneByUsername(username) ?? [];
-        // if (u[0].error) { console.log('errr', u[0].error); }
-        // console.log(JSON.stringify(u[0]))
-        // console.log(u[0].result)
-        // console.log(u.result.length)
-
-
-        console.log(username, password)
-        return 1;
+            return await this.userService.createNewUser(username, password);
+        } catch (error) {
+            console.log(dev && error)
+            return 'error signing up';
+        }
     }
 }

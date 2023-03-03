@@ -24,6 +24,7 @@
 {#if isLoading}
     loading...
 {:else}
+    {form?.errors ?? ''}
     <form method="post" use:enhance={signup}>
         user<input type="text" name="username" required>
         <input type="password" name="password" required>
