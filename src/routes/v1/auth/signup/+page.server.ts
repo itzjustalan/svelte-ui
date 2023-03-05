@@ -1,4 +1,5 @@
-import { AuthController } from '$lib/controllers/auth.controller';
+import { authController } from '$lib/controllers/auth.controller';
+import { log } from '$lib/logger';
 import { sleep } from '$lib/utils';
 import { userSignupSchema } from '$lib/zod/user.signup';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
@@ -17,15 +18,18 @@ export const actions: Actions = {
         }
         await sleep(200);
         // throw redirect(303, '/profile');
-        const _auth = new AuthController();
-        const user = await _auth.signup(result.data);
-        if (typeof user !== 'string') {
-            throw redirect(303, '/auth/signin');
-        } else {
+        try {
+            await authController.signupWithEmail(result.data);
+        } catch (error: any) {
+            log.info(error)
             return {
                 data: Object.fromEntries(formData),
-                errors: user,
+                errors: error.body.message,
             }
+        }
+        return {
+            data: Object.fromEntries(formData),
+            errors: {},
         }
     },
 }

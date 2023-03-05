@@ -17,20 +17,23 @@
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
 		<ul>
-			<li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
-				<a href="/">Home</a>
+			<li aria-current={$page.url.pathname === '/v1' ? 'page' : undefined}>
+				<a href="/v1">Home</a>
 			</li>
-			<li aria-current={$page.url.pathname === '/about' ? 'page' : undefined}>
-				<a href="/about">About</a>
+			<li aria-current={$page.url.pathname === '/v1/protected' ? 'page' : undefined}>
+				<a href="/v1/protected">Protected</a>
 			</li>
-			<li aria-current={$page.url.pathname.startsWith('/sverdle') ? 'page' : undefined}>
-				<a href="/sverdle">Sverdle</a>
+			<li aria-current={$page.url.pathname === '/v1/about' ? 'page' : undefined}>
+				<a href="/v1/about">About</a>
 			</li>
-			<li aria-current={$page.url.pathname.startsWith('/auth/signin') ? 'page' : undefined}>
-				<a href="/auth/signin">signIN</a>
+			<li aria-current={$page.url.pathname.startsWith('/v1/sverdle') ? 'page' : undefined}>
+				<a href="/v1/sverdle">Sverdle</a>
 			</li>
-			<li aria-current={$page.url.pathname.startsWith('/auth/signup') ? 'page' : undefined}>
-				<a href="/auth/signup">signUP</a>
+			<li aria-current={$page.url.pathname.startsWith('/v1/auth/signin') ? 'page' : undefined}>
+				<a href="/v1/auth/signin">signIN</a>
+			</li>
+			<li aria-current={$page.url.pathname.startsWith('/v1/auth/signup') ? 'page' : undefined}>
+				<a href="/v1/auth/signup">signUP</a>
 			</li>
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">

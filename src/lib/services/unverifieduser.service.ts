@@ -2,7 +2,7 @@ import { log } from "$lib/logger";
 import type { User } from "$lib/models/user.model";
 import { db, type Result } from "$lib/server/db";
 
-class UserService {
+class UnverifiedUserService {
   async findById(id: string): Promise<User | undefined> {
     try {
       const res = await db.select<User>(id);
@@ -12,17 +12,17 @@ class UserService {
 
   async findAll(): Promise<User[] | undefined> {
     try {
-      const res = await db.query<Result<User>[]>("SELECT * FROM users");
+      const res = await db.query<Result<User>[]>("SELECT * FROM unverifiedusers");
       return res[0].result;
     } catch (error) { }
   }
 
   async findOneByUsername(username: string): Promise<User | undefined> {
     try {
-      const res = await db.query<Result<User>[]>("SELECT * FROM users WHERE username == $u", {
+      const res = await db.query<Result<User>[]>("SELECT * FROM unverifiedusers WHERE username == $u", {
         u: username,
       });
-      log.info(res[0].result)
+      log.info(res)
       return res[0].result[0];
     } catch (error) {
       log.error(error);
@@ -31,8 +31,7 @@ class UserService {
 
   async createNew(username: string, password: string): Promise<User | undefined> {
     try {
-      //todo: put unverified users in a seperate table
-      const res = await db.create('users', { username, password }) as User;
+      const res = await db.create('unverifiedusers', { username, password, verified: false }) as User;
       return res;
     } catch (error) {
       log.error(error);
@@ -40,4 +39,4 @@ class UserService {
   }
 }
 
-export const userService = new UserService();
+export const unverifiedUserService = new UnverifiedUserService();

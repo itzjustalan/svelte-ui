@@ -4,6 +4,6 @@
     // export let data: PageData;
 </script>
 
-this is - signIN
-<br />
-no account? <a href="/auth/signup">signUP</a>
+<h1>
+    this is a protected route!!
+</h1>

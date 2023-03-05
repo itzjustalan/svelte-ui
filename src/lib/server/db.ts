@@ -7,6 +7,8 @@ import {
     SURREALDB_PASS,
 } from "$env/static/private";
 import { dev } from '$app/environment';
+import { log } from '$lib/logger';
+import { withTimeout } from '$lib/utils';
 // ALWAYS MAKE SURE THAT THE SURREAL DB BINARY IS RUNNING !!!
 
 declare global {
@@ -14,25 +16,25 @@ declare global {
 }
 
 export type Result<T> = {
-  time: string;
-  status: string;
-  result: T[];
+    time: string;
+    status: string;
+    result: T[];
 }
 export let db = global.surrealdb;
 export async function conectDB() {
     if (db) return;
-    console.log('info: creating new connection to db.');
+    log.warn('creating new connection to db!');
     try {
         db = new Surreal(SURREALDB_URL);
-        await db.signin({
+        await withTimeout(db.signin({
             user: SURREALDB_USER,
             pass: SURREALDB_PASS,
-        });
-        await db.use(SURREALDB_NS, SURREALDB_DB);
+        }));
+        await withTimeout(db.use(SURREALDB_NS, SURREALDB_DB));
         if (dev) global.surrealdb = db;
-        console.log('info: connected to db.');
+        log.info('db connected ');
     } catch (error) {
-        console.log('error: connecting to db!', dev && error);
+        log.error('connecting to db:', error);
     }
 }
 
