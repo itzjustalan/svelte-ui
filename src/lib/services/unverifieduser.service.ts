@@ -1,38 +1,71 @@
 import { log } from "$lib/logger";
-import type { User } from "$lib/models/user.model";
 import { db, type Result } from "$lib/server/db";
 
+export interface Unverifieduser {
+  id: string;
+  code: string;
+  username: string;
+  password: string;
+}
+
 class UnverifiedUserService {
-  async findById(id: string): Promise<User | undefined> {
+  async findById(id: string): Promise<Unverifieduser | undefined> {
     try {
-      const res = await db.select<User>(id);
+      const res = await db.select<Unverifieduser>(id);
       return res[0];
-    } catch (error) { }
+    } catch (error) {}
   }
 
-  async findAll(): Promise<User[] | undefined> {
+  async findAll(): Promise<Unverifieduser[] | undefined> {
     try {
-      const res = await db.query<Result<User>[]>("SELECT * FROM unverifiedusers");
+      const res = await db.query<Result<Unverifieduser>[]>(
+        "SELECT * FROM unverifiedusers",
+      );
       return res[0].result;
-    } catch (error) { }
+    } catch (error) {}
   }
 
-  async findOneByUsername(username: string): Promise<User | undefined> {
+  async findOneByUsername(
+    username: string,
+  ): Promise<Unverifieduser | undefined> {
     try {
-      const res = await db.query<Result<User>[]>("SELECT * FROM unverifiedusers WHERE username == $u", {
-        u: username,
-      });
-      log.info(res)
+      const res = await db.query<Result<Unverifieduser>[]>(
+        "SELECT * FROM unverifiedusers WHERE username == $u",
+        {
+          u: username,
+        },
+      );
+      log.info(res);
       return res[0].result[0];
     } catch (error) {
       log.error(error);
-     }
+    }
   }
 
-  async createNew(username: string, password: string): Promise<User | undefined> {
+  async createNew(
+    username: string,
+    password: string,
+    code: string,
+  ): Promise<Unverifieduser | undefined> {
     try {
-      const res = await db.create('unverifiedusers', { username, password, verified: false }) as User;
+      const res = await db.create("unverifiedusers", {
+        username,
+        password,
+        code,
+      }) as Unverifieduser;
       return res;
+    } catch (error) {
+      log.error(error);
+    }
+  }
+
+  async deleteOneById(id: string) {
+    try {
+      const res = await db.query(
+        "DELETE FROM unverifiedusers WHERE id == $id",
+        { id },
+      );
+      log.info(res);
     } catch (error) {
       log.error(error);
     }

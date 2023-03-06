@@ -10,7 +10,7 @@ export enum Theme {
 }
 
 function createStore() {
-    let initialTheme = Theme.Light;
+    let initialTheme: Theme = Theme.Light;
     if (browser) {
         const storedTheme = getCookieValue(themeCookieName, document.cookie);
         if (storedTheme) {

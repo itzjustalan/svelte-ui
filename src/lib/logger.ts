@@ -1,4 +1,4 @@
-import { dev } from "$app/environment";
+import { browser, dev } from "$app/environment";
 
 const LOG_EMO = !true;
 const LOG_TIM = true;
@@ -75,6 +75,7 @@ export const log = {
 
 const handleLog = (level: LogLevel, ...d: any): void => {
     if (skiplog(level)) return;
+    if (browser) return console[level](...d);
     let prefix = ts();
     switch (level) {
         case LogLevel.warn:

@@ -1,12 +1,12 @@
-import { authController } from '$lib/controllers/auth.controller';
-import { log } from '$lib/logger';
-import { sleep } from '$lib/utils';
-import { userSignupSchema } from '$lib/zod/user.signup';
-import { fail, redirect, type Actions } from '@sveltejs/kit';
-import { zfd } from 'zod-form-data';
+import { authController } from "$lib/controllers/auth.controller";
+import { log } from "$lib/logger";
+import { sleep } from "$lib/utils";
+import { userSignupSchema } from "$lib/zod/user.signup";
+import { type Actions, fail, redirect } from "@sveltejs/kit";
+import { zfd } from "zod-form-data";
 
 export const actions: Actions = {
-    default: async ({ request }) => {
+    default: async ({ request, url }) => {
         const formData = await request.formData();
         const schema = zfd.formData(userSignupSchema);
         const result = schema.safeParse(formData);
@@ -16,20 +16,20 @@ export const actions: Actions = {
                 errors: result.error.flatten().fieldErrors,
             });
         }
-        await sleep(200);
+        // await sleep(200);
         // throw redirect(303, '/profile');
         try {
-            await authController.signupWithEmail(result.data);
+            await authController.signupWithEmail({ ...result.data, host: url.host });
         } catch (error: any) {
-            log.info(error)
+            log.info(error);
             return {
                 data: Object.fromEntries(formData),
                 errors: error.body.message,
-            }
+            };
         }
         return {
             data: Object.fromEntries(formData),
             errors: {},
-        }
+        };
     },
-}
+};

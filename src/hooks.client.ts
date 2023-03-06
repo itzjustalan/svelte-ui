@@ -1,7 +1,7 @@
 import { log } from "$lib/logger";
-import type { Handle } from "@sveltejs/kit";
+import type { Handle, HandleServerError } from "@sveltejs/kit";
 
-export const handle: Handle = async ({ event, resolve }) => {
-    const response = resolve(event);
-    return response;
+export const handleError: HandleServerError = async ({ event, error }) => {
+    log.error('client??', 22, { H: "fsdf"}, 'hooks.client.ts')
+    return Error('client error');
 }

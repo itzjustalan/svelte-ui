@@ -1,5 +1,6 @@
 import { log } from "$lib/logger";
 import { conectDB } from "$lib/server/db";
+import { mailService } from "$lib/services/mail.service";
 import type { Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 // import mpredirect, type Handle } from "@sveltejs/kit";
@@ -22,7 +23,7 @@ conectDB();
 
 export const main: Handle = async ({ event, resolve }) => {
   const start = performance.now();
-  log.warn('main hit')
+  // log.warn('main hit')
 
   // log.info('started!!')
   // log.info('start', new Date(), 23424, { v: true })
@@ -35,21 +36,70 @@ export const main: Handle = async ({ event, resolve }) => {
 
   const theme = event.cookies.get("app-theme") ?? "light";
   // passport.authenticate('jwt', { session: false });
-  const response = await resolve(event, {
+  // await mailService.sendMail();
+  const response: Response = await resolve(event, {
     transformPageChunk: ({ html }) =>
       html.replace('data-theme=""', `data-theme="${theme}"`),
   });
   const end = performance.now();
   log.request(response.status, event.request.method, event.url.pathname, end - start);
-  log.warn('main done')
+  // log.warn('main done')
   return response;
 };
-// export const bottom: Handle = async ({ event, resolve }) => {
-//   log.warn('bottom hit')
-//   const response = await resolve(event);
-//   log.warn('bottom done')
-//   return response;
-// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const bottom: Handle = async ({ event, resolve }) => {
+  log.warn('bottom hit')
+  const response = await resolve(event);
+  log.warn('bottom done')
+  return response;
+};
+
+
+
+
+
+
+
+
+
 
 // export const handle = sequence(top, main, bottom);
 export const handle = sequence(svelteOptimizer, main);
