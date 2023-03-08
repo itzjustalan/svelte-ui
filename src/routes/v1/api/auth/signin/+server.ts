@@ -2,7 +2,7 @@ import { authController } from "$lib/controllers/auth.controller";
 import { log } from "$lib/logger";
 import { userSignupSchema } from "$lib/zod/user.signup";
 import { json } from "@sveltejs/kit";
-import type { RequestHandler } from "../$types";
+import type { RequestHandler } from "./$types";
 
 export const POST: RequestHandler = async ({ request }) => {
     log.info('here here')

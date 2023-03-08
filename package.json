@@ -34,6 +34,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@tanstack/svelte-query": "^4.26.1",
 		"argon2": "^0.30.3",
 		"cirql": "^0.6.6",
 		"jsonwebtoken": "^9.0.0",
