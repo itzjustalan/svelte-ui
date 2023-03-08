@@ -1,4 +1,5 @@
-import Surreal from 'surrealdb.js';
+import { Cirql } from 'cirql';
+
 import {
     SURREALDB_NS,
     SURREALDB_DB,
@@ -12,30 +13,30 @@ import { withTimeout } from '$lib/utils';
 // ALWAYS MAKE SURE THAT THE SURREAL DB BINARY IS RUNNING !!!
 
 declare global {
-    var surrealdb: Surreal
+    var surrealdb: Cirql
 }
 
-export type Result<T> = {
-    time: string;
-    status: string;
-    result: T[];
-}
 export let db = global.surrealdb;
 export async function conectDB() {
     if (db) return;
     log.warn('creating new connection to db!');
     try {
-        db = new Surreal(SURREALDB_URL);
-        await withTimeout(db.signin({
-            user: SURREALDB_USER,
-            pass: SURREALDB_PASS,
-        }));
-        await withTimeout(db.use(SURREALDB_NS, SURREALDB_DB));
+        db = new Cirql({
+            connection: {
+                endpoint: SURREALDB_URL,
+                namespace: SURREALDB_NS,
+                database: SURREALDB_DB,
+            },
+            credentials: {
+                user: SURREALDB_USER,
+                pass: SURREALDB_PASS,
+            }
+        });
+        ;
+        await withTimeout(db.ready(), 'db connection timed out');
         if (dev) global.surrealdb = db;
         log.info('db connected ');
     } catch (error) {
         log.error('connecting to db:', error);
     }
 }
-
-// https://www.prisma.io/docs/guides/database/troubleshooting-orm/help-articles/nextjs-prisma-client-dev-practices

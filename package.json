@@ -35,13 +35,13 @@
 	"type": "module",
 	"dependencies": {
 		"argon2": "^0.30.3",
+		"cirql": "^0.6.6",
 		"jsonwebtoken": "^9.0.0",
 		"nanoid": "^4.0.1",
 		"nodemailer": "^6.9.1",
 		"passport": "^0.6.0",
 		"passport-jwt": "^4.0.1",
-		"surrealdb.js": "^0.5.0",
-		"zod": "^3.20.6",
+		"zod": "^3.21.4",
 		"zod-form-data": "^2.0.0"
 	}
 }

@@ -1,42 +1,45 @@
 import { log } from "$lib/logger";
-import { db, type Result } from "$lib/server/db";
-
-export interface Unverifieduser {
-  id: string;
-  code: string;
-  username: string;
-  password: string;
-}
+import { Unverifieduser } from "$lib/models/user.model";
+import { db } from "$lib/server/db";
+import { create, delRecord, select } from "cirql";
 
 class UnverifiedUserService {
-  async findById(id: string): Promise<Unverifieduser | undefined> {
+  table: string;
+  constructor() {
+    this.table = 'unverifieduser';
+  }
+  async findOneById(id: string) {
     try {
-      const res = await db.select<Unverifieduser>(id);
+      const res = await db.execute({
+        schema: Unverifieduser,
+        query: select().from(this.table).where({ id }),
+      });
       return res[0];
-    } catch (error) {}
+    } catch (error) {
+      log.error(error);
+    }
   }
 
-  async findAll(): Promise<Unverifieduser[] | undefined> {
+  async findAll() {
     try {
-      const res = await db.query<Result<Unverifieduser>[]>(
-        "SELECT * FROM unverifiedusers",
-      );
-      return res[0].result;
-    } catch (error) {}
+      return await db.execute({
+        schema: Unverifieduser,
+        query: select().from(this.table),
+      });
+    } catch (error) {
+      log.error(error);
+    }
   }
 
   async findOneByUsername(
     username: string,
-  ): Promise<Unverifieduser | undefined> {
+  ) {
     try {
-      const res = await db.query<Result<Unverifieduser>[]>(
-        "SELECT * FROM unverifiedusers WHERE username == $u",
-        {
-          u: username,
-        },
-      );
-      log.info(res);
-      return res[0].result[0];
+      const res = await db.execute({
+        schema: Unverifieduser,
+        query: select().from(this.table).where({ username }),
+      });
+      return res[0];
     } catch (error) {
       log.error(error);
     }
@@ -46,14 +49,16 @@ class UnverifiedUserService {
     username: string,
     password: string,
     code: string,
-  ): Promise<Unverifieduser | undefined> {
+  ) {
     try {
-      const res = await db.create("unverifiedusers", {
-        username,
-        password,
-        code,
-      }) as Unverifieduser;
-      return res;
+      return await db.execute({
+        schema: Unverifieduser,
+        query: create(this.table).setAll({
+          username,
+          password,
+          code,
+        }),
+      });
     } catch (error) {
       log.error(error);
     }
@@ -61,11 +66,10 @@ class UnverifiedUserService {
 
   async deleteOneById(id: string) {
     try {
-      const res = await db.query(
-        "DELETE FROM unverifiedusers WHERE id == $id",
-        { id },
-      );
-      log.info(res);
+      return await db.execute({
+        query: delRecord(id),
+        schema: Unverifieduser,
+      });
     } catch (error) {
       log.error(error);
     }

@@ -1,19 +1,17 @@
 import { dev } from "$app/environment";
 import { compareHash, genHash, genJwt } from "$lib/server/utils";
-import type { User } from "$lib/models/user.model";
 import { userService } from "$lib/services/user.service";
 import { log } from "$lib/logger";
 import { unverifiedUserService } from "$lib/services/unverifieduser.service";
 import { error } from "@sveltejs/kit";
 import { JWT_ACCESS_TOKEN_EXPIRES_IN, JWT_ACCESS_TOKEN_SECRET, JWT_REFRESH_TOKEN_EXPIRES_IN, JWT_REFRESH_TOKEN_SECRET } from "$env/static/private";
-import { use } from "passport";
 import { nanoid } from 'nanoid'
 import { mailService } from "$lib/services/mail.service";
 
 class AuthController {
   async signinWithEmail(
     { username, password }: { username: string; password: string },
-  ): Promise<{ user: User; jwt: { accessToken: string; refreshToken: string; }; }> {
+  ): Promise<{ user: { password: string; id: string; username: string; }; jwt: { accessToken: string; refreshToken: string; }; }> {
     const user = await userService.findOneByUsername(username);
     if (!user) throw error(404, 'user not found');
     if (!await compareHash(password, user.password)) {
@@ -63,12 +61,13 @@ class AuthController {
     //todo: return jwt after email verification
   }
   
-  async verifyEmail({ uid, code }: { uid: string; code: string; }) {
-    const user = await unverifiedUserService.findById(uid);
+  async verifyEmail({ uid, code }: { uid: string; code: string; }): Promise<{ user: { password: string; username: string; id: string; }; jwt: { accessToken: string; refreshToken: string; }; }> {
+    const user = await unverifiedUserService.findOneById(uid);
     if (!user) throw error(404, 'invalid link');
     // if (user.createdAt < 2hrs) throw error('link expired! register again');
     if (code !== user.code) throw error(404, 'invalid link');
     const nuser = await userService.createNew(user.username, user.password);
+    if (!nuser) throw error(404, 'error creating user');
     await unverifiedUserService.deleteOneById(user.id);
     return {
       user: {

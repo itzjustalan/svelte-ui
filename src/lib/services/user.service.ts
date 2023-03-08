@@ -1,39 +1,57 @@
 import { log } from "$lib/logger";
-import type { User } from "$lib/models/user.model";
-import { db, type Result } from "$lib/server/db";
+import { User } from "$lib/models/user.model";
+import { db } from "$lib/server/db";
+import { create, delRecord, select } from "cirql";
 
 class UserService {
-  async findById(id: string): Promise<User | undefined> {
-    try {
-      const res = await db.select<User>(id);
-      return res[0];
-    } catch (error) { }
+  table: string;
+  constructor() {
+    this.table = 'users';
   }
-
-  async findAll(): Promise<User[] | undefined> {
+  async findOneById(id: string) {
     try {
-      const res = await db.query<Result<User>[]>("SELECT * FROM users");
-      return res[0].result;
-    } catch (error) { }
-  }
-
-  async findOneByUsername(username: string): Promise<User | undefined> {
-    try {
-      const res = await db.query<Result<User>[]>("SELECT * FROM users WHERE username == $u", {
-        u: username,
+      const res = await db.execute({
+        schema: User,
+        query: select().from(this.table).where({ id }),
       });
-      log.info(res[0].result)
-      return res[0].result[0];
+      return res[0];
+    } catch (error) {
+      log.error(error);
+    }
+  }
+
+  async findAll() {
+    try {
+      return await db.execute({
+        schema: User,
+        query: select().from(this.table),
+      });
+    } catch (error) {
+      log.error(error);
+    }
+  }
+
+  async findOneByUsername(username: string) {
+    try {
+      const res = await db.execute({
+        schema: User,
+        query: select().from(this.table).where({ username }),
+      });
+      return res[0];
     } catch (error) {
       log.error(error);
      }
   }
 
-  async createNew(username: string, password: string): Promise<User | undefined> {
+  async createNew(username: string, password: string) {
     try {
-      //todo: put unverified users in a seperate table
-      const res = await db.create('users', { username, password }) as User;
-      return res;
+      return await db.execute({
+        schema: User,
+        query: create(this.table).setAll({
+          username,
+          password,
+        }),
+      });
     } catch (error) {
       log.error(error);
     }
