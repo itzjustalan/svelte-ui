@@ -60,11 +60,12 @@ class AuthController {
     // dsf.com/auth/verify/[:id]/token
     //todo: return jwt after email verification
   }
-  
-  async verifyEmail({ uid, code }: { uid: string; code: string; }): Promise<{ user: { password: string; username: string; id: string; }; jwt: { accessToken: string; refreshToken: string; }; }> {
+
+  async verifyEmail({ uid, code }: { uid: string; code: string; }): Promise<{ user: { password: string; id: string; username: string; }; jwt: { accessToken: string; refreshToken: string; }; }> {
     const user = await unverifiedUserService.findOneById(uid);
     if (!user) throw error(404, 'invalid link');
-    // if (user.createdAt < 2hrs) throw error('link expired! register again');
+    const time2hrAgo = Date.now() - (1000 * 60 * 60 * 2);
+    if (user.createdAt.getTime() < time2hrAgo) throw error(404, 'link expired!');
     if (code !== user.code) throw error(404, 'invalid link');
     const nuser = await userService.createNew(user.username, user.password);
     if (!nuser) throw error(404, 'error creating user');

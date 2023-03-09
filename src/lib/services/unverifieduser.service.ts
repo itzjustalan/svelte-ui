@@ -1,12 +1,12 @@
 import { log } from "$lib/logger";
 import { Unverifieduser } from "$lib/models/user.model";
 import { db } from "$lib/server/db";
-import { create, delRecord, select } from "cirql";
+import { delRecord, query, select } from "cirql";
 
 class UnverifiedUserService {
   table: string;
   constructor() {
-    this.table = 'unverifieduser';
+    this.table = "unverifieduser";
   }
   async findOneById(id: string) {
     try {
@@ -51,14 +51,18 @@ class UnverifiedUserService {
     code: string,
   ) {
     try {
-      return await db.execute({
+      const res = await db.execute({
         schema: Unverifieduser,
-        query: create(this.table).setAll({
+        query: query(
+          `CREATE ${this.table} SET username = $username, password = $password, code = $code, createdAt = time::now();`,
+        ),
+        params: {
           username,
           password,
           code,
-        }),
+        },
       });
+      return res[0];
     } catch (error) {
       log.error(error);
     }

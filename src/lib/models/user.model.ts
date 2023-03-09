@@ -15,6 +15,7 @@ export const User = RecordSchema.extend({
 export const Unverifieduser = RecordSchema.extend({
   id: z.string(),
   code: z.string(),
+  createdAt: z.coerce.date(),
   username: z.string().max(255).email(),
   password: z.string().min(12).max(255),
 });
