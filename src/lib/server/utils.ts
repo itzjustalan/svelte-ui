@@ -1,3 +1,9 @@
+import {
+  JWT_ACCESS_TOKEN_EXPIRES_IN,
+  JWT_ACCESS_TOKEN_SECRET,
+  JWT_REFRESH_TOKEN_EXPIRES_IN,
+  JWT_REFRESH_TOKEN_SECRET,
+} from "$env/static/private";
 import * as argon2 from "argon2";
 import * as jwt from "jsonwebtoken";
 
@@ -9,5 +15,35 @@ export const compareHash = async (
   hash: string,
 ): Promise<boolean> => await argon2.verify(hash, text);
 
-export const genJwt = (secret: string, expiresIn: string) =>
-  jwt.sign({ role: "aamaadmi" }, secret, { expiresIn });
+export interface JwtPayload {
+  uid: string;
+  role: string;
+  iat?: number;
+  exp?: number;
+}
+
+export const genJwts = (payload: JwtPayload) => ({
+  accessToken: genJwt(
+    payload,
+    JWT_ACCESS_TOKEN_SECRET,
+    JWT_ACCESS_TOKEN_EXPIRES_IN,
+  ),
+  refreshToken: genJwt(
+    payload,
+    JWT_REFRESH_TOKEN_SECRET,
+    JWT_REFRESH_TOKEN_EXPIRES_IN,
+  ),
+});
+
+export const genJwt = (
+  payload: JwtPayload,
+  secret: string,
+  expiresIn: string,
+) => jwt.sign(payload, secret, { expiresIn });
+
+export const verifyJwt = <T>(token: string, secret: string): T =>
+  jwt.verify(token, secret) as T;
+export const verifyAccessToken = <T>(token: string): T =>
+  jwt.verify(token, JWT_ACCESS_TOKEN_SECRET) as T;
+export const verifyRefreshToken = <T>(token: string): T =>
+  jwt.verify(token, JWT_REFRESH_TOKEN_SECRET) as T;
