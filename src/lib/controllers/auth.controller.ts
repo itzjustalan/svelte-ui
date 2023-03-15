@@ -11,13 +11,14 @@ import { mailService } from "$lib/services/mail.service";
 class AuthController {
   async signinWithEmail(
     { username, password }: { username: string; password: string },
-  ): Promise<{ user: { password: string; id: string; username: string; }; jwt: { accessToken: string; refreshToken: string; }; }> {
+  ): Promise<Response> {
     const user = await userService.findOneByUsername(username);
-    if (!user) throw error(404, 'user not found');
+    if (!user) return new Response('user not found', { status: 404 });
     if (!await compareHash(password, user.password)) {
-      throw error(401, 'invalid credentials');
+      return new Response('invalid credentials', { status: 401 });
     }
-    return {
+    //todo: envs okke ivide ingane cheiyano or vere abstraction veno??
+    return new Response(JSON.stringify({
       user: {
         ...user,
         password: '',
@@ -26,27 +27,18 @@ class AuthController {
         accessToken: genJwt(JWT_ACCESS_TOKEN_SECRET, JWT_ACCESS_TOKEN_EXPIRES_IN),
         refreshToken: genJwt(JWT_REFRESH_TOKEN_SECRET, JWT_REFRESH_TOKEN_EXPIRES_IN),
       }
-    }
+    }), {
+    });
   }
 
   // async signupWithEmail(credentials: Credentials): Promise<User | string> {
   async signupWithEmail(
     { username, password, host }: { username: string; password: string; host: string; },
-  ): Promise<void> {
-    // await db.create('users', { ...credentials });
-    // const { username, password } = credentials;
-    // log.info(username, password)
-
-    // if (await userService.findOneByUsername(username)) {
-    //   throw error(400, 'email taken');
-    // } else if (await unverifiedUserService.findOneByUsername(username)) {
-    //   throw error(400, 'email taken');
-    // }
+  ): Promise<Response> {
     const pwhash = await genHash(password);
     const code = nanoid(32);
-    // await userService.createNew(username, pwhash);
     const user = await unverifiedUserService.createNew(username, pwhash, code);
-    if (!user) throw error(500, 'error registering user');
+    if (!user) return new Response('error registering user', { status: 500 });
     const url = `${host}/v1/auth/verify/${user.id}/${code}`;
     if (dev) {
       log.info('verification email:', url);
@@ -57,20 +49,22 @@ class AuthController {
         body: emailVerificationTemplate(url),
       }).then(res => log.info(res));
     }
+    return new Response();
     // dsf.com/auth/verify/[:id]/token
     //todo: return jwt after email verification
   }
 
-  async verifyEmail({ uid, code }: { uid: string; code: string; }): Promise<{ user: { password: string; id: string; username: string; }; jwt: { accessToken: string; refreshToken: string; }; }> {
+  async verifyEmail({ uid, code }: { uid: string; code: string; }): Promise<Response> {
+    //todo: show already verified?? but that would err out if the user opens the link twice..
     const user = await unverifiedUserService.findOneById(uid);
-    if (!user) throw error(404, 'invalid link');
+    if (!user) return new Response('invalid link', { status: 404 });
     const time2hrAgo = Date.now() - (1000 * 60 * 60 * 2);
-    if (user.createdAt.getTime() < time2hrAgo) throw error(404, 'link expired!');
-    if (code !== user.code) throw error(404, 'invalid link');
+    if (user.createdAt.getTime() < time2hrAgo) return new Response('link expired!', { status: 404 });
+    if (code !== user.code) return new Response('invalid link', { status: 404 });
     const nuser = await userService.createNew(user.username, user.password);
-    if (!nuser) throw error(404, 'error creating user');
+    if (!nuser) return new Response('error creating user', { status: 404 });
     await unverifiedUserService.deleteOneById(user.id);
-    return {
+    return new Response(JSON.stringify({
       user: {
         ...nuser,
         password: '',
@@ -79,7 +73,7 @@ class AuthController {
         accessToken: genJwt(JWT_ACCESS_TOKEN_SECRET, JWT_ACCESS_TOKEN_EXPIRES_IN),
         refreshToken: genJwt(JWT_REFRESH_TOKEN_SECRET, JWT_REFRESH_TOKEN_EXPIRES_IN),
       }
-    }
+    }));
   }
 }
 

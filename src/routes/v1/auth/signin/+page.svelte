@@ -1,38 +1,41 @@
 <script lang="ts">
-    import { enhance, type SubmitFunction } from '$app/forms';
-    import type { ActionData, PageData } from './$types';
-    
-    export let data: PageData;
-    export let form: ActionData;
-    let isLoading = false;
-    // console.log(data, form);
+    import { browser } from "$app/environment";
+    import { log } from "$lib/logger";
+    import { authNetwork } from "$lib/networks/auth.network";
+    import { createMutation } from "@tanstack/svelte-query";
 
-    const signup: SubmitFunction = (input) => {
-        isLoading = true;
-        return async (opts) => {
-            isLoading = false;
-            await opts.update();
-        }
+    let username: string;
+    let password: string;
+
+    const signin = createMutation({
+        mutationKey: ['signin'],
+        mutationFn: authNetwork.signin,
+        onSuccess(data, variables, context) {
+            console.log('yeyy', data, variables, context)
+            log.info(browser && document.cookie)
+        },
+    })
+    const handleSignin = (e: Event) => {
+        e.preventDefault();
+        $signin.mutate({ username, password });
     }
 </script>
 
-<pre>{JSON.stringify(data)}</pre>
-<pre>{JSON.stringify(form)}</pre>
+<!-- <pre>{JSON.stringify(data)}</pre>
+<pre>{JSON.stringify(form)}</pre> -->
 
 <h1>signup</h1>
 
-{#if isLoading}
+{#if $signin.isLoading}
     loading...
-{:else}
-    {form?.errors ?? ''}
-    <form method="post" use:enhance={signup}>
-        user<input type="text" name="username" required>
-        <input type="password" name="password" required>
-        <button type="submit">summit</button>
-    </form>
+{:else if $signin.isError}
+    error...
+    <pre>{JSON.stringify($signin.error)}</pre>
 {/if}
 
+user<input type="text" name="username" bind:value={username} required />
+<input type="password" name="password" bind:value={password} required />
+<button disabled={$signin.isLoading} on:click={handleSignin}>summit</button>
 this is - signIN
 <br />
 no account? <a href="/v1/auth/signup">signUP</a>
-

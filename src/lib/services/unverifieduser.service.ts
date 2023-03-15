@@ -1,5 +1,5 @@
 import { log } from "$lib/logger";
-import { Unverifieduser } from "$lib/models/user.model";
+import { UnverifieduserSchema, type Unverifieduser } from "$lib/zod/models/user.model";
 import { db } from "$lib/server/db";
 import { delRecord, query, select } from "cirql";
 
@@ -8,10 +8,10 @@ class UnverifiedUserService {
   constructor() {
     this.table = "unverifieduser";
   }
-  async findOneById(id: string) {
+  async findOneById(id: string): Promise<Unverifieduser | undefined> {
     try {
       const res = await db.execute({
-        schema: Unverifieduser,
+        schema: UnverifieduserSchema,
         query: select().from(this.table).where({ id }),
       });
       return res[0];
@@ -20,10 +20,10 @@ class UnverifiedUserService {
     }
   }
 
-  async findAll() {
+  async findAll(): Promise<Unverifieduser[] | undefined> {
     try {
       return await db.execute({
-        schema: Unverifieduser,
+        schema: UnverifieduserSchema,
         query: select().from(this.table),
       });
     } catch (error) {
@@ -33,10 +33,10 @@ class UnverifiedUserService {
 
   async findOneByUsername(
     username: string,
-  ) {
+  ): Promise<Unverifieduser | undefined> {
     try {
       const res = await db.execute({
-        schema: Unverifieduser,
+        schema: UnverifieduserSchema,
         query: select().from(this.table).where({ username }),
       });
       return res[0];
@@ -49,10 +49,10 @@ class UnverifiedUserService {
     username: string,
     password: string,
     code: string,
-  ) {
+  ): Promise<Unverifieduser | undefined> {
     try {
       const res = await db.execute({
-        schema: Unverifieduser,
+        schema: UnverifieduserSchema,
         query: query(
           `CREATE ${this.table} SET username = $username, password = $password, code = $code, createdAt = time::now();`,
         ),
@@ -68,12 +68,12 @@ class UnverifiedUserService {
     }
   }
 
-  async deleteOneById(id: string) {
+  async deleteOneById(id: string): Promise<Unverifieduser | undefined> {
     try {
       return await db.execute({
         query: delRecord(id),
-        schema: Unverifieduser,
-      });
+        schema: UnverifieduserSchema,
+      }) ?? undefined;
     } catch (error) {
       log.error(error);
     }
