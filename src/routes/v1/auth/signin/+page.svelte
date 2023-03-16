@@ -24,7 +24,7 @@
 <!-- <pre>{JSON.stringify(data)}</pre>
 <pre>{JSON.stringify(form)}</pre> -->
 
-<h1>signup</h1>
+<h1>signin</h1>
 
 {#if $signin.isLoading}
     loading...

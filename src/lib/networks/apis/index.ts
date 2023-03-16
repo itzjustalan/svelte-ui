@@ -1,4 +1,5 @@
 import { PUBLIC_ADMIN_API_URL } from '$env/static/public';
+import { log } from '$lib/logger';
 import axios, { type AxiosInstance } from 'axios';
 // export { type AxiosInstance } from 'axios';
 
@@ -13,25 +14,12 @@ defaultApi.defaults.headers.common['Content-Type'] = 'application/json';
 //   return config;
 // })
 
-// export const refreshAccessTokenFn = async () => {
-//   const response = await defaultApi.get('auth/refresh');
-//   return response.data;
-// };
-
-// defaultApi.interceptors.response.use(
-//   (response) => {
-//     return response;
-//   },
-//   async (error) => {
-//     const originalRequest = error.config;
-//     const errMessage = error.response.data.message as string;
-//     if (errMessage.includes('not logged in') && !originalRequest._retry) {
-//       originalRequest._retry = true;
-//       await refreshAccessTokenFn();
-//       return defaultApi(originalRequest);
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+// defaultApi.interceptors.request.use(config => {
+//   return config;
+// })
+// defaultApi.interceptors.response.use(config => {
+//   log.request(config.status, config.request.method, '', 0);
+//   return config;
+// })
 
 export default defaultApi;

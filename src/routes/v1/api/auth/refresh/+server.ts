@@ -1,6 +1,8 @@
 import { dev } from "$app/environment";
 import { authController } from "$lib/controllers/auth.controller";
+import { responseFromError } from "$lib/server/utils";
 import { HttpStatusCodes } from "$lib/utils/httpStatusCodes";
+import { json } from "@sveltejs/kit";
 import type { CookieSerializeOptions } from "cookie";
 import type { RequestHandler } from "./$types";
 
@@ -21,10 +23,9 @@ const authCookieAttributes: CookieSerializeOptions = {
 export const GET: RequestHandler = async ({ request, cookies }) => {
     const refreshToken = cookies.get('refresh-token') || request.headers.get('Authorization');
     if (!refreshToken) return new Response('invalid refresh token', { status: HttpStatusCodes.BadRequest });
-    const response = await authController.refreshTokens(refreshToken);
-    if (response.status !== 200) return response;
-    const data = await response.clone().json(); //todo: find a better approach
-    cookies.set('access-token', data.jwt.accessToken, { ...authCookieAttributes, maxAge: 3600 });
-    cookies.set('refresh-token', data.jwt.refreshToken, { ...authCookieAttributes, maxAge: 50400 });
-    return response;
+    const payload = await authController.refreshTokens(refreshToken);
+    if (payload instanceof Error) return responseFromError(payload);
+    cookies.set('access-token', payload.jwt.accessToken, { ...authCookieAttributes, maxAge: 3600 });
+    cookies.set('refresh-token', payload.jwt.refreshToken, { ...authCookieAttributes, maxAge: 50400 });
+    return json(payload);
 };

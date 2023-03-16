@@ -50,7 +50,7 @@ export const log = {
     info: (...d: any[]) => handleLog(LogLevel.info, ...d),
     warn: (...d: any[]) => handleLog(LogLevel.warn, ...d),
     error: (...d: any[]) => handleLog(LogLevel.error, ...d),
-    request: (status: number, method: string, path: string, ms: number, ...d: any[]) => {
+    endpoint: (status: number, method: string, path: string, ms: number, ...d: any[]) => {
         if (!LOG_REQ) return;
         ms = Math.trunc(ms);
         let str = ts() + '[:';
@@ -70,7 +70,9 @@ export const log = {
         else str += Colors.FgGreen + ' 🚀';
         str += ` ${ms} ms` + Colors.Reset;
         console.log(str);
-    }
+    },
+    // request: (status: number, method: string, path: string, ms: number, ...d: any[]) => {},
+    // response: (status: number, method: string, path: string, ms: number, ...d: any[]) => {},
 }
 
 const handleLog = (level: LogLevel, ...d: any): void => {

@@ -20,6 +20,11 @@ class AuthNetwork {
 
   signout = () => clearInterval(this.accessTimeout);
 
+  signup = async (data: AuthData) => {
+    authSchema.parse(data);
+    await defaultApi.post<AuthResponse>("v1/api/auth/signup", data);
+  }
+
   signin = async (data: AuthData): Promise<AuthResponse> => {
     authSchema.parse(data);
     const res = await defaultApi.post<AuthResponse>("v1/api/auth/signin", data);

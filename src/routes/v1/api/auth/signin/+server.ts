@@ -1,7 +1,9 @@
 import { dev } from "$app/environment";
 import { authController } from "$lib/controllers/auth.controller";
+import { responseFromError } from "$lib/server/utils";
 import { HttpStatusCodes } from "$lib/utils/httpStatusCodes";
 import { authSchema } from "$lib/zod/schemas/user.signup";
+import { json } from "@sveltejs/kit";
 import type { CookieSerializeOptions } from "cookie";
 import type { RequestHandler } from "./$types";
 
@@ -22,10 +24,9 @@ const authCookieAttributes: CookieSerializeOptions = {
 export const POST: RequestHandler = async ({ request, cookies }) => {
     const result = authSchema.safeParse(await request.json());
     if (!result.success) return new Response(result.error.toString(), { status: HttpStatusCodes.BadRequest });
-    const response = await authController.signinWithEmail(result.data);
-    if (response.status !== 200) return response;
-    const data = await response.clone().json(); //todo: find a better approach
-    cookies.set('access-token', data.jwt.accessToken, { ...authCookieAttributes, maxAge: 3600 });
-    cookies.set('refresh-token', data.jwt.refreshToken, { ...authCookieAttributes, maxAge: 50400 });
-    return response;
+    const payload = await authController.signinWithEmail(result.data);
+    if (payload instanceof Error) return responseFromError(payload);
+    cookies.set('access-token', payload.jwt.accessToken, { ...authCookieAttributes, maxAge: 3600 });
+    cookies.set('refresh-token', payload.jwt.refreshToken, { ...authCookieAttributes, maxAge: 50400 });
+    return json(payload);
 };

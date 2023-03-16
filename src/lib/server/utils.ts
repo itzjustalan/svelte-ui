@@ -4,6 +4,8 @@ import {
   JWT_REFRESH_TOKEN_EXPIRES_IN,
   JWT_REFRESH_TOKEN_SECRET,
 } from "$env/static/private";
+import { AppError } from "$lib/errors";
+import { HttpStatusCodes } from "$lib/utils/httpStatusCodes";
 import * as argon2 from "argon2";
 import * as jwt from "jsonwebtoken";
 
@@ -47,3 +49,10 @@ export const verifyAccessToken = <T>(token: string): T =>
   jwt.verify(token, JWT_ACCESS_TOKEN_SECRET) as T;
 export const verifyRefreshToken = <T>(token: string): T =>
   jwt.verify(token, JWT_REFRESH_TOKEN_SECRET) as T;
+
+export const responseFromError = (error: Error): Response => {
+  if (error instanceof AppError) return error.respond();
+  return new Response(error.message ?? "Internal Server Error", {
+    status: HttpStatusCodes.InternalServerError,
+  });
+};
