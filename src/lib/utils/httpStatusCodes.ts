@@ -3,7 +3,7 @@
  *
  * @see {@link https://en.wikipedia.org/wiki/List_of_HTTP_status_codes}
  */
-export enum HttpStatusCode {
+export enum HttpStatusCodes {
 
     /**
      * The server has received the request headers and the client should proceed to send the request body

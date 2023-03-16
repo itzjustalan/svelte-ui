@@ -5,9 +5,10 @@ import { log } from "$lib/logger";
 import { unverifiedUserService } from "$lib/services/unverifieduser.service";
 import { nanoid } from "nanoid";
 import { mailService } from "$lib/services/mail.service";
-import { HttpStatusCode } from "$lib/utils";
+import { HttpStatusCodes } from "$lib/utils/httpStatusCodes";
 
 class AuthController {
+  todo = () => 'centralised place for all things jwt including setting the cookie';
   async signinWithEmail(
     { username, password }: { username: string; password: string },
   ): Promise<Response> {
@@ -32,8 +33,13 @@ class AuthController {
       host: string;
     },
   ): Promise<Response> {
-    const pwhash = await genHash(password);
+    if (await userService.findOneByUsername(username)) {
+      return new Response('email already taken', { status: HttpStatusCodes.BadRequest});
+    } else if (await unverifiedUserService.findOneByUsername(username)) {
+      return new Response('email already taken', { status: HttpStatusCodes.BadRequest});
+    }
     const code = nanoid(32);
+    const pwhash = await genHash(password);
     const user = await unverifiedUserService.createNew(username, pwhash, code);
     if (!user) return new Response("error registering user", { status: 500 });
     const url = `${host}/v1/auth/verify/${user.id}/${code}`;
@@ -77,17 +83,17 @@ class AuthController {
   async refreshTokens(refreshToken: string): Promise<Response> {
     try {
       const decodedToken = verifyRefreshToken<JwtPayload>(refreshToken);
-      // if (Date.now() >= decodedToken.exp! * 1000) return new Response('token expired', { status: HttpStatusCode.Unauthorized });
-      if (!decodedToken.exp || Date.now() >= decodedToken.exp * 1000) return new Response('token expired', { status: HttpStatusCode.Unauthorized });
+      // if (Date.now() >= decodedToken.exp! * 1000) return new Response('token expired', { status: HttpStatusCodes.Unauthorized });
+      if (!decodedToken.exp || Date.now() >= decodedToken.exp * 1000) return new Response('token expired', { status: HttpStatusCodes.Unauthorized });
       const user = await userService.findOneById(decodedToken.uid)
-      if (!user) return new Response('unauthorized', { status: HttpStatusCode.Unauthorized })
+      if (!user) return new Response('unauthorized', { status: HttpStatusCodes.Unauthorized })
       const payload = { uid: user.id, role: "etho-oru-role" };
       return new Response(JSON.stringify({
         user: { ...user, password: "" },
         jwt: genJwts(payload),
       }));
     } catch (e: any) {
-      return new Response(e.message, { status: HttpStatusCode.BadRequest });
+      return new Response(e.message, { status: HttpStatusCodes.BadRequest });
     }
   }
 }

@@ -1,4 +1,4 @@
-export { HttpStatusCode } from "./httpStatusCode";
+// export { HttpStatusCodes } from "./httpStatusCodes";
 
 export const getCookieValue = (name: string, cookie: string | null) =>
   cookie?.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || null;
