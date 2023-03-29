@@ -1,8 +1,10 @@
 import { log } from "$lib/logger";
 import { conectDB } from "$lib/server/db";
+import { seedDataDevMode } from "$lib/utils/seeder";
 import type { Handle } from "@sveltejs/kit";
 
 conectDB();
+seedDataDevMode();
 
 export const handle: Handle = async ({ event, resolve }) => {
   const start = performance.now();
