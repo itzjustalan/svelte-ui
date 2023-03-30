@@ -1,5 +1,5 @@
 import { log } from "$lib/logger";
-import { UserSchema, type User } from "$lib/zod/models/user.model";
+import { userSchema, type User } from "$lib/zod/models/user.model";
 import { db } from "$lib/server/db";
 import { create, select } from "cirql";
 
@@ -11,7 +11,7 @@ class UserService {
   async findOneById(id: string): Promise<User | undefined> {
     try {
       const res = await db.execute({
-        schema: UserSchema,
+        schema: userSchema,
         query: select().from(this.table).where({ id }),
       });
       return res[0];
@@ -23,7 +23,7 @@ class UserService {
   async findAll(): Promise<User[] | undefined> {
     try {
       return await db.execute({
-        schema: UserSchema,
+        schema: userSchema,
         query: select().from(this.table),
       });
     } catch (error) {
@@ -34,7 +34,7 @@ class UserService {
   async findOneByUsername(username: string): Promise<User | undefined> {
     try {
       const res = await db.execute({
-        schema: UserSchema,
+        schema: userSchema,
         query: select().from(this.table).where({ username }),
       });
       return res[0];
@@ -46,7 +46,7 @@ class UserService {
   async createNew(username: string, password: string): Promise<User | undefined> {
     try {
       return await db.execute({
-        schema: UserSchema,
+        schema: userSchema,
         query: create(this.table).setAll({
           username,
           password,

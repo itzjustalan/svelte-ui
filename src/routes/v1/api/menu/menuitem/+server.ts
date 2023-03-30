@@ -1,16 +1,13 @@
 import { menuController } from "$lib/controllers/menu.controller";
 import { responseFromError } from "$lib/server/utils";
-import { MenuItemSchema, type MenuItem } from "$lib/zod/models/menu.model";
+import { menuItemDataSchema } from "$lib/zod/schemas/menuitem";
+import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
-
-
 export const POST: RequestHandler = async ({ request }) => {
-    const result = MenuItemSchema.safeParse({ ...await request.json(), id: '' });
-    if (!result.success) {
-        return new Response(result.error.toString(), { status: 400 });
-    }
-    const error = menuController.createMenuItem(result.data as MenuItem);
-    if (!error) return new Response("success");
-    return responseFromError(error);
+    const result = menuItemDataSchema.safeParse({ ...await request.json() });
+    if (!result.success) return responseFromError(result.error);
+    const error = await menuController.createMenuItem(result.data);
+    if (error instanceof Error) return responseFromError(error);
+    return json(error);
 };

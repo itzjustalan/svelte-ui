@@ -1,5 +1,5 @@
 import { log } from "$lib/logger";
-import { UnverifieduserSchema, type Unverifieduser } from "$lib/zod/models/user.model";
+import { unverifieduserSchema, type Unverifieduser } from "$lib/zod/models/user.model";
 import { db } from "$lib/server/db";
 import { delRecord, query, select } from "cirql";
 
@@ -11,7 +11,7 @@ class UnverifiedUserService {
   async findOneById(id: string): Promise<Unverifieduser | undefined> {
     try {
       const res = await db.execute({
-        schema: UnverifieduserSchema,
+        schema: unverifieduserSchema,
         query: select().from(this.table).where({ id }),
       });
       return res[0];
@@ -23,7 +23,7 @@ class UnverifiedUserService {
   async findAll(): Promise<Unverifieduser[] | undefined> {
     try {
       return await db.execute({
-        schema: UnverifieduserSchema,
+        schema: unverifieduserSchema,
         query: select().from(this.table),
       });
     } catch (error) {
@@ -36,7 +36,7 @@ class UnverifiedUserService {
   ): Promise<Unverifieduser | undefined> {
     try {
       const res = await db.execute({
-        schema: UnverifieduserSchema,
+        schema: unverifieduserSchema,
         query: select().from(this.table).where({ username }),
       });
       return res[0];
@@ -52,7 +52,7 @@ class UnverifiedUserService {
   ): Promise<Unverifieduser | undefined> {
     try {
       const res = await db.execute({
-        schema: UnverifieduserSchema,
+        schema: unverifieduserSchema,
         query: query(
           `CREATE ${this.table} SET username = $username, password = $password, code = $code, createdAt = time::now();`,
         ),
@@ -72,7 +72,7 @@ class UnverifiedUserService {
     try {
       return await db.execute({
         query: delRecord(id),
-        schema: UnverifieduserSchema,
+        schema: unverifieduserSchema,
       }) ?? undefined;
     } catch (error) {
       log.error(error);

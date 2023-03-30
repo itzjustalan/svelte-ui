@@ -1,28 +1,33 @@
 <script lang="ts">
   import { log } from "$lib/logger";
+    import { menuNetwork } from "$lib/networks/menu.network";
   import { prettyPrintMenuItemType } from "$lib/utils";
   import {
-    MenuItemSchema,
     MenuItemType,
-    MenuSchema,
-    type Menu,
-    type MenuItem,
   } from "$lib/zod/models/menu.model";
+    import { menuItemDataSchema, type MenuItemData } from "$lib/zod/schemas/menuitem";
+    import { createMutation } from "@tanstack/svelte-query";
 
-  let newItem: MenuItem = {
-    id: "",
+  let newItem: MenuItemData = {
     title: "",
     description: "",
     category: "",
     price: 0,
     itemType: MenuItemType.veg,
   };
+  const menuItem = createMutation({
+    mutationKey: ['menuitem'],
+    mutationFn: menuNetwork.createNewMenuUtem,
+  });
   const addMenuItem = () => {
     log.info(JSON.stringify(newItem));
-    // if (!MenuItemSchema.safeParse(newItem).success) {
-    //   log.info(MenuItemSchema.safeParse(newItem));
-    //   return alert(MenuItemSchema.safeParse(newItem).success);
-    // }
+    const result = menuItemDataSchema.safeParse(newItem);
+    if (!result.success) {
+      log.info(result.error);
+      return alert('error validating input chk console');
+    } else {
+      $menuItem.mutate(newItem);
+    }
   };
 </script>
 
@@ -31,6 +36,12 @@
 </svelte:head>
 
 <h1>Add Menu Item</h1>
+{#if $menuItem.isLoading}
+    loading...
+{:else if $menuItem.isError}
+    error...
+    <pre>{JSON.stringify($menuItem.error)}</pre>
+{/if}
 <form>
   Title <input type="text" bind:value={newItem.title} />
   <br />Description <input type="text" bind:value={newItem.description} />
@@ -44,5 +55,5 @@
       </option>
     {/each}
   </select>
-  <button type="button" on:click={addMenuItem}> Add New Menu Item </button>
+  <button type="button" on:click={addMenuItem} disabled={$menuItem.isLoading}> Add New Menu Item </button>
 </form>

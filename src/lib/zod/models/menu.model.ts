@@ -8,18 +8,15 @@ export enum MenuItemType {
     halal = 'halal'
 }
 
-export type Menu = z.infer<typeof MenuSchema>;
-export const MenuSchema = RecordSchema.extend({
-    username: z.string().max(255).email(),
-    password: z.string().min(12).max(255),
-});
-export type MenuItem = z.infer<typeof MenuItemSchema>;
-export const MenuItemSchema = RecordSchema.extend({
+export type Menu = z.infer<typeof menuSchema>;
+export const menuSchema = RecordSchema.extend({
+}).strict();
+export type MenuItem = z.infer<typeof menuItemSchema>;
+export const menuItemSchema = RecordSchema.extend({
     id: z.string(),
-    title: z.string(),
-    description: z.string(),
-    category: z.string(),
+    title: z.string().min(1).trim(),
+    description: z.string().min(1).trim(),
+    category: z.string().min(1).trim(),
     price: z.number(),
     itemType: z.nativeEnum(MenuItemType),
-});
-
+}).strict();

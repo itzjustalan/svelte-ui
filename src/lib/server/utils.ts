@@ -8,6 +8,7 @@ import { AppError } from "$lib/errors";
 import { HttpStatusCodes } from "$lib/utils/httpStatusCodes";
 import * as argon2 from "argon2";
 import * as jwt from "jsonwebtoken";
+import { ZodError } from "zod";
 
 export const genHash = async (text: string): Promise<string> =>
   await argon2.hash(text);
@@ -52,6 +53,11 @@ export const verifyRefreshToken = <T>(token: string): T =>
 
 export const responseFromError = (error: Error): Response => {
   if (error instanceof AppError) return error.respond();
+  else if (error instanceof ZodError) {
+    return new Response(error.toString(), {
+      status: HttpStatusCodes.BadRequest,
+    });
+  }
   return new Response(error.message ?? "Internal Server Error", {
     status: HttpStatusCodes.InternalServerError,
   });
