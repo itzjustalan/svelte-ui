@@ -4,7 +4,7 @@ import { AppError } from "./app.error";
 export class BadRequestError extends AppError {
     constructor(
     message: string,
-    statusCode?: HttpStatusCodes.BadRequest,
+    statusCode?: HttpStatusCodes,
     ) {
         statusCode ??= HttpStatusCodes.BadRequest;
         super(message, statusCode);
