@@ -3,8 +3,12 @@ import { db } from "$lib/server/db";
 import { menuItemSchema, type MenuItem } from "$lib/zod/models/menu.model";
 import type { MenuItemData } from "$lib/zod/schemas/menuitem";
 import { create } from "cirql";
+import { BaseService } from "./base.service";
 
-class MenuItemService {
+class MenuItemService extends BaseService<MenuItem> {
+    constructor() {
+        super("menuitem", menuItemSchema)
+    }
     table = 'menuitem'
     async createNew(menuItem: MenuItemData): Promise<MenuItem | undefined> {
         try {

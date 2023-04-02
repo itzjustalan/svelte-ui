@@ -11,3 +11,10 @@ export const POST: RequestHandler = async ({ request }) => {
     if (error instanceof Error) return responseFromError(error);
     return json(error);
 };
+
+export const GET: RequestHandler = async () => {
+
+    const error = await menuController.getMenuItems();
+    if (error instanceof Error) return responseFromError(error);
+    return json(error);
+};
