@@ -7,7 +7,11 @@
     menuItemDataSchema,
     type MenuItemData,
   } from "$lib/zod/schemas/menuitem";
-  import { createMutation, createQuery } from "@tanstack/svelte-query";
+  import {
+    createMutation,
+    createQuery,
+    useQueryClient,
+  } from "@tanstack/svelte-query";
 
   let newItem: MenuItemData = {
     title: "",
@@ -16,9 +20,15 @@
     price: 0,
     itemType: MenuItemType.veg,
   };
+  const client = useQueryClient();
   const menuItem = createMutation({
     mutationKey: ["menuitem"],
     mutationFn: menuNetwork.createNewMenuItem,
+    onSuccess: () => {
+      client.invalidateQueries({
+        queryKey: ["menuitems"],
+      });
+    },
   });
   const menuItems = createQuery<MenuItem[], Error>({
     queryKey: ["menuitems"],
@@ -64,12 +74,14 @@
     Add New Menu Item
   </button>
 </form>
+
+<b>Menu items</b>
 {#if $menuItems.isLoading}
   Loading menu items...
 {:else if $menuItems.status === "error"}
   <span>Error: {$menuItems.error.message}</span>
 {:else}
   {#each $menuItems.data as menu, index}
-    <h6>{menu.title}</h6>
+    <div>{menu.title}</div>
   {/each}
 {/if}
