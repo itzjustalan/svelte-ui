@@ -7,19 +7,19 @@ import { BaseService } from "./base.service";
 
 class MenuItemService extends BaseService<MenuItem> {
     constructor() {
-        super("menuitem", menuItemSchema)
+        super("menuitems", menuItemSchema)
     }
-    table = 'menuitem'
-    async createNew(menuItem: MenuItemData): Promise<MenuItem | undefined> {
-        try {
-            return await db.execute({
-                schema: menuItemSchema,
-                query: create(this.table).setAll({ ...menuItem }),
-            }) satisfies MenuItem;
-        } catch (error) {
-            log.error(error);
-        }
-    }
+    // table = 'menuitem'
+    // async createNew(menuItem: MenuItemData): Promise<MenuItem | undefined> {
+    //     try {
+    //         return await db.execute({
+    //             schema: menuItemSchema,
+    //             query: create(this.table).setAll({ ...menuItem }),
+    //         }) satisfies MenuItem;
+    //     } catch (error) {
+    //         log.error(error);
+    //     }
+    // }
 }
 
 export const menuItemService = new MenuItemService();

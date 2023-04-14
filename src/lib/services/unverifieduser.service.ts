@@ -6,7 +6,7 @@ import { delRecord, query, select } from "cirql";
 class UnverifiedUserService {
   table: string;
   constructor() {
-    this.table = "unverifieduser";
+    this.table = "unverifiedusers";
   }
   async findOneById(id: string): Promise<Unverifieduser | undefined> {
     try {

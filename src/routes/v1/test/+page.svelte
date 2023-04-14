@@ -2,7 +2,7 @@
   import { log } from "$lib/logger";
   import { menuNetwork } from "$lib/networks/menu.network";
   import { prettyPrintMenuItemType } from "$lib/utils";
-  import { MenuItemType, type MenuItem } from "$lib/zod/models/menu.model";
+  import { MenuItemType, type MenuItem, type Menu } from "$lib/zod/models/menu.model";
   import {
     menuItemDataSchema,
     type MenuItemData,
@@ -13,17 +13,36 @@
     useQueryClient,
   } from "@tanstack/svelte-query";
 
+  let selectedMenu: Menu;
   let newItem: MenuItemData = {
     title: "",
     description: "",
-    category: "",
     price: 0,
     itemType: MenuItemType.veg,
   };
   const client = useQueryClient();
+  const menu = createMutation({
+    mutationKey: ["menu"],
+    mutationFn: menuNetwork.createMenu,
+    onSuccess: () => {
+      client.invalidateQueries({
+        queryKey: ["menus"],
+      });
+    },
+  });
+  const category = createMutation({
+    mutationKey: ["category"],
+    mutationFn: menuNetwork.createCategory,
+    // onSuccess: () => {
+    //   client.invalidateQueries({
+    //     //todo: and selected menu?
+    //     queryKey: ["menus"],
+    //   });
+    // },
+  });
   const menuItem = createMutation({
     mutationKey: ["menuitem"],
-    mutationFn: menuNetwork.createNewMenuItem,
+    mutationFn: menuNetwork.createMenuItem,
     onSuccess: () => {
       client.invalidateQueries({
         queryKey: ["menuitems"],
@@ -33,6 +52,10 @@
   const menuItems = createQuery<MenuItem[], Error>({
     queryKey: ["menuitems"],
     queryFn: menuNetwork.getMenuItems,
+  });
+  const menus = createQuery<Menu[], Error>({
+    queryKey: ["menus"],
+    queryFn: menuNetwork.getMenus,
   });
   const addMenuItem = () => {
     log.info(JSON.stringify(newItem));
@@ -44,13 +67,43 @@
       $menuItem.mutate(newItem);
     }
   };
+  const createCategory = async (title: string) => await $category.mutateAsync({ title, items: [] })
+  const createNewMenu = async () => {
+    let cat = (await createCategory("default_category")).data;
+    $menu.mutate({ title: "default_menu", categories: [cat.id] });
+  }
 </script>
 
 <svelte:head>
-  <title>sdfsf</title>
+  <title>test_page</title>
 </svelte:head>
 
-<h1>Add Menu Item</h1>
+<div class="card">
+  <!-- <pre>selected Menu: {selectedMenu?.title}</pre> -->
+{#if $menus.isLoading}
+  Loading menus...
+{:else if $menus.status === "error"}
+  <span>Error: {$menus.error.message}</span>
+{:else}
+  <b>Menus</b>
+  {#each $menus.data as item}
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <div on:click|preventDefault={() => selectedMenu = item}>{item.title}</div>
+  {/each}
+{/if}
+<button type="button" disabled={$menu.isLoading} on:click={createNewMenu}>create new menu</button>
+</div>
+
+{#if selectedMenu}
+<div class="card">
+  <b><u>Menu: {selectedMenu?.title}</u></b>
+  {#each selectedMenu.categories as category}
+    <u>{category}</u>
+    <!-- <u>{category.title}</u> -->
+  {/each}
+</div>
+{/if}
+<div class="card">
 {#if $menuItem.isLoading}
   loading...
 {:else if $menuItem.isError}
@@ -60,7 +113,6 @@
 <form>
   Title <input type="text" bind:value={newItem.title} />
   <br />Description <input type="text" bind:value={newItem.description} />
-  <br />Category <input type="text" bind:value={newItem.category} />
   <br />price <input type="number" bind:value={newItem.price} />
   <br />itemType
   <select bind:value={newItem.itemType}>
@@ -74,14 +126,28 @@
     Add New Menu Item
   </button>
 </form>
+</div>
 
-<b>Menu items</b>
+<div class="card">
 {#if $menuItems.isLoading}
   Loading menu items...
 {:else if $menuItems.status === "error"}
   <span>Error: {$menuItems.error.message}</span>
 {:else}
-  {#each $menuItems.data as menu, index}
-    <div>{menu.title}</div>
+  <b>Menu items</b>
+  {#each $menuItems.data as item}
+    <div>{item.title}</div>
   {/each}
 {/if}
+</div>
+
+
+
+<style>
+  .card {
+    margin: 1rem;
+    padding: 1rem;
+    border: 2px solid black;
+    border-radius: 1rem;
+  }
+</style>
