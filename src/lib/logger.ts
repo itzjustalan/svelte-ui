@@ -51,6 +51,23 @@ export const log = {
   info: (...d: any[]) => handleLog(LogLevel.info, ...d),
   warn: (...d: any[]) => handleLog(LogLevel.warn, ...d),
   error: (...d: any[]) => handleLog(LogLevel.error, ...d),
+  cl_req: (method: string, path: string, data: unknown) => {
+    if (skiplog(LogLevel.info)) return;
+    console.info(`🚀 ${method.toUpperCase()} ${path}`, data);
+  },
+  cl_res: (
+    status: number,
+    statusText: string,
+    method: string,
+    path: string,
+    data: unknown
+  ) => {
+    if (skiplog(LogLevel.info)) return;
+    console.info(
+      `[:${status}]  ${method.toUpperCase()} ${path} ${statusText}`,
+      data
+    );
+  },
   endpoint: (
     status: number,
     method: string,
