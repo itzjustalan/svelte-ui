@@ -7,14 +7,14 @@ import { z } from "zod";
 //   password: string
 // }
 
-export type User = z.infer<typeof userSchema>;
-export const userSchema = RecordSchema.extend({
+export type UserModel = z.infer<typeof userModelSchema>;
+export const userModelSchema = RecordSchema.extend({
   username: z.string().max(255).email(),
   password: z.string().min(12).max(255),
 }).strict();
 
-export type Unverifieduser = z.infer<typeof unverifieduserSchema>;
-export const unverifieduserSchema = RecordSchema.extend({
+export type UnverifieduserModel = z.infer<typeof unverifieduserModelSchema>;
+export const unverifieduserModelSchema = RecordSchema.extend({
   id: z.string(),
   code: z.string(),
   createdAt: z.coerce.date(),

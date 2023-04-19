@@ -32,11 +32,11 @@ export class BaseService<T extends object> {
         }
     }
 
-    async findAll(): Promise<T[] | undefined> {
+    async findAll<T>(fetch: string[] = [], schema?: ZodType): Promise<T[] | undefined> {
         try {
             return await db.execute({
-                schema: this.tableschema,
-                query: select().from(this.tablename),
+                schema: schema ?? this.tableschema,
+                query: select().from(this.tablename).fetch(...fetch),
             });
         } catch (error) {
             log.error(error);

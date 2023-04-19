@@ -2,19 +2,17 @@
   import { log } from "$lib/logger";
   import { menuNetwork } from "$lib/networks/menu.network";
   import { prettyPrintMenuItemType } from "$lib/utils";
-  import { MenuItemType, type MenuItem, type Menu } from "$lib/zod/models/menu.model";
-  import {
-    menuItemDataSchema,
-    type MenuItemData,
-  } from "$lib/zod/schemas/menuitem";
+  import { MenuItemType, type MenuItemModel, type MenuModel } from "$lib/models/db/menu.model";
   import {
     createMutation,
     createQuery,
     useQueryClient,
   } from "@tanstack/svelte-query";
+    import { menuItemInputSchema, type MenuItemInput } from "$lib/zod/schemas/menuitem";
+    import type { MenuData } from "$lib/models/data/menu.data";
 
-  let selectedMenu: Menu;
-  let newItem: MenuItemData = {
+  let selectedMenu: MenuData;
+  let newItem: MenuItemInput = {
     title: "",
     description: "",
     price: 0,
@@ -49,17 +47,17 @@
       });
     },
   });
-  const menuItems = createQuery<MenuItem[], Error>({
+  const menuItems = createQuery<MenuItemModel[], Error>({
     queryKey: ["menuitems"],
     queryFn: menuNetwork.getMenuItems,
   });
-  const menus = createQuery<Menu[], Error>({
+  const menus = createQuery<MenuData[], Error>({
     queryKey: ["menus"],
     queryFn: menuNetwork.getMenus,
   });
   const addMenuItem = () => {
     log.info(JSON.stringify(newItem));
-    const result = menuItemDataSchema.safeParse(newItem);
+    const result = menuItemInputSchema.safeParse(newItem);
     if (!result.success) {
       log.info(result.error);
       return alert("error validating input chk console");
@@ -98,8 +96,8 @@
 <div class="card">
   <b><u>Menu: {selectedMenu?.title}</u></b>
   {#each selectedMenu.categories as category}
-    <u>{category}</u>
-    <!-- <u>{category.title}</u> -->
+    <!-- <u>{category}</u> -->
+    <br><u>{category.title}</u>
   {/each}
 </div>
 {/if}

@@ -1,5 +1,5 @@
 import { log } from "$lib/logger";
-import { userSchema, type User } from "$lib/zod/models/user.model";
+import { userModelSchema, type UserModel } from "$lib/models/db/user.model";
 import { db } from "$lib/server/db";
 import { create, select } from "cirql";
 
@@ -8,10 +8,10 @@ class UserService {
   constructor() {
     this.table = 'users';
   }
-  async findOneById(id: string): Promise<User | undefined> {
+  async findOneById(id: string): Promise<UserModel | undefined> {
     try {
       const res = await db.execute({
-        schema: userSchema,
+        schema: userModelSchema,
         query: select().from(this.table).where({ id }),
       });
       return res[0];
@@ -20,10 +20,10 @@ class UserService {
     }
   }
 
-  async findAll(): Promise<User[] | undefined> {
+  async findAll(): Promise<UserModel[] | undefined> {
     try {
       return await db.execute({
-        schema: userSchema,
+        schema: userModelSchema,
         query: select().from(this.table),
       });
     } catch (error) {
@@ -31,10 +31,10 @@ class UserService {
     }
   }
 
-  async findOneByUsername(username: string): Promise<User | undefined> {
+  async findOneByUsername(username: string): Promise<UserModel | undefined> {
     try {
       const res = await db.execute({
-        schema: userSchema,
+        schema: userModelSchema,
         query: select().from(this.table).where({ username }),
       });
       return res[0];
@@ -43,15 +43,15 @@ class UserService {
      }
   }
 
-  async createNew(username: string, password: string): Promise<User | undefined> {
+  async createNew(username: string, password: string): Promise<UserModel | undefined> {
     try {
       return await db.execute({
-        schema: userSchema,
+        schema: userModelSchema,
         query: create(this.table).setAll({
           username,
           password,
         }),
-      }) satisfies User;
+      }) satisfies UserModel;
     } catch (error) {
       log.error(error);
     }

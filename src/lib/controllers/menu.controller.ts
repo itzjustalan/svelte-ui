@@ -2,27 +2,31 @@ import { InternalServerError } from "$lib/errors";
 import { categoryService } from "$lib/services/category.service";
 import { menuService } from "$lib/services/menu.service";
 import { menuItemService } from "$lib/services/menuitem.service";
-import type { Category, Menu, MenuItem } from "$lib/zod/models/menu.model";
-import type { CategoryData, MenuData, MenuItemData } from "$lib/zod/schemas/menuitem";
+import type { CategoryModel, MenuModel, MenuItemModel } from "$lib/models/db/menu.model";
+import type { CategoryInput, MenuInput, MenuItemInput } from "$lib/zod/schemas/menuitem";
+import { menuDataSchema, type MenuData } from "$lib/models/data/menu.data";
 
 class MenuController {
-    async createMenu(menuItem: MenuData): Promise<Error | Menu> {
+    async createMenu(menuItem: MenuInput): Promise<Error | MenuModel> {
         return await menuService.createNew(menuItem) ?? new InternalServerError('error creating menu item');
     }
 
-    async getMenus(): Promise<Error | Menu[]> {
-        return await menuService.findAll() ?? new InternalServerError('error getting menu item');
+    async getMenus(): Promise<Error | MenuData[]> {
+        await menuService.findAll2();
+        // await menuService.findAll2(['categories']);
+        return await menuService.findAll<MenuData>(['categories'], menuDataSchema) ?? new InternalServerError('error getting menu item');
+        // return await menuService.findAll() ?? new InternalServerError('error getting menu item');
     }
 
-    async createCategory(category: CategoryData): Promise<Error | Category> {
+    async createCategory(category: CategoryInput): Promise<Error | CategoryModel> {
         return await categoryService.createNew(category) ?? new InternalServerError('error creating category');
     }
 
-    async createMenuItem(menuItem: MenuItemData): Promise<Error | MenuItem> {
+    async createMenuItem(menuItem: MenuItemInput): Promise<Error | MenuItemModel> {
         return await menuItemService.createNew(menuItem) ?? new InternalServerError('error creating menu item');
     }
 
-    async getMenuItems(): Promise<Error | MenuItem[]> {
+    async getMenuItems(): Promise<Error | MenuItemModel[]> {
         return await menuItemService.findAll() ?? new InternalServerError('error creating menu item');
     }
 

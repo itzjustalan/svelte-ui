@@ -1,6 +1,6 @@
 // export { HttpStatusCodes } from "./httpStatusCodes";
 
-import { MenuItemType } from "$lib/zod/models/menu.model";
+import { MenuItemType } from "$lib/models/db/menu.model";
 
 export const getCookieValue = (name: string, cookie: string | null) =>
   cookie?.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || null;

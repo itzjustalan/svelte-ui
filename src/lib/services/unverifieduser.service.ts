@@ -1,5 +1,5 @@
 import { log } from "$lib/logger";
-import { unverifieduserSchema, type Unverifieduser } from "$lib/zod/models/user.model";
+import { unverifieduserModelSchema, type UnverifieduserModel } from "$lib/models/db/user.model";
 import { db } from "$lib/server/db";
 import { delRecord, query, select } from "cirql";
 
@@ -8,10 +8,10 @@ class UnverifiedUserService {
   constructor() {
     this.table = "unverifiedusers";
   }
-  async findOneById(id: string): Promise<Unverifieduser | undefined> {
+  async findOneById(id: string): Promise<UnverifieduserModel | undefined> {
     try {
       const res = await db.execute({
-        schema: unverifieduserSchema,
+        schema: unverifieduserModelSchema,
         query: select().from(this.table).where({ id }),
       });
       return res[0];
@@ -20,10 +20,10 @@ class UnverifiedUserService {
     }
   }
 
-  async findAll(): Promise<Unverifieduser[] | undefined> {
+  async findAll(): Promise<UnverifieduserModel[] | undefined> {
     try {
       return await db.execute({
-        schema: unverifieduserSchema,
+        schema: unverifieduserModelSchema,
         query: select().from(this.table),
       });
     } catch (error) {
@@ -33,10 +33,10 @@ class UnverifiedUserService {
 
   async findOneByUsername(
     username: string,
-  ): Promise<Unverifieduser | undefined> {
+  ): Promise<UnverifieduserModel | undefined> {
     try {
       const res = await db.execute({
-        schema: unverifieduserSchema,
+        schema: unverifieduserModelSchema,
         query: select().from(this.table).where({ username }),
       });
       return res[0];
@@ -49,10 +49,10 @@ class UnverifiedUserService {
     username: string,
     password: string,
     code: string,
-  ): Promise<Unverifieduser | undefined> {
+  ): Promise<UnverifieduserModel | undefined> {
     try {
       const res = await db.execute({
-        schema: unverifieduserSchema,
+        schema: unverifieduserModelSchema,
         query: query(
           `CREATE ${this.table} SET username = $username, password = $password, code = $code, createdAt = time::now();`,
         ),
@@ -68,11 +68,11 @@ class UnverifiedUserService {
     }
   }
 
-  async deleteOneById(id: string): Promise<Unverifieduser | undefined> {
+  async deleteOneById(id: string): Promise<UnverifieduserModel | undefined> {
     try {
       return await db.execute({
         query: delRecord(id),
-        schema: unverifieduserSchema,
+        schema: unverifieduserModelSchema,
       }) ?? undefined;
     } catch (error) {
       log.error(error);

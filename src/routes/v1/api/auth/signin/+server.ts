@@ -2,7 +2,7 @@ import { dev } from "$app/environment";
 import { authController } from "$lib/controllers/auth.controller";
 import { responseFromError } from "$lib/server/utils";
 import { HttpStatusCodes } from "$lib/utils/httpStatusCodes";
-import { authSchema } from "$lib/zod/schemas/user.signup";
+import { authInputSchema } from "$lib/zod/schemas/user.signup";
 import { json } from "@sveltejs/kit";
 import type { CookieSerializeOptions } from "cookie";
 import type { RequestHandler } from "./$types";
@@ -22,7 +22,7 @@ const authCookieAttributes: CookieSerializeOptions = {
 };
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
-    const result = authSchema.safeParse(await request.json());
+    const result = authInputSchema.safeParse(await request.json());
     if (!result.success) return new Response(result.error.toString(), { status: HttpStatusCodes.BadRequest });
     const payload = await authController.signinWithEmail(result.data);
     if (payload instanceof Error) return responseFromError(payload);

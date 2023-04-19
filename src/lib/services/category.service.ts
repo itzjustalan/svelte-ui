@@ -1,8 +1,8 @@
-import { type Category, categorySchema } from "$lib/zod/models/menu.model";
+import { type CategoryModel, categoryModelSchema } from "$lib/models/db/menu.model";
 import { BaseService } from "./base.service";
 
-class CategoryService extends BaseService<Category> {
-    constructor() { super("categories", categorySchema) }
+class CategoryService extends BaseService<CategoryModel> {
+    constructor() { super("categories", categoryModelSchema) }
 }
 
 export const categoryService = new CategoryService();

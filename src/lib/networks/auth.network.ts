@@ -1,10 +1,10 @@
-import { type AuthData, authSchema } from "$lib/zod/schemas/user.signup";
-import type { User } from "$lib/zod/models/user.model";
+import { type AuthInput, authInputSchema } from "$lib/zod/schemas/user.signup";
+import type { UserModel } from "$lib/models/db/user.model";
 import defaultApi from "./apis";
 import { decodeJwt } from "$lib/utils";
 
 interface AuthResponse {
-  user: User;
+  user: UserModel;
   jwt: {
     accessToken: string;
     refreshToken: string;
@@ -20,13 +20,13 @@ class AuthNetwork {
 
   signout = () => clearInterval(this.accessTimeout);
 
-  signup = async (data: AuthData) => {
-    authSchema.parse(data);
+  signup = async (data: AuthInput) => {
+    authInputSchema.parse(data);
     await defaultApi.post<AuthResponse>("v1/api/auth/signup", data);
   }
 
-  signin = async (data: AuthData): Promise<AuthResponse> => {
-    authSchema.parse(data);
+  signin = async (data: AuthInput): Promise<AuthResponse> => {
+    authInputSchema.parse(data);
     const res = await defaultApi.post<AuthResponse>("v1/api/auth/signin", data);
     this.autoRefresh(res.data.jwt.accessToken);
     return res.data;

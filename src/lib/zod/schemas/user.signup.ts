@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-export type AuthData = z.infer<typeof authSchema>;
-export const authSchema = z.object({
+export type AuthInput = z.infer<typeof authInputSchema>;
+export const authInputSchema = z.object({
     username: z.string().max(255).email(),
     password: z.string().min(12).max(255),
 }).strict();

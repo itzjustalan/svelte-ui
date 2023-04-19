@@ -6,12 +6,12 @@ import { nanoid } from "nanoid";
 import { log } from "$lib/logger";
 import { mailService } from "$lib/services/mail.service";
 import { AppError, BadRequestError, InternalServerError } from "$lib/errors";
-import type { User } from "$lib/zod/models/user.model";
+import type { UserModel } from "$lib/models/db/user.model";
 
 class AuthController {
   async signinWithEmail(
     { username, password }: { username: string; password: string },
-  ): Promise<AppError | { user: User; jwt: { accessToken: string; refreshToken: string; }; }> {
+  ): Promise<AppError | { user: UserModel; jwt: { accessToken: string; refreshToken: string; }; }> {
     const user = await userService.findOneByUsername(username);
     if (!user) return new BadRequestError("user not found");
     if (!await compareHash(password, user.password)) {
@@ -59,7 +59,7 @@ class AuthController {
 
   async verifyEmail(
     { uid, code }: { uid: string; code: string },
-  ): Promise<AppError | { user: User; jwt: { accessToken: string; refreshToken: string; }; }> {
+  ): Promise<AppError | { user: UserModel; jwt: { accessToken: string; refreshToken: string; }; }> {
     //todo: show already verified?? but that would err out if the user opens the link twice..
     const user = await unverifiedUserService.findOneById(uid);
     if (!user) return new BadRequestError("invalid link");
@@ -76,7 +76,7 @@ class AuthController {
     };
   }
 
-  async refreshTokens(refreshToken: string): Promise<AppError | { user: User; jwt: { accessToken: string; refreshToken: string; }; }> {
+  async refreshTokens(refreshToken: string): Promise<AppError | { user: UserModel; jwt: { accessToken: string; refreshToken: string; }; }> {
     try {
       const decodedToken = verifyRefreshToken<JwtPayload>(refreshToken);
       // if (Date.now() >= decodedToken.exp! * 1000) return new BadRequestError('token expired');

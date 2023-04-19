@@ -1,11 +1,11 @@
 import type { z } from "zod";
-import { categorySchema, menuItemSchema, menuSchema } from "../models/menu.model";
+import { categoryModelSchema, menuItemModelSchema, menuModelSchema } from "../../models/db/menu.model";
 
-export type MenuData = z.infer<typeof menuDataSchema>;
-export const menuDataSchema = menuSchema.omit({ id: true });
+export type MenuInput = z.infer<typeof menuInputSchema>;
+export const menuInputSchema = menuModelSchema.omit({ id: true });
 
-export type CategoryData = z.infer<typeof categoryDataSchema>;
-export const categoryDataSchema = categorySchema.omit({ id: true });
+export type CategoryInput = z.infer<typeof categoryInputSchema>;
+export const categoryInputSchema = categoryModelSchema.omit({ id: true });
 
-export type MenuItemData = z.infer<typeof menuItemDataSchema>;
-export const menuItemDataSchema = menuItemSchema.omit({ id: true });
+export type MenuItemInput = z.infer<typeof menuItemInputSchema>;
+export const menuItemInputSchema = menuItemModelSchema.omit({ id: true });
