@@ -1,0 +1,47 @@
+{
+    "menus": [
+        {
+            "id": "menus:seed_menu_1",
+            "title": "menu one",
+            "categories": [
+                "categories:seed_cat_1",
+                "categories:seed_cat_2"
+            ]
+        },
+        {
+            "id": "menus:seed_menu_2",
+            "title": "menu two",
+            "categories": [
+                "categories:seed_cat_1"
+            ]
+        }
+    ],
+    "categories": [
+        {
+            "id": "categories:seed_cat_1",
+            "title": "seed cat one",
+            "items": []
+        },
+        {
+            "id": "categories:seed_cat_2",
+            "title": "seed cat two",
+            "items": []
+        }
+    ],
+    "menuItems": [
+        {
+            "id": "menuitems:menu_item_1",
+            "description": "nalla menu item",
+            "itemType": "non_vegetarian",
+            "price": 0,
+            "title": "chicken biriyani"
+        },
+        {
+            "id": "menuitems:menu_item_2",
+            "description": "nalla menu item",
+            "itemType": "vegetarian",
+            "price": 0,
+            "title": "vada"
+        }
+    ]
+}

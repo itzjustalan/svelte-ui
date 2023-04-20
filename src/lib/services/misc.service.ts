@@ -11,7 +11,7 @@ class MiscService extends BaseService<MiscModel> {
 	constructor() {
 		super('miscellaneous', miscModelSchema);
 	}
-	async getAppData() {
+	async getAppData(): Promise<undefined | MiscModel> {
 		try {
 			const res = await db.execute({
 				schema: this.tableschema,
@@ -22,28 +22,12 @@ class MiscService extends BaseService<MiscModel> {
 			log.error(error);
 		}
 	}
-	async setAppData(seeded: boolean) {
+	async setAppData({ seeded }: { seeded: boolean }) {
 		try {
 			await this.createOrUpdate({
 				id: MiscIds.appdata,
 				seeded
 			});
-			// const appdata = await miscService.getAppData();
-			// if (!appdata)
-			// 	await db.execute({
-			// 		schema: this.tableschema,
-			// 		query: create(this.tablename).setAll({
-			// 			seeded,
-			// 			id: MiscIds.appdata
-			// 		})
-			// 	});
-			// const res = await db.execute({
-			// 	schema: this.tableschema,
-			// 	query: update(this.tablename)
-			// 		.where({ id: MiscIds.appdata })
-			// 		.setAll({ seeded, id: MiscIds.appdata })
-			// });
-			// return res[0];
 		} catch (error) {
 			log.error('ee:', error);
 		}

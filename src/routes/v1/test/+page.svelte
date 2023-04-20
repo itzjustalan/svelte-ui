@@ -63,6 +63,7 @@
 	};
 	const createCategory = async (title: string) => await $category.mutateAsync({ title, items: [] });
 	const createNewMenu = async () => {
+		log.info("Okj")
 		let cat = (await createCategory('default_category')).data;
 		$menu.mutate({ title: 'default_menu', categories: [cat.id] });
 	};

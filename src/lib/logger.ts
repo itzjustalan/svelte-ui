@@ -51,6 +51,10 @@ export const log = {
 	info: (...d: any[]) => handleLog(LogLevel.info, ...d),
 	warn: (...d: any[]) => handleLog(LogLevel.warn, ...d),
 	error: (...d: any[]) => handleLog(LogLevel.error, ...d),
+	db_log: (...d: any[]) => {
+		if (skiplog(LogLevel.info)) return;
+		console.log(Colors.FgMagenta, ...d, Colors.Reset);
+	},
 	cl_req: (method: string, path: string, data: unknown) => {
 		if (skiplog(LogLevel.info)) return;
 		console.info(`🚀 ${method.toUpperCase()} ${path}`, data);

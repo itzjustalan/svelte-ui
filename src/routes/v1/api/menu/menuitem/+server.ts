@@ -1,11 +1,11 @@
 import { menuController } from '$lib/controllers/menu.controller';
 import { responseFromError } from '$lib/server/utils';
-import { menuItemDataSchema } from '$lib/models/input/menuitem';
+import { menuItemInputSchema } from '$lib/models/input/menuitem';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request }) => {
-	const result = menuItemDataSchema.safeParse({ ...(await request.json()) });
+	const result = menuItemInputSchema.safeParse({ ...(await request.json()) });
 	if (!result.success) return responseFromError(result.error);
 	const error = await menuController.createMenuItem(result.data);
 	if (error instanceof Error) return responseFromError(error);

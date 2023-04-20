@@ -32,7 +32,8 @@ export async function conectDB() {
 				pass: SURREALDB_PASS
 			},
 			autoConnect: true,
-			logging: dev
+			logging: dev,
+			logPrinter: log.db_log
 		});
 		await withTimeout(db.ready(), 'db connection timed out');
 		if (dev) global.surrealdb = db;
