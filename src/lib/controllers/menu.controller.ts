@@ -14,7 +14,7 @@ class MenuController {
 	}
 
 	async getMenus(): Promise<Error | MenuData[]> {
-		await menuService.findAll2();
+		// await menuService.findAll();
 		// await menuService.findAll2(['categories']);
 		return (
 			(await menuService.findAll<MenuData>(['categories'], menuDataSchema)) ??

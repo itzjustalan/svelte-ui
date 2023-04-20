@@ -8,6 +8,7 @@ seedDataDevMode();
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const start = performance.now();
+	seedDataDevMode();
 	const theme = event.cookies.get('app-theme') ?? 'light';
 	// passport.authenticate('jwt', { session: false });
 	const response: Response = await resolve(event, {
