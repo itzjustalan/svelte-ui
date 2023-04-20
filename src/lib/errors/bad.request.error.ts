@@ -1,5 +1,5 @@
-import { HttpStatusCodes } from "$lib/utils/httpStatusCodes";
-import { AppError } from "./app.error";
+import { HttpStatusCodes } from '$lib/utils/httpStatusCodes';
+import { AppError } from './app.error';
 
 export class BadRequestError extends AppError {
     constructor(

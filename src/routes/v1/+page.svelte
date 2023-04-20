@@ -1,17 +1,17 @@
 <script lang="ts">
-	import Counter from "./Counter.svelte";
-	import welcome from "$lib/images/svelte-welcome.webp";
-	import welcome_fallback from "$lib/images/svelte-welcome.png";
-	import { createQuery, useQueryClient } from "@tanstack/svelte-query";
-	import { getPosts, type Post } from "$lib/networks/test.network";
+	import Counter from './Counter.svelte';
+	import welcome from '$lib/images/svelte-welcome.webp';
+	import welcome_fallback from '$lib/images/svelte-welcome.png';
+	import { createQuery, useQueryClient } from '@tanstack/svelte-query';
+	import { getPosts, type Post } from '$lib/networks/test.network';
 
 	const client = useQueryClient();
 	let limit = 10;
 	// This data is cached by prefetchQuery in +page.ts
 	// so no fetch actually happens here
 	$: posts = createQuery<Post[], Error>({
-		queryKey: ["posts", limit],
-		queryFn: () => getPosts(limit),
+		queryKey: ['posts', limit],
+		queryFn: () => getPosts(limit)
 	});
 </script>
 
@@ -21,36 +21,33 @@
 </svelte:head>
 
 <section>
-	<input type=range bind:value={limit} min=0 max=100>
+	<input type="range" bind:value={limit} min="0" max="100" />
 	{#if $posts.status === 'loading'}
-      <span>Loading...</span>
-    {:else if $posts.status === 'error'}
-      <span>Error: {$posts.error.message}</span>
-    {:else}
-      <ul>
-        {#each $posts.data as post, index}
-          <article>
-			{++index}.
-            <a
-              href={`/v1/posts/${post.id}`}
-              style={// We can use the queryCache here to show bold links for
-              // ones that are cached
-              client.getQueryData(['post', post.id])
-                ? 'font-weight: bold; color: indigo'
-                : 'cursor: pointer'}
-            >
-              {post.title}
-            </a>
-          </article>
-        {/each}
-      </ul>
-      {#if $posts.isFetching}
-        <div style="color:darkgreen; font-weight:700">
-          Background Updating...
-        </div>
-      {/if}
-    {/if}
-
+		<span>Loading...</span>
+	{:else if $posts.status === 'error'}
+		<span>Error: {$posts.error.message}</span>
+	{:else}
+		<ul>
+			{#each $posts.data as post, index}
+				<article>
+					{++index}.
+					<a
+						href={`/v1/posts/${post.id}`}
+						style={// We can use the queryCache here to show bold links for
+						// ones that are cached
+						client.getQueryData(['post', post.id])
+							? 'font-weight: bold; color: indigo'
+							: 'cursor: pointer'}
+					>
+						{post.title}
+					</a>
+				</article>
+			{/each}
+		</ul>
+		{#if $posts.isFetching}
+			<div style="color:darkgreen; font-weight:700">Background Updating...</div>
+		{/if}
+	{/if}
 
 	<h1>
 		<span class="welcome">

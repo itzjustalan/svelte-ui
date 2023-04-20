@@ -1,6 +1,6 @@
-import { dev } from "$app/environment";
-import { genHash } from "$lib/server/utils";
-import { userService } from "$lib/services/user.service";
+import { dev } from '$app/environment';
+import { genHash } from '$lib/server/utils';
+import { userService } from '$lib/services/user.service';
 
 export const seedDataDevMode = async () => {
     if (!dev) {

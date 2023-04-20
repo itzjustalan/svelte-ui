@@ -12,13 +12,13 @@ interface AuthResponse {
 }
 
 class AuthNetwork {
-  accessTimeout: NodeJS.Timeout | undefined;
+	accessTimeout: NodeJS.Timeout | undefined;
 
-  // refresh = async () => await defaultApi.get('v1/api/auth/refresh');
-  // signin = async (data: AuthData): Promise<AuthResponse> =>
-  //   (await defaultApi.post("v1/api/auth/signin", authSchema.parse(data))).data;
+	// refresh = async () => await defaultApi.get('v1/api/auth/refresh');
+	// signin = async (data: AuthData): Promise<AuthResponse> =>
+	//   (await defaultApi.post("v1/api/auth/signin", authSchema.parse(data))).data;
 
-  signout = () => clearInterval(this.accessTimeout);
+	signout = () => clearInterval(this.accessTimeout);
 
   signup = async (data: AuthInput) => {
     authInputSchema.parse(data);
@@ -32,20 +32,17 @@ class AuthNetwork {
     return res.data;
   };
 
-  refresh = async (): Promise<AuthResponse> => {
-    const response = await defaultApi.get<AuthResponse>("v1/api/auth/refresh");
-    this.autoRefresh(response.data.jwt.accessToken);
-    return response.data;
-  };
+	refresh = async (): Promise<AuthResponse> => {
+		const response = await defaultApi.get<AuthResponse>('v1/api/auth/refresh');
+		this.autoRefresh(response.data.jwt.accessToken);
+		return response.data;
+	};
 
-  autoRefresh = (accessToken: string) => {
-    const decodedToken = decodeJwt(accessToken);
-    clearTimeout(this.accessTimeout);
-    this.accessTimeout = setTimeout(
-      this.refresh,
-      (decodedToken.exp - decodedToken.iat) * 1000,
-    );
-  }
+	autoRefresh = (accessToken: string) => {
+		const decodedToken = decodeJwt(accessToken);
+		clearTimeout(this.accessTimeout);
+		this.accessTimeout = setTimeout(this.refresh, (decodedToken.exp - decodedToken.iat) * 1000);
+	};
 }
 
 export const authNetwork = new AuthNetwork();

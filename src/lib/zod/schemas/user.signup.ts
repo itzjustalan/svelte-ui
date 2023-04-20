@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export type AuthInput = z.infer<typeof authInputSchema>;
 export const authInputSchema = z.object({

@@ -24,38 +24,42 @@ class AuthController {
     };
   }
 
-  // async signupWithEmail(credentials: Credentials): Promise<User | string> {
-  async signupWithEmail(
-    { username, password, host }: {
-      username: string;
-      password: string;
-      host: string;
-    },
-  ): Promise<undefined | AppError> {
-    if (await unverifiedUserService.findOneByUsername(username)) {
-      return new BadRequestError('email already taken');
-    } else if (await userService.findOneByUsername(username)) {
-      return new BadRequestError('email already taken');
-    }
-    log.info('say whaaa')
-    const code = nanoid(32);
-    const pwhash = await genHash(password);
-    const user = await unverifiedUserService.createNew(username, pwhash, code);
-    if (!user) return new InternalServerError("error registering user");
-    const url = `${host}/v1/auth/verify/${user.id}/${code}`;
-    if (dev) {
-      log.info("verification email:", url);
-    } else {
-      mailService.sendMail({
-        to: [user.username],
-        sub: "Email verification from CPDBytes.com",
-        body: emailVerificationTemplate(url),
-      }).then((res) => log.info(res));
-    }
-    // dsf.com/auth/verify/[:id]/token
-    //todo: return jwt after email verification
-    return;
-  }
+	// async signupWithEmail(credentials: Credentials): Promise<User | string> {
+	async signupWithEmail({
+		username,
+		password,
+		host
+	}: {
+		username: string;
+		password: string;
+		host: string;
+	}): Promise<undefined | AppError> {
+		if (await unverifiedUserService.findOneByUsername(username)) {
+			return new BadRequestError('email already taken');
+		} else if (await userService.findOneByUsername(username)) {
+			return new BadRequestError('email already taken');
+		}
+		log.info('say whaaa');
+		const code = nanoid(32);
+		const pwhash = await genHash(password);
+		const user = await unverifiedUserService.createNew(username, pwhash, code);
+		if (!user) return new InternalServerError('error registering user');
+		const url = `${host}/v1/auth/verify/${user.id}/${code}`;
+		if (dev) {
+			log.info('verification email:', url);
+		} else {
+			mailService
+				.sendMail({
+					to: [user.username],
+					sub: 'Email verification from CPDBytes.com',
+					body: emailVerificationTemplate(url)
+				})
+				.then((res) => log.info(res));
+		}
+		// dsf.com/auth/verify/[:id]/token
+		//todo: return jwt after email verification
+		return;
+	}
 
   async verifyEmail(
     { uid, code }: { uid: string; code: string },
@@ -97,7 +101,7 @@ class AuthController {
 export const authController = new AuthController();
 
 const emailVerificationTemplate = (url: string): string => {
-  return `
+	return `
   <!DOCTYPE html>
   <html>
   <head></head>

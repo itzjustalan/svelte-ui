@@ -110,7 +110,7 @@ button:focus:not(:focus-visible) {
 	--th-cl: rgb(220, 254, 220);
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
 	--th-cl: rgb(161, 160, 161);
 }
 

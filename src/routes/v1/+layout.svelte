@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Header from "./Header.svelte";
-	import "./styles.css";
+	import Header from './Header.svelte';
+	import './styles.css';
 
-	import { QueryClientProvider } from "@tanstack/svelte-query";
-	import type { LayoutData } from "./$types";
+	import { QueryClientProvider } from '@tanstack/svelte-query';
+	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
 </script>
