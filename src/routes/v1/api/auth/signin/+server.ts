@@ -1,11 +1,11 @@
-import { dev } from "$app/environment";
-import { authController } from "$lib/controllers/auth.controller";
-import { responseFromError } from "$lib/server/utils";
-import { HttpStatusCodes } from "$lib/utils/httpStatusCodes";
-import { authInputSchema } from "$lib/zod/schemas/user.signup";
-import { json } from "@sveltejs/kit";
-import type { CookieSerializeOptions } from "cookie";
-import type { RequestHandler } from "./$types";
+import { dev } from '$app/environment';
+import { authController } from '$lib/controllers/auth.controller';
+import { responseFromError } from '$lib/server/utils';
+import { HttpStatusCodes } from '$lib/utils/httpStatusCodes';
+import { authInputSchema } from '$lib/models/input/user.signup';
+import { json } from '@sveltejs/kit';
+import type { CookieSerializeOptions } from 'cookie';
+import type { RequestHandler } from './$types';
 
 const authCookieAttributes: CookieSerializeOptions = {
 	// send cookie for every page
@@ -22,11 +22,15 @@ const authCookieAttributes: CookieSerializeOptions = {
 };
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
-    const result = authInputSchema.safeParse(await request.json());
-    if (!result.success) return new Response(result.error.toString(), { status: HttpStatusCodes.BadRequest });
-    const payload = await authController.signinWithEmail(result.data);
-    if (payload instanceof Error) return responseFromError(payload);
-    cookies.set('access-token', payload.jwt.accessToken, { ...authCookieAttributes, maxAge: 3600 });
-    cookies.set('refresh-token', payload.jwt.refreshToken, { ...authCookieAttributes, maxAge: 50400 });
-    return json(payload);
+	const result = authInputSchema.safeParse(await request.json());
+	if (!result.success)
+		return new Response(result.error.toString(), { status: HttpStatusCodes.BadRequest });
+	const payload = await authController.signinWithEmail(result.data);
+	if (payload instanceof Error) return responseFromError(payload);
+	cookies.set('access-token', payload.jwt.accessToken, { ...authCookieAttributes, maxAge: 3600 });
+	cookies.set('refresh-token', payload.jwt.refreshToken, {
+		...authCookieAttributes,
+		maxAge: 50400
+	});
+	return json(payload);
 };

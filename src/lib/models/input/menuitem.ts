@@ -1,5 +1,5 @@
-import type { z } from "zod";
-import { categoryModelSchema, menuItemModelSchema, menuModelSchema } from "../../models/db/menu.model";
+import type { z } from 'zod';
+import { categoryModelSchema, menuItemModelSchema, menuModelSchema } from '../db/menu.model';
 
 export type MenuInput = z.infer<typeof menuInputSchema>;
 export const menuInputSchema = menuModelSchema.omit({ id: true });

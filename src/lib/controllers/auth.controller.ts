@@ -1,28 +1,38 @@
-import { dev } from "$app/environment";
-import { compareHash, genHash, genJwts, verifyRefreshToken, type JwtPayload } from "$lib/server/utils";
-import { userService } from "$lib/services/user.service";
-import { unverifiedUserService } from "$lib/services/unverifieduser.service";
-import { nanoid } from "nanoid";
-import { log } from "$lib/logger";
-import { mailService } from "$lib/services/mail.service";
-import { AppError, BadRequestError, InternalServerError } from "$lib/errors";
-import type { UserModel } from "$lib/models/db/user.model";
+import { dev } from '$app/environment';
+import {
+	compareHash,
+	genHash,
+	genJwts,
+	verifyRefreshToken,
+	type JwtPayload
+} from '$lib/server/utils';
+import { userService } from '$lib/services/user.service';
+import { unverifiedUserService } from '$lib/services/unverifieduser.service';
+import { nanoid } from 'nanoid';
+import { log } from '$lib/logger';
+import { mailService } from '$lib/services/mail.service';
+import { AppError, BadRequestError, InternalServerError } from '$lib/errors';
+import type { UserModel } from '$lib/models/db/user.model';
 
 class AuthController {
-  async signinWithEmail(
-    { username, password }: { username: string; password: string },
-  ): Promise<AppError | { user: UserModel; jwt: { accessToken: string; refreshToken: string; }; }> {
-    const user = await userService.findOneByUsername(username);
-    if (!user) return new BadRequestError("user not found");
-    if (!await compareHash(password, user.password)) {
-      return new BadRequestError("invalid credentials");
-    }
-    const payload = { uid: user.id, role: "etho-oru-role" };
-    return {
-      user: { ...user, password: "" },
-      jwt: genJwts(payload),
-    };
-  }
+	async signinWithEmail({
+		username,
+		password
+	}: {
+		username: string;
+		password: string;
+	}): Promise<AppError | { user: UserModel; jwt: { accessToken: string; refreshToken: string } }> {
+		const user = await userService.findOneByUsername(username);
+		if (!user) return new BadRequestError('user not found');
+		if (!(await compareHash(password, user.password))) {
+			return new BadRequestError('invalid credentials');
+		}
+		const payload = { uid: user.id, role: 'etho-oru-role' };
+		return {
+			user: { ...user, password: '' },
+			jwt: genJwts(payload)
+		};
+	}
 
 	// async signupWithEmail(credentials: Credentials): Promise<User | string> {
 	async signupWithEmail({
@@ -61,41 +71,48 @@ class AuthController {
 		return;
 	}
 
-  async verifyEmail(
-    { uid, code }: { uid: string; code: string },
-  ): Promise<AppError | { user: UserModel; jwt: { accessToken: string; refreshToken: string; }; }> {
-    //todo: show already verified?? but that would err out if the user opens the link twice..
-    const user = await unverifiedUserService.findOneById(uid);
-    if (!user) return new BadRequestError("invalid link");
-    const time2hrAgo = Date.now() - (1000 * 60 * 60 * 2);
-    if (user.createdAt.getTime() < time2hrAgo) return new BadRequestError("link expired!");
-    if (code !== user.code) return new BadRequestError("invalid link");
-    const nuser = await userService.createNew(user.username, user.password);
-    if (!nuser) return new InternalServerError("error creating user");
-    await unverifiedUserService.deleteOneById(user.id);
-    const payload = { uid: user.id, role: "etho-oru-role" };
-    return {
-      user: { ...nuser, password: "" },
-      jwt: genJwts(payload),
-    };
-  }
+	async verifyEmail({
+		uid,
+		code
+	}: {
+		uid: string;
+		code: string;
+	}): Promise<AppError | { user: UserModel; jwt: { accessToken: string; refreshToken: string } }> {
+		//todo: show already verified?? but that would err out if the user opens the link twice..
+		const user = await unverifiedUserService.findOneById(uid);
+		if (!user) return new BadRequestError('invalid link');
+		const time2hrAgo = Date.now() - 1000 * 60 * 60 * 2;
+		if (user.createdAt.getTime() < time2hrAgo) return new BadRequestError('link expired!');
+		if (code !== user.code) return new BadRequestError('invalid link');
+		const nuser = await userService.createNew(user.username, user.password);
+		if (!nuser) return new InternalServerError('error creating user');
+		await unverifiedUserService.deleteOneById(user.id);
+		const payload = { uid: user.id, role: 'etho-oru-role' };
+		return {
+			user: { ...nuser, password: '' },
+			jwt: genJwts(payload)
+		};
+	}
 
-  async refreshTokens(refreshToken: string): Promise<AppError | { user: UserModel; jwt: { accessToken: string; refreshToken: string; }; }> {
-    try {
-      const decodedToken = verifyRefreshToken<JwtPayload>(refreshToken);
-      // if (Date.now() >= decodedToken.exp! * 1000) return new BadRequestError('token expired');
-      if (!decodedToken.exp || Date.now() >= decodedToken.exp * 1000) return new BadRequestError('token expired');
-      const user = await userService.findOneById(decodedToken.uid)
-      if (!user) return new BadRequestError('invalid token')
-      const payload = { uid: user.id, role: "etho-oru-role" };
-      return {
-        user: { ...user, password: "" },
-        jwt: genJwts(payload),
-      };
-    } catch (e: any) {
-      return new BadRequestError(e.message);
-    }
-  }
+	async refreshTokens(
+		refreshToken: string
+	): Promise<AppError | { user: UserModel; jwt: { accessToken: string; refreshToken: string } }> {
+		try {
+			const decodedToken = verifyRefreshToken<JwtPayload>(refreshToken);
+			// if (Date.now() >= decodedToken.exp! * 1000) return new BadRequestError('token expired');
+			if (!decodedToken.exp || Date.now() >= decodedToken.exp * 1000)
+				return new BadRequestError('token expired');
+			const user = await userService.findOneById(decodedToken.uid);
+			if (!user) return new BadRequestError('invalid token');
+			const payload = { uid: user.id, role: 'etho-oru-role' };
+			return {
+				user: { ...user, password: '' },
+				jwt: genJwts(payload)
+			};
+		} catch (e: any) {
+			return new BadRequestError(e.message);
+		}
+	}
 }
 
 export const authController = new AuthController();
