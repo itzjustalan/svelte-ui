@@ -25,6 +25,11 @@ export const seedDataDevMode = async () => {
 	if (!dev) {
 		return;
 	}
-	await miscService.setAppData();
+	if (await miscService.getAppData()) {
+		log.warn('seed found! aborting...');
+		return;
+	}
+	log.warn('seeding db!!');
 	await gen_users();
+	await miscService.setAppData(true);
 };

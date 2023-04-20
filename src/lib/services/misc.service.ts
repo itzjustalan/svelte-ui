@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 
-import { select, update, updateRecord } from 'cirql';
+import { create, select, update, updateRecord } from 'cirql';
 import { BaseService } from './base.service';
 import { log } from '$lib/logger';
 import { z } from 'zod';
@@ -22,17 +22,30 @@ class MiscService extends BaseService<MiscModel> {
 			log.error(error);
 		}
 	}
-	async setAppData() {
+	async setAppData(seeded: boolean) {
 		try {
-			log.warn(2222);
-			const res = await db.execute({
-				schema: this.tableschema,
-				query: update(this.tablename).where({ id: MiscIds.appdata }).set('seeded', true)
+			await this.createOrUpdate({
+				id: MiscIds.appdata,
+				seeded
 			});
-			log.info(res);
-			return res[0];
+			// const appdata = await miscService.getAppData();
+			// if (!appdata)
+			// 	await db.execute({
+			// 		schema: this.tableschema,
+			// 		query: create(this.tablename).setAll({
+			// 			seeded,
+			// 			id: MiscIds.appdata
+			// 		})
+			// 	});
+			// const res = await db.execute({
+			// 	schema: this.tableschema,
+			// 	query: update(this.tablename)
+			// 		.where({ id: MiscIds.appdata })
+			// 		.setAll({ seeded, id: MiscIds.appdata })
+			// });
+			// return res[0];
 		} catch (error) {
-			log.error(error);
+			log.error('ee:', error);
 		}
 	}
 }

@@ -30,7 +30,9 @@ export async function conectDB() {
 			credentials: {
 				user: SURREALDB_USER,
 				pass: SURREALDB_PASS
-			}
+			},
+			autoConnect: true,
+			logging: dev
 		});
 		await withTimeout(db.ready(), 'db connection timed out');
 		if (dev) global.surrealdb = db;
