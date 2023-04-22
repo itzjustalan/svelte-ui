@@ -10,9 +10,9 @@ export const load: LayoutLoad = async (input) => {
 	const queryClient = new QueryClient({
 		defaultOptions: {
 			queries: {
-				enabled: browser
-			}
-		}
+				enabled: browser,
+			},
+		},
 	});
 	if (input.url.pathname.startsWith('/v1/protected')) {
 		log.error('prtd!! redirectingg');

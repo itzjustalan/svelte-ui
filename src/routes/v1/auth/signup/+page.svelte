@@ -13,7 +13,7 @@
 		mutationFn: authNetwork.signup,
 		onSuccess(data, variables, context) {
 			console.log('signup succse', data, variables, context);
-		}
+		},
 	});
 	const handleSignup = (e: Event) => {
 		e.preventDefault();

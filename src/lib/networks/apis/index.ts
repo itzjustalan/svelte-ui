@@ -5,7 +5,7 @@ import axios, { type AxiosInstance } from 'axios';
 
 const defaultApi: AxiosInstance = axios.create({
 	baseURL: PUBLIC_ADMIN_API_URL,
-	withCredentials: true
+	withCredentials: true,
 });
 
 defaultApi.defaults.headers.common['Content-Type'] = 'application/json';

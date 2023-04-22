@@ -8,7 +8,7 @@ export const load: PageLoad = async ({ parent, params }) => {
 
 	await queryClient.prefetchQuery({
 		queryKey: ['post', postId],
-		queryFn: () => getPostById(postId)
+		queryFn: () => getPostById(postId),
 	});
 
 	return { postId };

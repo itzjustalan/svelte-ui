@@ -1,7 +1,5 @@
 // export { HttpStatusCodes } from "./httpStatusCodes";
 
-import { MenuItemType } from '$lib/models/db/menu.model';
-
 export const getCookieValue = (name: string, cookie: string | null) =>
 	cookie?.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || null;
 
@@ -34,15 +32,15 @@ export const decodeJwt = (token: string): JwtPayload => {
 	return JSON.parse(jsonPayload) as JwtPayload;
 };
 
-export const prettyPrintMenuItemType = (itemType: MenuItemType) => {
-	switch (itemType) {
-		case MenuItemType.veg:
-			return 'Vegetarian';
-		case MenuItemType.halal:
-			return 'Halal';
-		case MenuItemType.nonVeg:
-			return 'Non Vegetarian';
-		default:
-			return 'Not Specified';
-	}
-};
+// export const prettyPrintMenuItemType = (itemType: MenuItemType) => {
+// 	switch (itemType) {
+// 		case MenuItemType.veg:
+// 			return 'Vegetarian';
+// 		case MenuItemType.halal:
+// 			return 'Halal';
+// 		case MenuItemType.nonVeg:
+// 			return 'Non Vegetarian';
+// 		default:
+// 			return 'Not Specified';
+// 	}
+// };

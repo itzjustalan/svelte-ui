@@ -9,7 +9,7 @@ const config = {
 	smtp: { host: 'smtp.ethereal.email', port: 587, secure: false },
 	imap: { host: 'imap.ethereal.email', port: 993, secure: true },
 	pop3: { host: 'pop3.ethereal.email', port: 995, secure: true },
-	web: 'https://ethereal.email'
+	web: 'https://ethereal.email',
 };
 
 class MailService {
@@ -23,8 +23,8 @@ class MailService {
 			service: 'gmail',
 			auth: {
 				user: 'dinersbyte@gmail.com',
-				pass: 'rszeaurjsmfzyxvo'
-			}
+				pass: 'rszeaurjsmfzyxvo',
+			},
 
 			// host: "smtp.ethereal.email",
 			// port: 587,
@@ -49,7 +49,7 @@ class MailService {
 				from: this.from,
 				to: dev ? this.to : to,
 				subject: sub,
-				html: body
+				html: body,
 			});
 			return res;
 		} catch (error) {
@@ -63,7 +63,7 @@ class MailService {
 			to: ['alankjohn314@gmail.com', 'adwaith@duck.com', 'muhammed.rmcab2023@saintgits.org'],
 			subject: 'Email verification from CPDBytes.com',
 			text: 'text',
-			html: '<h1>ni chooper aada</h1>'
+			html: '<h1>ni chooper aada</h1>',
 		});
 		log.info('mail sent!', res);
 		log.error(nodemailer.getTestMessageUrl(res));

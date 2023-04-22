@@ -15,7 +15,7 @@ class MiscService extends BaseService<MiscModel> {
 		try {
 			const res = await db.execute({
 				schema: this.tableschema,
-				query: select().from(this.tablename).where({ id: MiscIds.appdata })
+				query: select().from(this.tablename).where({ id: MiscIds.appdata }),
 			});
 			return res[0];
 		} catch (error) {
@@ -26,7 +26,7 @@ class MiscService extends BaseService<MiscModel> {
 		try {
 			await this.createOrUpdate({
 				id: MiscIds.appdata,
-				seeded
+				seeded,
 			});
 		} catch (error) {
 			log.error('ee:', error);

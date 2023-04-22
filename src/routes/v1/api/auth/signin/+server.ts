@@ -18,7 +18,7 @@ const authCookieAttributes: CookieSerializeOptions = {
 	// only sent over HTTPS in production
 	secure: !dev,
 	// set cookie to expire after a month
-	maxAge: 3600
+	maxAge: 3600,
 };
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
@@ -30,7 +30,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 	cookies.set('access-token', payload.jwt.accessToken, { ...authCookieAttributes, maxAge: 3600 });
 	cookies.set('refresh-token', payload.jwt.refreshToken, {
 		...authCookieAttributes,
-		maxAge: 50400
+		maxAge: 50400,
 	});
 	return json(payload);
 };

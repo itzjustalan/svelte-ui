@@ -4,7 +4,7 @@ export const jwtStrategy = new Strategy(
 	{
 		jwtFromRequest: ExtractJwt.fromHeader('auth'),
 		secretOrKey: 'chooper-secret',
-		issuer: 'cpdbytes.com'
+		issuer: 'cpdbytes.com',
 	},
 	(jwt, done) => {
 		// verify jwt

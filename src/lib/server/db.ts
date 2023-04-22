@@ -5,7 +5,7 @@ import {
 	SURREALDB_DB,
 	SURREALDB_URL,
 	SURREALDB_USER,
-	SURREALDB_PASS
+	SURREALDB_PASS,
 } from '$env/static/private';
 import { dev } from '$app/environment';
 import { log } from '$lib/logger';
@@ -25,15 +25,15 @@ export async function conectDB() {
 			connection: {
 				endpoint: SURREALDB_URL,
 				namespace: SURREALDB_NS,
-				database: SURREALDB_DB
+				database: SURREALDB_DB,
 			},
 			credentials: {
 				user: SURREALDB_USER,
-				pass: SURREALDB_PASS
+				pass: SURREALDB_PASS,
 			},
 			autoConnect: true,
 			logging: dev,
-			logPrinter: log.db_log
+			logPrinter: log.db_log,
 		});
 		await withTimeout(db.ready(), 'db connection timed out');
 		if (dev) global.surrealdb = db;

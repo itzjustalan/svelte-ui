@@ -1,18 +1,26 @@
 <script lang="ts">
 	import { log } from '$lib/logger';
 	import { menuNetwork } from '$lib/networks/menu.network';
-	import { prettyPrintMenuItemType } from '$lib/utils';
-	import { MenuItemType, type MenuItemModel, type MenuModel } from '$lib/models/db/menu.model';
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
-	import { menuItemInputSchema, type MenuItemInput } from '$lib/models/input/menuitem';
+	import {
+		menuItemInputSchema,
+		type MenuItemInput,
+		type MenuItemTypeInput,
+		menuItemTypeInputSchema,
+	} from '$lib/models/input/menu';
 	import type { MenuData } from '$lib/models/data/menu.data';
+	import type { MenuItemModel, MenuItemTypeModel } from '$lib/models/db/menu.model';
 
 	let selectedMenu: MenuData;
 	let newItem: MenuItemInput = {
 		title: '',
 		description: '',
 		price: 0,
-		itemType: MenuItemType.veg
+		itemType: [],
+	};
+	let newItemType: MenuItemTypeInput = {
+		title: '',
+		description: '',
 	};
 	const client = useQueryClient();
 	const menu = createMutation({
@@ -20,50 +28,72 @@
 		mutationFn: menuNetwork.createMenu,
 		onSuccess: () => {
 			client.invalidateQueries({
-				queryKey: ['menus']
+				queryKey: ['menus'],
 			});
-		}
+		},
 	});
 	const category = createMutation({
 		mutationKey: ['category'],
-		mutationFn: menuNetwork.createCategory
-		// onSuccess: () => {
-		//   client.invalidateQueries({
-		//     //todo: and selected menu?
-		//     queryKey: ["menus"],
-		//   });
-		// },
+		mutationFn: menuNetwork.createCategory,
+		onSuccess: () => {
+			client.invalidateQueries({
+				//todo: and selected menu?
+				queryKey: ['menus'],
+			});
+		},
 	});
 	const menuItem = createMutation({
-		mutationKey: ['menuitem'],
+		mutationKey: ['create', 'menuitem'],
 		mutationFn: menuNetwork.createMenuItem,
 		onSuccess: () => {
 			client.invalidateQueries({
-				queryKey: ['menuitems']
+				queryKey: ['menuitems'],
 			});
-		}
+		},
+	});
+	const menuItemType = createMutation({
+		mutationKey: ['create', 'menuitemtype'],
+		mutationFn: menuNetwork.createMenuItemType,
+		onSuccess: () => {
+			client.invalidateQueries({
+				queryKey: ['menuitemtypes'],
+			});
+		},
+	});
+	const menuItemTypes = createQuery<MenuItemTypeModel[], Error>({
+		queryKey: ['menuitemtypes'],
+		queryFn: menuNetwork.getMenuItemTypes,
 	});
 	const menuItems = createQuery<MenuItemModel[], Error>({
 		queryKey: ['menuitems'],
-		queryFn: menuNetwork.getMenuItems
+		queryFn: menuNetwork.getMenuItems,
 	});
 	const menus = createQuery<MenuData[], Error>({
 		queryKey: ['menus'],
-		queryFn: menuNetwork.getMenus
+		queryFn: menuNetwork.getMenus,
 	});
 	const addMenuItem = () => {
 		log.info(JSON.stringify(newItem));
 		const result = menuItemInputSchema.safeParse(newItem);
 		if (!result.success) {
-			log.info(result.error);
+			log.error(result.error);
 			return alert('error validating input chk console');
 		} else {
 			$menuItem.mutate(newItem);
 		}
 	};
+	const addMenuItemType = () => {
+		const result = menuItemTypeInputSchema.safeParse(newItemType);
+		if (!result.success) {
+			log.error(result.error);
+			return alert('errror while validation menu item type');
+		} else {
+			$menuItemType.mutate(newItemType);
+		}
+	};
 	const createCategory = async (title: string) => await $category.mutateAsync({ title, items: [] });
 	const createNewMenu = async () => {
-		log.info("Okj")
+		log.info('Okj');
 		let cat = (await createCategory('default_category')).data;
 		$menu.mutate({ title: 'default_menu', categories: [cat.id] });
 	};
@@ -98,6 +128,24 @@
 		{/each}
 	</div>
 {/if}
+
+<div class="card">
+	<pre>{JSON.stringify($menuItemType.status)}</pre>
+	{#if $menuItemType.isLoading}
+		loading...
+	{:else if $menuItemType.isError}
+		error...
+		<pre>{JSON.stringify($menuItemType.error)}</pre>
+	{/if}
+	<form>
+		Title <input type="text" bind:value={newItemType.title} />
+		Description <input type="text" bind:value={newItemType.description} />
+		<button type="button" on:click={addMenuItemType} disabled={$menuItemType.isLoading}>
+			Add New Menu Item Type
+		</button>
+	</form>
+</div>
+
 <div class="card">
 	{#if $menuItem.isLoading}
 		loading...
@@ -110,13 +158,20 @@
 		<br />Description <input type="text" bind:value={newItem.description} />
 		<br />price <input type="number" bind:value={newItem.price} />
 		<br />itemType
-		<select bind:value={newItem.itemType}>
-			{#each Object.values(MenuItemType) as menuItem}
-				<option value={menuItem}>
-					{prettyPrintMenuItemType(menuItem)}
-				</option>
-			{/each}
-		</select>
+		{#if $menuItemTypes.isLoading}
+			Loading menu items...
+		{:else if $menuItemTypes.status === 'error'}
+			<span>Error: {$menuItemTypes.error.message}</span>
+		{:else}
+			<select bind:value={newItem.itemType}>
+				{#each $menuItemTypes.data as elm}
+					<option value={elm.id}>
+						{elm.title}
+					</option>
+				{/each}
+			</select>
+		{/if}
+
 		<button type="button" on:click={addMenuItem} disabled={$menuItem.isLoading}>
 			Add New Menu Item
 		</button>

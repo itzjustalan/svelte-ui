@@ -3,12 +3,12 @@ import type { z } from 'zod';
 
 export type CategoryData = z.infer<typeof categoryDataSchema>;
 export const categoryDataSchema = categoryModelSchema.extend({
-	items: menuItemModelSchema.array()
+	items: menuItemModelSchema.array(),
 });
 
 export type MenuData = z.infer<typeof menuDataSchema>;
 export const menuDataSchema = menuModelSchema
 	.extend({
-		categories: categoryDataSchema.array()
+		categories: categoryDataSchema.array(),
 	})
 	.strict();

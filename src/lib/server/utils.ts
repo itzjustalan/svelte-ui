@@ -2,7 +2,7 @@ import {
 	JWT_ACCESS_TOKEN_EXPIRES_IN,
 	JWT_ACCESS_TOKEN_SECRET,
 	JWT_REFRESH_TOKEN_EXPIRES_IN,
-	JWT_REFRESH_TOKEN_SECRET
+	JWT_REFRESH_TOKEN_SECRET,
 } from '$env/static/private';
 import { AppError } from '$lib/errors';
 import { HttpStatusCodes } from '$lib/utils/httpStatusCodes';
@@ -24,7 +24,7 @@ export interface JwtPayload {
 
 export const genJwts = (payload: JwtPayload) => ({
 	accessToken: genJwt(payload, JWT_ACCESS_TOKEN_SECRET, JWT_ACCESS_TOKEN_EXPIRES_IN),
-	refreshToken: genJwt(payload, JWT_REFRESH_TOKEN_SECRET, JWT_REFRESH_TOKEN_EXPIRES_IN)
+	refreshToken: genJwt(payload, JWT_REFRESH_TOKEN_SECRET, JWT_REFRESH_TOKEN_EXPIRES_IN),
 });
 
 export const genJwt = (payload: JwtPayload, secret: string, expiresIn: string) =>
@@ -40,10 +40,10 @@ export const responseFromError = (error: Error): Response => {
 	if (error instanceof AppError) return error.respond();
 	else if (error instanceof ZodError) {
 		return new Response(error.toString(), {
-			status: HttpStatusCodes.BadRequest
+			status: HttpStatusCodes.BadRequest,
 		});
 	}
 	return new Response(error.message ?? 'Internal Server Error', {
-		status: HttpStatusCodes.InternalServerError
+		status: HttpStatusCodes.InternalServerError,
 	});
 };

@@ -7,7 +7,7 @@
 
 	const post = createQuery<Post, Error>({
 		queryKey: ['post', data.postId],
-		queryFn: () => getPostById(data.postId)
+		queryFn: () => getPostById(data.postId),
 	});
 </script>
 

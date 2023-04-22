@@ -10,7 +10,7 @@ import { z } from 'zod';
 export type UserModel = z.infer<typeof userModelSchema>;
 export const userModelSchema = RecordSchema.extend({
 	username: z.string().max(255).email(),
-	password: z.string().min(12).max(255)
+	password: z.string().min(12).max(255),
 }).strict();
 
 export type UnverifieduserModel = z.infer<typeof unverifieduserModelSchema>;
@@ -19,5 +19,5 @@ export const unverifieduserModelSchema = RecordSchema.extend({
 	code: z.string(),
 	createdAt: z.coerce.date(),
 	username: z.string().max(255).email(),
-	password: z.string().min(12).max(255)
+	password: z.string().min(12).max(255),
 }).strict();

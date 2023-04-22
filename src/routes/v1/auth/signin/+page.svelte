@@ -13,7 +13,7 @@
 		onSuccess(data, variables, context) {
 			console.log('yeyy', data, variables, context);
 			log.info(browser && document.cookie);
-		}
+		},
 	});
 	const handleSignin = (e: Event) => {
 		e.preventDefault();

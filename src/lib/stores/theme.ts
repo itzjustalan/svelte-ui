@@ -6,7 +6,7 @@ const themeCookieAttributes = 'SameSite=Strict;max-age=31536000;path=/';
 const themeCookieName = 'app-theme';
 export enum Theme {
 	Dark = 'dark',
-	Light = 'light'
+	Light = 'light',
 }
 
 function createStore() {
@@ -28,7 +28,7 @@ function createStore() {
 			updateDocumentTheme(theme);
 			set(theme);
 		},
-		toggle: () => update((v) => updateDocumentTheme(v === Theme.Dark ? Theme.Light : Theme.Dark))
+		toggle: () => update((v) => updateDocumentTheme(v === Theme.Dark ? Theme.Light : Theme.Dark)),
 	};
 }
 

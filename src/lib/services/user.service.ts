@@ -12,7 +12,7 @@ class UserService {
 		try {
 			const res = await db.execute({
 				schema: userModelSchema,
-				query: select().from(this.table).where({ id })
+				query: select().from(this.table).where({ id }),
 			});
 			return res[0];
 		} catch (error) {
@@ -24,7 +24,7 @@ class UserService {
 		try {
 			return await db.execute({
 				schema: userModelSchema,
-				query: select().from(this.table)
+				query: select().from(this.table),
 			});
 		} catch (error) {
 			log.error(error);
@@ -35,7 +35,7 @@ class UserService {
 		try {
 			const res = await db.execute({
 				schema: userModelSchema,
-				query: select().from(this.table).where({ username })
+				query: select().from(this.table).where({ username }),
 			});
 			return res[0];
 		} catch (error) {
@@ -49,8 +49,8 @@ class UserService {
 				schema: userModelSchema,
 				query: create(this.table).setAll({
 					username,
-					password
-				})
+					password,
+				}),
 			})) satisfies UserModel;
 		} catch (error) {
 			log.error(error);

@@ -1,6 +1,6 @@
 import { menuController } from '$lib/controllers/menu.controller';
 import { responseFromError } from '$lib/server/utils';
-import { menuInputSchema } from '$lib/models/input/menuitem';
+import { menuInputSchema } from '$lib/models/input/menu';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 

@@ -18,7 +18,7 @@ class MenuService extends BaseService<MenuModel> {
 				// query: select().from(this.tablename).fetch(),
 				query: select()
 					.from(this.tablename)
-					.fetch(...fetch)
+					.fetch(...fetch),
 				// query: select().from(this.tablename).fetch('categories'),
 			});
 			log.warn(r);

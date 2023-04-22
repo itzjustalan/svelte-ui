@@ -3,13 +3,13 @@ import {
 	PUBLIC_LOG_EMOJI,
 	PUBLIC_LOG_LEVEL,
 	PUBLIC_LOG_REQUEST,
-	PUBLIC_LOG_TIME
+	PUBLIC_LOG_TIME,
 } from '$env/static/public';
 
 enum LogLevel {
 	info = 'info',
 	warn = 'warn',
-	error = 'error'
+	error = 'error',
 }
 
 enum Colors {
@@ -37,7 +37,7 @@ enum Colors {
 	BgMagenta = '\x1b[45m',
 	BgCyan = '\x1b[46m',
 	BgWhite = '\x1b[47m',
-	BgGray = '\x1b[100m'
+	BgGray = '\x1b[100m',
 }
 
 // const INFO_LABEL = '[' + Colors.FgBlue + 'INF' + Colors.Reset + ']';
@@ -83,7 +83,7 @@ export const log = {
 		else str += Colors.FgGreen + ' 🚀';
 		str += ` ${ms} ms` + Colors.Reset;
 		console.log(str);
-	}
+	},
 	// request: (status: number, method: string, path: string, ms: number, ...d: any[]) => {},
 	// response: (status: number, method: string, path: string, ms: number, ...d: any[]) => {},
 };

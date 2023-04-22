@@ -4,7 +4,7 @@ import {
 	genHash,
 	genJwts,
 	verifyRefreshToken,
-	type JwtPayload
+	type JwtPayload,
 } from '$lib/server/utils';
 import { userService } from '$lib/services/user.service';
 import { unverifiedUserService } from '$lib/services/unverifieduser.service';
@@ -17,7 +17,7 @@ import type { UserModel } from '$lib/models/db/user.model';
 class AuthController {
 	async signinWithEmail({
 		username,
-		password
+		password,
 	}: {
 		username: string;
 		password: string;
@@ -30,7 +30,7 @@ class AuthController {
 		const payload = { uid: user.id, role: 'etho-oru-role' };
 		return {
 			user: { ...user, password: '' },
-			jwt: genJwts(payload)
+			jwt: genJwts(payload),
 		};
 	}
 
@@ -38,7 +38,7 @@ class AuthController {
 	async signupWithEmail({
 		username,
 		password,
-		host
+		host,
 	}: {
 		username: string;
 		password: string;
@@ -62,7 +62,7 @@ class AuthController {
 				.sendMail({
 					to: [user.username],
 					sub: 'Email verification from CPDBytes.com',
-					body: emailVerificationTemplate(url)
+					body: emailVerificationTemplate(url),
 				})
 				.then((res) => log.info(res));
 		}
@@ -73,7 +73,7 @@ class AuthController {
 
 	async verifyEmail({
 		uid,
-		code
+		code,
 	}: {
 		uid: string;
 		code: string;
@@ -90,7 +90,7 @@ class AuthController {
 		const payload = { uid: user.id, role: 'etho-oru-role' };
 		return {
 			user: { ...nuser, password: '' },
-			jwt: genJwts(payload)
+			jwt: genJwts(payload),
 		};
 	}
 
@@ -107,7 +107,7 @@ class AuthController {
 			const payload = { uid: user.id, role: 'etho-oru-role' };
 			return {
 				user: { ...user, password: '' },
-				jwt: genJwts(payload)
+				jwt: genJwts(payload),
 			};
 		} catch (e: any) {
 			return new BadRequestError(e.message);

@@ -1,6 +1,16 @@
 import defaultApi from './apis';
-import type { CategoryModel, MenuModel, MenuItemModel } from '$lib/models/db/menu.model';
-import type { CategoryInput, MenuInput, MenuItemInput } from '$lib/models/input/menuitem';
+import type {
+	CategoryModel,
+	MenuModel,
+	MenuItemModel,
+	MenuItemTypeModel,
+} from '$lib/models/db/menu.model';
+import type {
+	CategoryInput,
+	MenuInput,
+	MenuItemInput,
+	MenuItemTypeInput,
+} from '$lib/models/input/menu';
 import type { MenuData } from '$lib/models/data/menu.data';
 
 class MenuNetwork {
@@ -9,8 +19,12 @@ class MenuNetwork {
 		await defaultApi.post<CategoryModel>('v1/api/menu/category', data);
 	createMenuItem = async (data: MenuItemInput) =>
 		await defaultApi.post<MenuItemModel>('v1/api/menu/menuitem', data);
+	createMenuItemType = async (data: MenuItemTypeInput) =>
+		await defaultApi.post<MenuItemTypeModel>('v1/api/menu/menuitemtype', data);
 	getMenus = async () => (await defaultApi.get<MenuData[]>('v1/api/menu')).data;
 	getMenuItems = async () => (await defaultApi.get<MenuItemModel[]>('v1/api/menu/menuitem')).data;
+	getMenuItemTypes = async () =>
+		(await defaultApi.get<MenuItemTypeModel[]>('v1/api/menu/menuitemtype')).data;
 }
 
 export const menuNetwork = new MenuNetwork();

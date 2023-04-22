@@ -1,8 +1,4 @@
-import { log } from '$lib/logger';
-import { db } from '$lib/server/db';
 import { menuItemModelSchema, type MenuItemModel } from '$lib/models/db/menu.model';
-import type { MenuItemData } from '$lib/models/input/menuitem';
-import { create } from 'cirql';
 import { BaseService } from './base.service';
 
 class MenuItemService extends BaseService<MenuItemModel> {

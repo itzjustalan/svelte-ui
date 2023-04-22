@@ -6,8 +6,14 @@ import { miscService } from '$lib/services/misc.service';
 import { userService } from '$lib/services/user.service';
 import { users } from '$lib/utils/seeds/users.json';
 import { menus, categories, menuItems } from '$lib/utils/seeds/menus.json';
-import { menuModelSchema } from '$lib/models/db/menu.model';
+import {
+	categoryModelSchema,
+	menuItemModelSchema,
+	menuModelSchema,
+} from '$lib/models/db/menu.model';
 import { menuService } from '$lib/services/menu.service';
+import { categoryService } from '$lib/services/category.service';
+import { menuItemService } from '$lib/services/menuitem.service';
 
 const gen_users = async () => {
 	await Promise.allSettled(
@@ -23,14 +29,26 @@ const gen_users = async () => {
 };
 
 const gen_menus = async () => {
-	await Promise.allSettled(
-		menus.map(async (menu) => {
+	await Promise.allSettled([
+		...menus.map(async (menu) => {
 			log.warn({ menu });
 			const result = menuModelSchema.safeParse(menu);
 			if (result.success) await menuService.createOrUpdate(menu);
 			else log.error('error seeding menu', menu.title, result.error);
-		})
-	);
+		}),
+		...categories.map(async (category) => {
+			log.warn({ category });
+			const result = categoryModelSchema.safeParse(category);
+			if (result.success) await categoryService.createOrUpdate(category);
+			else log.error('error seeding menu', category.title, result.error);
+		}),
+		...menuItems.map(async (menuitem) => {
+			log.warn({ menuitem });
+			const result = menuItemModelSchema.safeParse(menuitem);
+			if (result.success) await menuItemService.createOrUpdate(result.data);
+			else log.error('error seeding menu', menuitem.title, result.error);
+		}),
+	]);
 };
 export const seedDataDevMode = async () => {
 	if (!dev) {

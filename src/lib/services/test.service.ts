@@ -13,7 +13,7 @@ class TestService extends BaseService<UserModel> {
 		try {
 			const res = await db.execute({
 				schema: this.tableschema,
-				query: select().from(this.tablename).where({ username }).fetch('')
+				query: select().from(this.tablename).where({ username }).fetch(''),
 			});
 			return res[0];
 		} catch (error) {
@@ -27,5 +27,5 @@ let gg = await testService.findAll();
 let gh = await testService.findOneById('');
 let gk = await testService.createNew({
 	password: '',
-	username: ''
+	username: '',
 });

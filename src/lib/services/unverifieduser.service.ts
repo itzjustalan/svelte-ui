@@ -12,7 +12,7 @@ class UnverifiedUserService {
 		try {
 			const res = await db.execute({
 				schema: unverifieduserModelSchema,
-				query: select().from(this.table).where({ id })
+				query: select().from(this.table).where({ id }),
 			});
 			return res[0];
 		} catch (error) {
@@ -24,7 +24,7 @@ class UnverifiedUserService {
 		try {
 			return await db.execute({
 				schema: unverifieduserModelSchema,
-				query: select().from(this.table)
+				query: select().from(this.table),
 			});
 		} catch (error) {
 			log.error(error);
@@ -35,7 +35,7 @@ class UnverifiedUserService {
 		try {
 			const res = await db.execute({
 				schema: unverifieduserModelSchema,
-				query: select().from(this.table).where({ username })
+				query: select().from(this.table).where({ username }),
 			});
 			return res[0];
 		} catch (error) {
@@ -57,8 +57,8 @@ class UnverifiedUserService {
 				params: {
 					username,
 					password,
-					code
-				}
+					code,
+				},
 			});
 			return res[0];
 		} catch (error) {
@@ -71,7 +71,7 @@ class UnverifiedUserService {
 			return (
 				(await db.execute({
 					query: delRecord(id),
-					schema: unverifieduserModelSchema
+					schema: unverifieduserModelSchema,
 				})) ?? undefined
 			);
 		} catch (error) {

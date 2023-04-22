@@ -1,16 +1,7 @@
 {
-    "users": [
-        [
-            "user@admin.in",
-            "user@1234567"
-        ],
-        [
-            "waiter@admin.in",
-            "alan69696969"
-        ],
-        [
-            "chef@admin.in",
-            "alan69696969"
-        ]
-    ]
+	"users": [
+		["user@admin.in", "user@1234567"],
+		["waiter@admin.in", "alan69696969"],
+		["chef@admin.in", "alan69696969"]
+	]
 }
