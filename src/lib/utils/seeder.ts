@@ -5,15 +5,17 @@ import { genHash } from '$lib/server/utils';
 import { miscService } from '$lib/services/misc.service';
 import { userService } from '$lib/services/user.service';
 import { users } from '$lib/utils/seeds/users.json';
-import { menus, categories, menuItems } from '$lib/utils/seeds/menus.json';
+import { menus, categories, menuItems, menuItemTypes } from '$lib/utils/seeds/menus.json';
 import {
 	categoryModelSchema,
 	menuItemModelSchema,
+	menuItemTypeModelSchema,
 	menuModelSchema,
 } from '$lib/models/db/menu.model';
 import { menuService } from '$lib/services/menu.service';
 import { categoryService } from '$lib/services/category.service';
 import { menuItemService } from '$lib/services/menuitem.service';
+import { menuItemTypeService } from '$lib/services/menuitemtype.service';
 
 const gen_users = async () => {
 	await Promise.allSettled(
@@ -47,6 +49,13 @@ const gen_menus = async () => {
 			const result = menuItemModelSchema.safeParse(menuitem);
 			if (result.success) await menuItemService.createOrUpdate(result.data);
 			else log.error('error seeding menu', menuitem.title, result.error);
+		}),
+		,
+		...menuItemTypes.map(async (menuItemType) => {
+			log.warn({ menuItemType });
+			const result = menuItemTypeModelSchema.safeParse(menuItemType);
+			if (result.success) await menuItemTypeService.createOrUpdate(result.data);
+			else log.error('error seeding menu', menuItemType.title, result.error);
 		}),
 	]);
 };

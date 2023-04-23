@@ -32,6 +32,15 @@ export const decodeJwt = (token: string): JwtPayload => {
 	return JSON.parse(jsonPayload) as JwtPayload;
 };
 
+export const ToTitleCase = (text: string) => {
+	return text
+		.toLowerCase()
+		.split(' ')
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(' ');
+};
+
+export const prettyPrintV = (title: string) => ToTitleCase(title.replaceAll('-', ' '));
 // export const prettyPrintMenuItemType = (itemType: MenuItemType) => {
 // 	switch (itemType) {
 // 		case MenuItemType.veg:

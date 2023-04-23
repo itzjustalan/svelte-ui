@@ -10,6 +10,7 @@
 	} from '$lib/models/input/menu';
 	import type { MenuData } from '$lib/models/data/menu.data';
 	import type { MenuItemModel, MenuItemTypeModel } from '$lib/models/db/menu.model';
+	import { prettyPrintV } from '$lib/utils';
 
 	let selectedMenu: MenuData;
 	let newItem: MenuItemInput = {
@@ -166,7 +167,7 @@
 			<select bind:value={newItem.itemType}>
 				{#each $menuItemTypes.data as elm}
 					<option value={elm.id}>
-						{elm.title}
+						{prettyPrintV(elm.title)}
 					</option>
 				{/each}
 			</select>
