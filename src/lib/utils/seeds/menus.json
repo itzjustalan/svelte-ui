@@ -15,26 +15,26 @@
 		{
 			"id": "categories:seed_cat_1",
 			"title": "seed cat one",
-			"items": []
+			"menuItems": ["menuitems:menu_item_1"]
 		},
 		{
 			"id": "categories:seed_cat_2",
 			"title": "seed cat two",
-			"items": []
+			"menuItems": []
 		}
 	],
 	"menuItems": [
 		{
 			"id": "menuitems:menu_item_1",
 			"description": "nalla menu item",
-			"itemType": ["menuitemtypes:menu_item_type_1"],
+			"menuItemTypes": ["menuitemtypes:menu_item_type_1"],
 			"price": 0,
 			"title": "chicken biriyani"
 		},
 		{
 			"id": "menuitems:menu_item_2",
 			"description": "nalla menu item",
-			"itemType": ["menuitemtypes:menu_item_type_2"],
+			"menuItemTypes": ["menuitemtypes:menu_item_type_2"],
 			"price": 0,
 			"title": "vada"
 		}

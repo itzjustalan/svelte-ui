@@ -15,14 +15,14 @@ export const menuItemModelSchema = RecordSchema.extend({
 	title: z.string().min(1).trim(),
 	description: z.string().min(1).trim(),
 	price: z.number(),
-	itemType: z.string().array().min(1),
+	menuItemTypes: z.string().array().min(1),
 }).strict();
 
 export type CategoryModel = z.infer<typeof categoryModelSchema>;
 export const categoryModelSchema = RecordSchema.extend({
 	id: z.string(),
 	title: z.string().min(1).trim(),
-	items: z.string().array(),
+	menuItems: z.string().array(),
 	// items: menuItemSchema.array(),
 }).strict();
 

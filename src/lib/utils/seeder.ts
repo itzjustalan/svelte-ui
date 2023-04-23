@@ -47,14 +47,14 @@ const gen_menus = async () => {
 		...menuItems.map(async (menuitem) => {
 			log.warn({ menuitem });
 			const result = menuItemModelSchema.safeParse(menuitem);
-			if (result.success) await menuItemService.createOrUpdate(result.data);
+			if (result.success) await menuItemService.createOrUpdate(menuitem);
 			else log.error('error seeding menu', menuitem.title, result.error);
 		}),
 		,
 		...menuItemTypes.map(async (menuItemType) => {
 			log.warn({ menuItemType });
 			const result = menuItemTypeModelSchema.safeParse(menuItemType);
-			if (result.success) await menuItemTypeService.createOrUpdate(result.data);
+			if (result.success) await menuItemTypeService.createOrUpdate(menuItemType);
 			else log.error('error seeding menu', menuItemType.title, result.error);
 		}),
 	]);
