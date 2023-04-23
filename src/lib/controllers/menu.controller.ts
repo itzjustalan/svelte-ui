@@ -13,6 +13,7 @@ import type {
 	MenuInput,
 	MenuItemInput,
 	MenuItemTypeInput,
+	MenuUpdateInput,
 } from '$lib/models/input/menu';
 import { menuDataSchema, type MenuData } from '$lib/models/data/menu.data';
 import { menuItemTypeService } from '$lib/services/menuitemtype.service';
@@ -21,6 +22,13 @@ class MenuController {
 	async createMenu(menuItem: MenuInput): Promise<Error | MenuModel> {
 		return (
 			(await menuService.createNew(menuItem)) ?? new InternalServerError('error creating menu item')
+		);
+	}
+
+	async updateMenu(menuItem: MenuUpdateInput): Promise<Error | MenuModel> {
+		return (
+			(await menuService.updateById(menuItem.id, menuItem)) ??
+			new InternalServerError('error updating menu')
 		);
 	}
 
