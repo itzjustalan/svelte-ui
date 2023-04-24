@@ -17,7 +17,7 @@
 		title: '',
 		description: '',
 		price: 0,
-		itemType: [],
+		menuItemTypes: [],
 	};
 	let newItemType: MenuItemTypeInput = {
 		title: '',
@@ -92,7 +92,8 @@
 			$menuItemType.mutate(newItemType);
 		}
 	};
-	const createCategory = async (title: string) => await $category.mutateAsync({ title, items: [] });
+	const createCategory = async (title: string) =>
+		await $category.mutateAsync({ title, menuItems: [] });
 	const createNewMenu = async () => {
 		log.info('Okj');
 		let cat = (await createCategory('default_category')).data;
@@ -164,7 +165,7 @@
 		{:else if $menuItemTypes.status === 'error'}
 			<span>Error: {$menuItemTypes.error.message}</span>
 		{:else}
-			<select bind:value={newItem.itemType}>
+			<select multiple bind:value={newItem.menuItemTypes}>
 				{#each $menuItemTypes.data as elm}
 					<option value={elm.id}>
 						{prettyPrintV(elm.title)}
