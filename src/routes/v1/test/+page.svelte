@@ -199,5 +199,6 @@
 		padding: 1rem;
 		border: 2px solid black;
 		border-radius: 1rem;
+		background-color: inherit;
 	}
 </style>

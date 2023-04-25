@@ -2,7 +2,8 @@
 	import { page } from '$app/stores';
 	import logo from '$lib/images/svelte-logo.svg';
 	import github from '$lib/images/github.svg';
-	import { theme } from '$lib/stores/theme';
+	//import { theme } from '$lib/stores/theme';
+	import { LightSwitch } from '@skeletonlabs/skeleton';
 </script>
 
 <header>
@@ -45,9 +46,10 @@
 	</nav>
 
 	<div class="corner">
-		<button on:click={theme.toggle}>
+		<!-- <button on:click={theme.toggle}>
 			{$theme}
-		</button>
+		</button> -->
+		<LightSwitch />
 	</div>
 	<div class="corner">
 		<a href="https://github.com/sveltejs/kit">
