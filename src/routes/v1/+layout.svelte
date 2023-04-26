@@ -13,10 +13,12 @@
 
 	import { QueryClientProvider } from '@tanstack/svelte-query';
 	import type { LayoutData } from './$types';
+	import TwDebug from '$lib/ui/TwDebug.svelte';
 
 	export let data: LayoutData;
 </script>
 
+<TwDebug />
 <QueryClientProvider client={data.queryClient}>
 	<div class="app">
 		<Header />

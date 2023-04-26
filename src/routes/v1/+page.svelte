@@ -21,6 +21,7 @@
 </svelte:head>
 
 <section>
+	<a href="/v1/menu">menu</a>
 	<input type="range" bind:value={limit} min="0" max="100" />
 	{#if $posts.status === 'loading'}
 		<span>Loading...</span>
