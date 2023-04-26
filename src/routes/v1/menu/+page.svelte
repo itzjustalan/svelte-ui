@@ -7,6 +7,7 @@
 	import type { MenuData } from '$lib/models/data/menu.data';
 	import { menuNetwork } from '$lib/networks/menu.network';
 	import LoadingSpinner from '$lib/ui/LoadingSpinner.svelte';
+	import Category from './Category.svelte';
 	// export let data: PageData;
 	let seltectedMenu: MenuData;
 	const allmenus = createQuery<MenuData[], Error>({
@@ -36,27 +37,17 @@
 	</ListBox>
 {/if}
 
-
 {#if seltectedMenu !== undefined}
 	<Accordion>
-	{#each seltectedMenu.categories as category}
-	<AccordionItem>
-		<svelte:fragment slot="summary">{category.title}</svelte:fragment>
-		<svelte:fragment slot="content">(cat widget)</svelte:fragment>
-	</AccordionItem>
-	{/each}
+		{#each seltectedMenu.categories as category}
+			{#if category.menuItems.length}
+				<AccordionItem open>
+					<svelte:fragment slot="summary">{category.title}</svelte:fragment>
+					<svelte:fragment slot="content">
+						<Category {category} />
+					</svelte:fragment>
+				</AccordionItem>
+			{/if}
+		{/each}
 	</Accordion>
 {/if}
-
-<!-- <Accordion>
-	<AccordionItem open>
-		<svelte:fragment slot="lead">(icon)</svelte:fragment>
-		<svelte:fragment slot="summary">(summary)</svelte:fragment>
-		<svelte:fragment slot="content">(content)</svelte:fragment>
-	</AccordionItem>
-	<AccordionItem>
-		<svelte:fragment slot="lead">(icon)</svelte:fragment>
-		<svelte:fragment slot="summary">(summary)</svelte:fragment>
-		<svelte:fragment slot="content">(content)</svelte:fragment>
-	</AccordionItem>
-</Accordion> -->

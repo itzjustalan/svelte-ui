@@ -12,7 +12,24 @@
 	};
 	if (browser) {
 		updateText(window?.outerWidth ?? 0);
-		window.addEventListener('resize', (e) => updateText(e?.target?.outerWidth ?? 0), true);
+		// window.addEventListener('resize', (e) => updateText(e?.target?.outerWidth ?? 0), true);
+		// window.addEventListener('resize', (e) => updateText(e?.target?.innerWidth ?? 0), true);
+		window.addEventListener(
+			'resize',
+			(e: UIEvent) => {
+				const w = e.target as Window;
+				updateText(w?.innerWidth ?? 0);
+			},
+			true
+		);
+		// window.addEventListener(
+		// 	'resize',
+		// 	(e: UIEvent) => {
+		// 		const w = e.target as Window;
+		// 		updateText(w?.outerWidth ?? 0);
+		// 	},
+		// 	true
+		// );
 	}
 </script>
 

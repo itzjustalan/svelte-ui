@@ -14,11 +14,13 @@
 	import { QueryClientProvider } from '@tanstack/svelte-query';
 	import type { LayoutData } from './$types';
 	import TwDebug from '$lib/ui/TwDebug.svelte';
+	import { LightSwitch } from '@skeletonlabs/skeleton';
 
 	export let data: LayoutData;
 </script>
 
 <TwDebug />
+<LightSwitch class="absolute right-0 top-0 " />
 <QueryClientProvider client={data.queryClient}>
 	<div class="app">
 		<Header />
