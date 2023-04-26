@@ -1,38 +1,37 @@
 <script lang="ts">
 	import type { CategoryData } from '$lib/models/data/menu.data';
+	import { ToTitleCase } from '$lib/utils';
 
 	export let category: CategoryData;
-	('${data}');
+	let count = 0;
 </script>
 
 {#each category.menuItems as menuItem}
-	<div class=".card-hover card p-4">
-		<div class=" pb-1 text-xl">
-			{menuItem.title}
+	<div class="card card-hover p-4">
+		<div class="card bg-lime-500 p-3">(image)</div>
+		<div class="mt-3 p-1 text-xl">
+			{ToTitleCase(menuItem.title)}
 		</div>
 		<hr class="!border-t-2" />
-		<div class=" text-sm">
+		<div class="py-3 text-sm">
 			{menuItem.description}
 		</div>
+		<hr class="!border-t-1" />
+		{#each menuItem.menuItemTypes as menuItemType}
+			icon: ({menuItemType.title})
+		{/each}
+		<br />
+		<button
+			type="button"
+			class="btn-icon variant-filled-warning"
+			on:click={() => {
+				if (count > 0) {
+					count--;
+				}
+			}}>-</button
+		>
+		{count}
+		<button type="button" class="btn-icon variant-filled-success" on:click={() => count++}>+</button
+		>
 	</div>
 {/each}
-
-<div
-	class="w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-800"
->
-	<div class="px-5 pb-5">
-		<a href="#">
-			<h5 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-				Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport
-			</h5>
-		</a>
-		<div class="flex items-center justify-between">
-			<span class="text-3xl font-bold text-gray-900 dark:text-white">$599</span>
-			<a
-				href="#"
-				class="rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-				>Add to cart</a
-			>
-		</div>
-	</div>
-</div>
