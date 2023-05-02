@@ -17,7 +17,11 @@
 	import { LightSwitch } from '@skeletonlabs/skeleton';
 
 	export let data: LayoutData;
+	// import { page } from '$app/stores';
+	// console.log('$page', $page.data.user ?? '----!!');
 </script>
+
+<pre>{JSON.stringify(data.user)}</pre>
 
 <TwDebug />
 <LightSwitch class="absolute right-0 top-0 " />

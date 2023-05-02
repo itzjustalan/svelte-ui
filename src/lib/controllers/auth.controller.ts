@@ -5,6 +5,7 @@ import {
 	genJwts,
 	verifyRefreshToken,
 	type JwtPayload,
+	verifyAccessToken,
 } from '$lib/server/utils';
 import { userService } from '$lib/services/user.service';
 import { unverifiedUserService } from '$lib/services/unverifieduser.service';
@@ -27,7 +28,7 @@ class AuthController {
 		if (!(await compareHash(password, user.password))) {
 			return new BadRequestError('invalid credentials');
 		}
-		const payload = { uid: user.id, role: 'etho-oru-role' };
+		const payload = { uid: user.id, role: user.role, access: user.access };
 		return {
 			user: { ...user, password: '' },
 			jwt: genJwts(payload),
@@ -84,10 +85,15 @@ class AuthController {
 		const time2hrAgo = Date.now() - 1000 * 60 * 60 * 2;
 		if (user.createdAt.getTime() < time2hrAgo) return new BadRequestError('link expired!');
 		if (code !== user.code) return new BadRequestError('invalid link');
-		const nuser = await userService.createNew(user.username, user.password);
+		const nuser = await userService.createNew({
+			username: user.username,
+			password: user.password,
+			role: 'customer',
+			access: [],
+		});
 		if (!nuser) return new InternalServerError('error creating user');
 		await unverifiedUserService.deleteOneById(user.id);
-		const payload = { uid: user.id, role: 'etho-oru-role' };
+		const payload = { uid: nuser.id, role: nuser.role, access: nuser.access };
 		return {
 			user: { ...nuser, password: '' },
 			jwt: genJwts(payload),
@@ -104,7 +110,7 @@ class AuthController {
 				return new BadRequestError('token expired');
 			const user = await userService.findOneById(decodedToken.uid);
 			if (!user) return new BadRequestError('invalid token');
-			const payload = { uid: user.id, role: 'etho-oru-role' };
+			const payload = { uid: user.id, role: user.role, access: user.access };
 			return {
 				user: { ...user, password: '' },
 				jwt: genJwts(payload),
@@ -113,6 +119,30 @@ class AuthController {
 			return new BadRequestError(e.message);
 		}
 	}
+
+	authenticate(accessToken: string): JwtPayload | undefined {
+		try {
+			return verifyAccessToken<JwtPayload>(accessToken);
+		} catch (error) {
+			log.error(error);
+		}
+	}
+
+	// decodeAccessToken(token: string): JwtPayload | undefined {
+	// 	try {
+	// 		return verifyAccessToken<JwtPayload>(token);
+	// 	} catch (error) {
+	// 		log.error(error);
+	// 	}
+	// }
+
+	// decodeRefreshToken(token: string): JwtPayload | undefined {
+	// 	try {
+	// 		return verifyRefreshToken<JwtPayload>(token);
+	// 	} catch (error) {
+	// 		log.error(error);
+	// 	}
+	// }
 }
 
 export const authController = new AuthController();

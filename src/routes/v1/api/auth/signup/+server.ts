@@ -1,7 +1,7 @@
 import { authController } from '$lib/controllers/auth.controller';
 import { log } from '$lib/logger';
 import { responseFromError } from '$lib/server/utils';
-import { authInputSchema } from '$lib/models/input/user.signup';
+import { authInputSchema } from '$lib/models/input/user';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request, url }) => {

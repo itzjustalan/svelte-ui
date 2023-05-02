@@ -18,6 +18,7 @@ export const compareHash = async (text: string, hash: string): Promise<boolean> 
 export interface JwtPayload {
 	uid: string;
 	role: string;
+	access: string[];
 	iat?: number;
 	exp?: number;
 }
@@ -32,9 +33,9 @@ export const genJwt = (payload: JwtPayload, secret: string, expiresIn: string) =
 
 export const verifyJwt = <T>(token: string, secret: string): T => jwt.verify(token, secret) as T;
 export const verifyAccessToken = <T>(token: string): T =>
-	jwt.verify(token, JWT_ACCESS_TOKEN_SECRET) as T;
+	verifyJwt(token, JWT_ACCESS_TOKEN_SECRET) as T;
 export const verifyRefreshToken = <T>(token: string): T =>
-	jwt.verify(token, JWT_REFRESH_TOKEN_SECRET) as T;
+	verifyJwt(token, JWT_REFRESH_TOKEN_SECRET) as T;
 
 export const responseFromError = (error: Error): Response => {
 	if (error instanceof AppError) return error.respond();

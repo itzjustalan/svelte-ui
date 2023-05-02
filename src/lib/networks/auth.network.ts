@@ -1,4 +1,4 @@
-import { type AuthInput, authInputSchema } from '$lib/models/input/user.signup';
+import { type AuthInput, authInputSchema } from '$lib/models/input/user';
 import type { UserModel } from '$lib/models/db/user.model';
 import defaultApi from './apis';
 import { decodeJwt } from '$lib/utils';

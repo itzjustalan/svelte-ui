@@ -1,41 +1,20 @@
 import { log } from '$lib/logger';
 import { userModelSchema, type UserModel } from '$lib/models/db/user.model';
 import { db } from '$lib/server/db';
-import { create, select } from 'cirql';
+import { create, eq, select, time } from 'cirql';
+import { BaseService } from './base.service';
+import type { AuthInput } from '$lib/models/input/user';
 
-class UserService {
-	table: string;
+class UserService extends BaseService<UserModel> {
 	constructor() {
-		this.table = 'users';
-	}
-	async findOneById(id: string): Promise<UserModel | undefined> {
-		try {
-			const res = await db.execute({
-				schema: userModelSchema,
-				query: select().from(this.table).where({ id }),
-			});
-			return res[0];
-		} catch (error) {
-			log.error(error);
-		}
-	}
-
-	async findAll(): Promise<UserModel[] | undefined> {
-		try {
-			return await db.execute({
-				schema: userModelSchema,
-				query: select().from(this.table),
-			});
-		} catch (error) {
-			log.error(error);
-		}
+		super('users', userModelSchema);
 	}
 
 	async findOneByUsername(username: string): Promise<UserModel | undefined> {
 		try {
 			const res = await db.execute({
-				schema: userModelSchema,
-				query: select().from(this.table).where({ username }),
+				schema: this.tableschema,
+				query: select().from(this.tablename).where({ username }),
 			});
 			return res[0];
 		} catch (error) {
@@ -43,19 +22,22 @@ class UserService {
 		}
 	}
 
-	async createNew(username: string, password: string): Promise<UserModel | undefined> {
-		try {
-			return (await db.execute({
-				schema: userModelSchema,
-				query: create(this.table).setAll({
-					username,
-					password,
-				}),
-			})) satisfies UserModel;
-		} catch (error) {
-			log.error(error);
-		}
-	}
+	// async createNew(
+	// 	data: Omit<UserModel, 'id' | 'createdAt' | 'updatedAt'>
+	// ): Promise<UserModel | undefined> {
+	// 	try {
+	// 		return (await db.execute({
+	// 			schema: this.tableschema,
+	// 			query: create(this.tablename).setAll({
+	// 				...data,
+	// 				createdAt: eq(time.now()),
+	// 				updatedAt: eq(time.now()),
+	// 			}),
+	// 		})) satisfies UserModel;
+	// 	} catch (error) {
+	// 		log.error(error);
+	// 	}
+	// }
 }
 
 export const userService = new UserService();

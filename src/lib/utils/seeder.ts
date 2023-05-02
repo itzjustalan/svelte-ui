@@ -1,6 +1,6 @@
 import { dev } from '$app/environment';
 import { log } from '$lib/logger';
-import { authInputSchema } from '$lib/models/input/user.signup';
+import { userInputSchema } from '$lib/models/input/user';
 import { genHash } from '$lib/server/utils';
 import { miscService } from '$lib/services/misc.service';
 import { userService } from '$lib/services/user.service';
@@ -17,55 +17,63 @@ import { categoryService } from '$lib/services/category.service';
 import { menuItemService } from '$lib/services/menuitem.service';
 import { menuItemTypeService } from '$lib/services/menuitemtype.service';
 
+declare global {
+	var appData: {
+		seeded: boolean;
+	};
+}
+
 const gen_users = async () => {
 	await Promise.allSettled(
 		users.map(async (user) => {
-			const result = authInputSchema.safeParse({
-				username: user[0],
-				password: user[1],
-			});
-			if (result.success) await userService.createNew(user[0], await genHash(user[1]));
-			else log.error('error seeding data:', result.error);
+			const result = userInputSchema.safeParse(user);
+			if (result.success)
+				await userService.createNew({
+					...result.data,
+					password: await genHash(result.data.password),
+				});
+			else log.error('error seeding user:', result.error);
 		})
 	);
 };
 
 const gen_menus = async () => {
+	const ndate = new Date();
 	await Promise.allSettled([
 		...menus.map(async (menu) => {
-			log.warn({ menu });
-			const result = menuModelSchema.safeParse(menu);
-			if (result.success) await menuService.createOrUpdate(menu);
-			else log.error('error seeding menu', menu.title, result.error);
+			const nmenu = { ...menu, createdAt: ndate, updatedAt: ndate };
+			const result = menuModelSchema.safeParse(nmenu);
+			if (result.success) await menuService.createNew(result.data);
+			else log.error('error seeding menu', nmenu, result.error);
 		}),
 		...categories.map(async (category) => {
-			log.warn({ category });
-			const result = categoryModelSchema.safeParse(category);
-			if (result.success) await categoryService.createOrUpdate(category);
-			else log.error('error seeding menu', category.title, result.error);
+			const ncategory = { ...category, createdAt: ndate, updatedAt: ndate };
+			const result = categoryModelSchema.safeParse(ncategory);
+			if (result.success) await categoryService.createNew(result.data);
+			else log.error('error seeding menu', ncategory, result.error);
 		}),
 		...menuItems.map(async (menuitem) => {
-			log.warn({ menuitem });
-			const result = menuItemModelSchema.safeParse(menuitem);
-			if (result.success) await menuItemService.createOrUpdate(menuitem);
-			else log.error('error seeding menu', menuitem.title, result.error);
+			const nmenuitem = { ...menuitem, createdAt: ndate, updatedAt: ndate };
+			const result = menuItemModelSchema.safeParse(nmenuitem);
+			if (result.success) await menuItemService.createNew(result.data);
+			else log.error('error seeding menu', nmenuitem, result.error);
 		}),
 		,
 		...menuItemTypes.map(async (menuItemType) => {
-			log.warn({ menuItemType });
-			const result = menuItemTypeModelSchema.safeParse(menuItemType);
-			if (result.success) await menuItemTypeService.createOrUpdate(menuItemType);
-			else log.error('error seeding menu', menuItemType.title, result.error);
+			const nmenuItemType = { ...menuItemType, createdAt: ndate, updatedAt: ndate };
+			const result = menuItemTypeModelSchema.safeParse(nmenuItemType);
+			if (result.success) await menuItemTypeService.createNew(result.data);
+			else log.error('error seeding menu', nmenuItemType, result.error);
 		}),
 	]);
 };
 export const seedDataDevMode = async () => {
-	if (!dev) {
-		return;
-	}
+	if (!dev) return;
+	// if (global.appData?.seeded ?? false) return;
 	const appData = await miscService.getAppData();
 	if (appData?.seeded) {
 		log.warn('seed found! aborting...');
+		// global.appData = { ...global.appData, seeded: true };
 		return;
 	}
 	const promises = [];
@@ -74,4 +82,5 @@ export const seedDataDevMode = async () => {
 	promises.push(gen_menus());
 	await Promise.allSettled(promises);
 	await miscService.setAppData({ seeded: true });
+	// global.appData = { ...global.appData, seeded: true };
 };
