@@ -1,14 +1,6 @@
+import { UserRoles } from '$lib/user.access.controller';
 import { RecordSchema } from 'cirql';
 import { z } from 'zod';
-
-export type UserAccess = 'create_menu' | 'read_menu' | 'update_menu' | 'delete_menu';
-
-export const UserRoles = {
-	Admin: 'admin',
-	Client: 'client',
-	Customer: 'customer',
-	Guest: 'guest',
-} as const;
 
 export type UserModel = z.infer<typeof userModelSchema>;
 export const userModelSchema = RecordSchema.extend({

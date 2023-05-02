@@ -1,8 +1,7 @@
-import { accessController } from '$lib/controllers/access.controller';
 import { authController } from '$lib/controllers/auth.controller';
-import { UnauthorizedError } from '$lib/errors';
 import { log } from '$lib/logger';
 import { conectDB } from '$lib/server/db';
+import { uacController } from '$lib/user.access.controller';
 import { seedDataDevMode } from '$lib/utils/seeder';
 import type { Handle } from '@sveltejs/kit';
 
@@ -26,7 +25,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 			};
 		}
 	}
-	const error = accessController.authorize(event);
+	// const error = uacController.authorize(event);
+	const error = uacController.authorize(
+		event.locals.user,
+		event.url.pathname,
+		event.request.method
+	);
 	if (error) {
 		log.endpoint(
 			error.statusCode,

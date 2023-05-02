@@ -5,7 +5,7 @@ export class AppError extends Error {
 	constructor(message: string, statusCode: HttpStatusCodes) {
 		super(message);
 		this.statusCode = statusCode;
-		Error.captureStackTrace(this);
+		// Error.captureStackTrace(this);
 	}
 
 	respond = (): Response => new Response(this.message, { status: this.statusCode });

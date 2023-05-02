@@ -63,6 +63,10 @@ export const log = {
 		if (skiplog(LogLevel.info)) return;
 		console.info(`[:${status}]  ${method.toUpperCase()} ${path} ${statusText}`, data);
 	},
+	cl_nav: (url: string, result: string, ...d: any[]) => {
+		if (skiplog(LogLevel.info)) return;
+		console.info('nav:', url, '=>', result, ...d);
+	},
 	endpoint: (status: number, method: string, path: string, ms: number, ...d: any[]) => {
 		if (!PUBLIC_LOG_REQUEST) return;
 		ms = Math.trunc(ms);

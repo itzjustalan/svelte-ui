@@ -1,12 +1,19 @@
 import { NotFoundError, type AppError, UnauthorizedError } from '$lib/errors';
-import { UserRoles, type UserAccess } from '$lib/models/db/user.model';
-import type { RequestEvent } from '@sveltejs/kit';
+
+export const UserRoles = {
+	Admin: 'admin',
+	Client: 'client',
+	Customer: 'customer',
+	Guest: 'guest',
+} as const;
+
+export type UserAccess = 'create_menu' | 'read_menu' | 'update_menu' | 'delete_menu';
 
 export type AccessRouteMethod = 'get' | 'post' | 'put' | 'delete';
 export type AccessRoute = {
 	roles: ('admin' | 'client' | 'customer' | 'guest')[];
 	access: {
-		[key in UserAccess]?: boolean;
+		[key in UserAccess]?: 0 | 1;
 	};
 };
 
@@ -16,10 +23,15 @@ export const accessRoutes: {
 	};
 } = {
 	get: {
+		'/': {
+			roles: [UserRoles.Guest],
+			access: {},
+		},
 		'/v1': {
 			roles: [UserRoles.Guest],
 			access: {
-				read_menu: true,
+				read_menu: 1,
+				update_menu: 0,
 			},
 		},
 		'/v1/auth/signin': {
@@ -32,6 +44,14 @@ export const accessRoutes: {
 		},
 		'/v1/auth/refresh': {
 			roles: [UserRoles.Guest],
+			access: {},
+		},
+		'/v1/test': {
+			roles: [UserRoles.Admin],
+			access: {},
+		},
+		'/v1/protected': {
+			roles: [UserRoles.Client],
 			access: {},
 		},
 	},
@@ -49,13 +69,16 @@ export const accessRoutes: {
 	delete: {},
 };
 
-class AccessController {
-	authorize(e: RequestEvent): AppError | undefined {
-		const { user } = e.locals;
-		const route = this._pick_route(e.request, e.url);
+class UserAccessController {
+	authorize(
+		user: undefined | App.Locals['user'],
+		url: string,
+		method: string
+	): AppError | undefined {
+		const route = this._pick_route(method, url);
 		if (route === undefined) return new NotFoundError();
-		if (route.roles.find((e) => e === UserRoles.Guest || e === user.role)) return;
-		if (this._has_access_to_route(user.access, route)) return;
+		if (route.roles.find((e) => e === UserRoles.Guest || e === user?.role)) return;
+		if (this._has_access_to_route(user?.access ?? [], route)) return;
 		return new UnauthorizedError();
 	}
 
@@ -68,20 +91,20 @@ class AccessController {
 		return false;
 	}
 
-	_pick_route(r: RequestEvent['request'], url: URL): AccessRoute | undefined {
-		switch (r.method.toLowerCase()) {
+	_pick_route(method: string, url: string): AccessRoute | undefined {
+		switch (method.toLowerCase()) {
 			case 'get':
-				return accessRoutes['get'][url.pathname];
+				return accessRoutes['get'][url];
 			case 'post':
-				return accessRoutes['post'][url.pathname];
+				return accessRoutes['post'][url];
 			case 'put':
-				return accessRoutes['put'][url.pathname];
+				return accessRoutes['put'][url];
 			case 'delete':
-				return accessRoutes['delete'][url.pathname];
+				return accessRoutes['delete'][url];
 			default:
 				return;
 		}
 	}
 }
 
-export const accessController = new AccessController();
+export const uacController = new UserAccessController();
