@@ -25,6 +25,7 @@
 	// console.log('$page', $page.data.user ?? '----!!');
 
 	beforeNavigate((navigation) => {
+		//todo: check if we own the url
 		const error = uacController.authorize(data.user, navigation.to?.url.pathname ?? '', 'get');
 		if (browser && error) {
 			navigation.cancel();

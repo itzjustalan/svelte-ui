@@ -32,6 +32,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		event.request.method
 	);
 	if (error) {
+		log.error('req denied:', error.message, event.request.method.toUpperCase(), event.url.pathname);
 		log.endpoint(
 			error.statusCode,
 			event.request.method,

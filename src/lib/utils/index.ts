@@ -1,5 +1,9 @@
 // export { HttpStatusCodes } from "./httpStatusCodes";
 
+export type Prettify<T> = {
+	[K in keyof T]: T[K];
+} & {};
+
 export const getCookieValue = (name: string, cookie: string | null) =>
 	cookie?.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || null;
 
@@ -77,8 +81,8 @@ export const deleteUndefinedKeys = <T extends object>(data: T): void =>
 		v === undefined
 			? delete data[k as keyof T]
 			: v && typeof v === 'object'
-			? deleteUndefinedKeys(v)
-			: undefined
+				? deleteUndefinedKeys(v)
+				: undefined
 	);
 
 // export const prettyPrintMenuItemType = (itemType: MenuItemType) => {

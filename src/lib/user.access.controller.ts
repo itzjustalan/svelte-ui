@@ -1,4 +1,4 @@
-import { NotFoundError, type AppError, UnauthorizedError } from '$lib/errors';
+import { NotFoundError, type AppError, UnauthorizedError, InternalServerError } from '$lib/errors';
 
 export const UserRoles = {
 	Admin: 'admin',
@@ -34,6 +34,11 @@ export const accessRoutes: {
 				update_menu: 0,
 			},
 		},
+		'/v1/api/cart': {
+			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer],
+			access: {
+			}
+		},
 		'/v1/auth/signin': {
 			roles: [UserRoles.Guest],
 			access: {},
@@ -65,7 +70,12 @@ export const accessRoutes: {
 			access: {},
 		},
 	},
-	put: {},
+	put: {
+		'/v1/api/cart': {
+			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer],
+			access: {}
+		},
+	},
 	delete: {},
 };
 
@@ -76,7 +86,7 @@ class UserAccessController {
 		method: string
 	): AppError | undefined {
 		const route = this._pick_route(method, url);
-		if (route === undefined) return new NotFoundError();
+		if (route === undefined) return new InternalServerError('uac not defined!');
 		if (route.roles.find((e) => e === UserRoles.Guest || e === user?.role)) return;
 		if (this._has_access_to_route(user?.access ?? [], route)) return;
 		return new UnauthorizedError();

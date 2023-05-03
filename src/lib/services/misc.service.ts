@@ -1,10 +1,7 @@
 import { db } from '$lib/server/db';
-
-import { create, select, update, updateRecord } from 'cirql';
+import { select } from 'cirql';
 import { BaseService } from './base.service';
 import { log } from '$lib/logger';
-import { z } from 'zod';
-import { menuDataSchema } from '$lib/models/data/menu.data';
 import { miscModelSchema, type MiscModel, MiscIds } from '$lib/models/db/misc.model';
 
 class MiscService extends BaseService<MiscModel> {

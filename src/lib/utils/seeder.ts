@@ -1,10 +1,9 @@
 import { dev } from '$app/environment';
 import { log } from '$lib/logger';
-import { userInputSchema } from '$lib/models/input/user';
 import { genHash } from '$lib/server/utils';
 import { miscService } from '$lib/services/misc.service';
 import { userService } from '$lib/services/user.service';
-import { users } from '$lib/utils/seeds/users.json';
+import { users, carts } from '$lib/utils/seeds/users.json';
 import { menus, categories, menuItems, menuItemTypes } from '$lib/utils/seeds/menus.json';
 import {
 	categoryModelSchema,
@@ -16,6 +15,9 @@ import { menuService } from '$lib/services/menu.service';
 import { categoryService } from '$lib/services/category.service';
 import { menuItemService } from '$lib/services/menuitem.service';
 import { menuItemTypeService } from '$lib/services/menuitemtype.service';
+import { userModelSchema } from '$lib/models/db/user.model';
+import { cartModelSchema } from '$lib/models/db/cart.model';
+import { cartService } from '$lib/services/cart.sevice';
 
 declare global {
 	var appData: {
@@ -24,17 +26,25 @@ declare global {
 }
 
 const gen_users = async () => {
-	await Promise.allSettled(
-		users.map(async (user) => {
-			const result = userInputSchema.safeParse(user);
+	const ndate = new Date();
+	await Promise.allSettled([
+		...users.map(async (user) => {
+			const nuser = { ...user, createdAt: ndate, updatedAt: ndate };
+			const result = userModelSchema.safeParse(nuser);
 			if (result.success)
-				await userService.createNew({
+				await userService.overwrite({
 					...result.data,
 					password: await genHash(result.data.password),
 				});
-			else log.error('error seeding user:', result.error);
+			else log.error('error parsing user:', result.error);
+		}),
+		...carts.map(async cart => {
+			const ncart = { ...cart, createdAt: ndate, updatedAt: ndate };
+			const result = cartModelSchema.safeParse(ncart);
+			if (result.success) await cartService.overwrite(result.data);
+			else log.error('error parsing cart:', result.error);
 		})
-	);
+	]);
 };
 
 const gen_menus = async () => {
@@ -43,26 +53,26 @@ const gen_menus = async () => {
 		...menus.map(async (menu) => {
 			const nmenu = { ...menu, createdAt: ndate, updatedAt: ndate };
 			const result = menuModelSchema.safeParse(nmenu);
-			if (result.success) await menuService.createNew(result.data);
+			if (result.success) await menuService.overwrite(result.data);
 			else log.error('error seeding menu', nmenu, result.error);
 		}),
 		...categories.map(async (category) => {
 			const ncategory = { ...category, createdAt: ndate, updatedAt: ndate };
 			const result = categoryModelSchema.safeParse(ncategory);
-			if (result.success) await categoryService.createNew(result.data);
+			if (result.success) await categoryService.overwrite(result.data);
 			else log.error('error seeding menu', ncategory, result.error);
 		}),
 		...menuItems.map(async (menuitem) => {
 			const nmenuitem = { ...menuitem, createdAt: ndate, updatedAt: ndate };
 			const result = menuItemModelSchema.safeParse(nmenuitem);
-			if (result.success) await menuItemService.createNew(result.data);
+			if (result.success) await menuItemService.overwrite(result.data);
 			else log.error('error seeding menu', nmenuitem, result.error);
 		}),
 		,
 		...menuItemTypes.map(async (menuItemType) => {
 			const nmenuItemType = { ...menuItemType, createdAt: ndate, updatedAt: ndate };
 			const result = menuItemTypeModelSchema.safeParse(nmenuItemType);
-			if (result.success) await menuItemTypeService.createNew(result.data);
+			if (result.success) await menuItemTypeService.overwrite(result.data);
 			else log.error('error seeding menu', nmenuItemType, result.error);
 		}),
 	]);
