@@ -8,7 +8,7 @@
 		else if (w < 1280) text = `xl: ${w}px`;
 		else if (w < 1536) text = `2xl: ${w}px`;
 		else text = `00: ${w}px`;
-		console.log({ w, text });
+		// console.log({ w, text });
 	};
 	if (browser) {
 		updateText(window?.outerWidth ?? 0);

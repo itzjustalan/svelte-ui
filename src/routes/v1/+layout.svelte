@@ -15,9 +15,26 @@
 	import type { LayoutData } from './$types';
 	import TwDebug from '$lib/ui/TwDebug.svelte';
 	import { LightSwitch } from '@skeletonlabs/skeleton';
+	import { beforeNavigate } from '$app/navigation';
+	import { uacController } from '$lib/user.access.controller';
+	import { browser } from '$app/environment';
+	import { log } from '$lib/logger';
 
 	export let data: LayoutData;
+	// import { page } from '$app/stores';
+	// console.log('$page', $page.data.user ?? '----!!');
+
+	beforeNavigate((navigation) => {
+		const error = uacController.authorize(data.user, navigation.to?.url.pathname ?? '', 'get');
+		if (browser && error) {
+			navigation.cancel();
+			alert(error.message);
+		}
+		log.cl_nav(navigation.to?.url.pathname ?? '-', error?.message ?? 'ok', data.user);
+	});
 </script>
+
+<pre>{JSON.stringify(data.user)}</pre>
 
 <TwDebug />
 <LightSwitch class="absolute right-0 top-0 " />

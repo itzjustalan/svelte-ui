@@ -24,9 +24,12 @@ class MiscService extends BaseService<MiscModel> {
 	}
 	async setAppData({ seeded }: { seeded: boolean }) {
 		try {
-			await this.createOrUpdate({
+			const ndate = new Date();
+			await this.overwrite({
 				id: MiscIds.appdata,
 				seeded,
+				createdAt: ndate,
+				updatedAt: ndate,
 			});
 		} catch (error) {
 			log.error('ee:', error);

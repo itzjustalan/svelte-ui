@@ -1,16 +1,15 @@
+import { UserRoles } from '$lib/user.access.controller';
 import { RecordSchema } from 'cirql';
 import { z } from 'zod';
-
-// export interface User {
-//   id: string,
-//   username: string,
-//   password: string
-// }
 
 export type UserModel = z.infer<typeof userModelSchema>;
 export const userModelSchema = RecordSchema.extend({
 	username: z.string().max(255).email(),
 	password: z.string().min(12).max(255),
+	role: z.nativeEnum(UserRoles),
+	access: z.string().array(), //todo: custom logic with zod refine
+	createdAt: z.coerce.date(),
+	updatedAt: z.coerce.date(),
 }).strict();
 
 export type UnverifieduserModel = z.infer<typeof unverifieduserModelSchema>;

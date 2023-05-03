@@ -11,7 +11,6 @@
 		mutationKey: ['signin'],
 		mutationFn: authNetwork.signin,
 		onSuccess(data, variables, context) {
-			console.log('yeyy', data, variables, context);
 			log.info(browser && document.cookie);
 		},
 	});

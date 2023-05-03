@@ -2,7 +2,7 @@ import { dev } from '$app/environment';
 import { authController } from '$lib/controllers/auth.controller';
 import { responseFromError } from '$lib/server/utils';
 import { HttpStatusCodes } from '$lib/utils/httpStatusCodes';
-import { authInputSchema } from '$lib/models/input/user.signup';
+import { authInputSchema } from '$lib/models/input/user';
 import { json } from '@sveltejs/kit';
 import type { CookieSerializeOptions } from 'cookie';
 import type { RequestHandler } from './$types';
