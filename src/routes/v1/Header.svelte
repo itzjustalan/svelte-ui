@@ -7,7 +7,7 @@
 	<div class="text-center text-2xl">Header</div>
 </header>
 
-<pre>{JSON.stringify($auth?.user)}</pre>
+<!-- <pre>{JSON.stringify($auth?.user)}</pre> -->
 
 <UacLink href="/v1/about">about</UacLink>
 <UacLink href="/v1/test">test</UacLink>

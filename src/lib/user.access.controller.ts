@@ -34,20 +34,31 @@ export const accessRoutes: {
 				update_menu: 0,
 			},
 		},
-		'/v1/api/cart': {
-			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer],
-			access: {
-			}
-		},
-		'/v1/cart': {
-			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer, UserRoles.Guest],
-			access: {
-			}
-		},
 		'/v1/api/auth/refresh': {
 			roles: [UserRoles.Guest],
 			access: {},
 		},
+		'/v1/api/cart': {
+			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer],
+			access: {},
+		},
+		'/v1/api/menu': {
+			roles: [UserRoles.Guest],
+			access: {},
+		},
+		'/v1/api/menu/menuitem': {
+			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer, UserRoles.Guest],
+			access: {},
+		},
+		'/v1/api/menu/menuitemtype': {
+			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer, UserRoles.Guest],
+			access: {},
+		},
+		'/v1/cart': {
+			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer, UserRoles.Guest],
+			access: {},
+		},
+
 		'/v1/auth/signin': {
 			roles: [UserRoles.Guest],
 			access: {},
@@ -78,7 +89,7 @@ export const accessRoutes: {
 	put: {
 		'/v1/api/cart': {
 			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer],
-			access: {}
+			access: {},
 		},
 	},
 	delete: {},
