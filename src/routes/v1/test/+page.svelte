@@ -16,7 +16,8 @@
 	let newItem: MenuItemInput = {
 		title: '',
 		description: '',
-		price: 0,
+		amount: 0,
+		currency: "GBP",
 		menuItemTypes: [],
 	};
 	let newItemType: MenuItemTypeInput = {
@@ -158,7 +159,7 @@
 	<form>
 		Title <input type="text" bind:value={newItem.title} />
 		<br />Description <input type="text" bind:value={newItem.description} />
-		<br />price <input type="number" bind:value={newItem.price} />
+		<br />price <input type="number" bind:value={newItem.amount} />
 		<br />itemType
 		{#if $menuItemTypes.isLoading}
 			Loading menu items...

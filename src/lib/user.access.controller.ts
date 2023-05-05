@@ -39,15 +39,20 @@ export const accessRoutes: {
 			access: {
 			}
 		},
+		'/v1/cart': {
+			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer, UserRoles.Guest],
+			access: {
+			}
+		},
+		'/v1/api/auth/refresh': {
+			roles: [UserRoles.Guest],
+			access: {},
+		},
 		'/v1/auth/signin': {
 			roles: [UserRoles.Guest],
 			access: {},
 		},
 		'/v1/auth/signup': {
-			roles: [UserRoles.Guest],
-			access: {},
-		},
-		'/v1/auth/refresh': {
 			roles: [UserRoles.Guest],
 			access: {},
 		},

@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-	import { log } from '$lib/logger';
 	import { authNetwork } from '$lib/networks/auth.network';
+	import { auth } from '$lib/stores/auth';
 	import { createMutation } from '@tanstack/svelte-query';
 
 	let username: string;
@@ -10,10 +9,14 @@
 	const signin = createMutation({
 		mutationKey: ['signin'],
 		mutationFn: authNetwork.signin,
-		onSuccess(data, variables, context) {
-			log.info(browser && document.cookie);
-		},
 	});
+	signin.subscribe(
+		(res) => {
+			if (!res) return;
+			if (!res.isSuccess) return;
+			auth.set(res.data);
+		}
+	)
 	const handleSignin = (e: Event) => {
 		e.preventDefault();
 		$signin.mutate({ username, password });

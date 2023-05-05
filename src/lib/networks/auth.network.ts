@@ -1,15 +1,8 @@
 import { type AuthInput, authInputSchema } from '$lib/models/input/user';
-import type { UserModel } from '$lib/models/db/user.model';
 import defaultApi from './apis';
-import { decodeJwt } from '$lib/utils';
+import type { AuthResponse } from '$lib/stores/auth';
 
-interface AuthResponse {
-	user: UserModel;
-	jwt: {
-		accessToken: string;
-		refreshToken: string;
-	};
-}
+
 
 class AuthNetwork {
 	accessTimeout: NodeJS.Timeout | undefined;
@@ -22,27 +15,27 @@ class AuthNetwork {
 
 	signup = async (data: AuthInput) => {
 		authInputSchema.parse(data);
-		await defaultApi.post<AuthResponse>('v1/api/auth/signup', data);
+		await defaultApi.post('v1/api/auth/signup', data);
 	};
 
 	signin = async (data: AuthInput): Promise<AuthResponse> => {
 		authInputSchema.parse(data);
 		const res = await defaultApi.post<AuthResponse>('v1/api/auth/signin', data);
-		this.autoRefresh(res.data.jwt.accessToken);
+		// this.autoRefresh(res.data.jwt.accessToken);
 		return res.data;
 	};
 
 	refresh = async (): Promise<AuthResponse> => {
 		const response = await defaultApi.get<AuthResponse>('v1/api/auth/refresh');
-		this.autoRefresh(response.data.jwt.accessToken);
+		// this.autoRefresh(response.data.jwt.accessToken);
 		return response.data;
 	};
 
-	autoRefresh = (accessToken: string) => {
-		const decodedToken = decodeJwt(accessToken);
-		clearTimeout(this.accessTimeout);
-		this.accessTimeout = setTimeout(this.refresh, (decodedToken.exp - decodedToken.iat) * 1000);
-	};
+	// autoRefresh = (accessToken: string) => {
+	// 	const decodedToken = decodeJwt(accessToken);
+	// 	clearTimeout(this.accessTimeout);
+	// 	this.accessTimeout = setTimeout(this.refresh, (decodedToken.exp - decodedToken.iat) * 1000);
+	// };
 }
 
 export const authNetwork = new AuthNetwork();

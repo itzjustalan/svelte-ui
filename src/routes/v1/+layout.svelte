@@ -35,7 +35,7 @@
 	});
 </script>
 
-<pre>{JSON.stringify(data.user)}</pre>
+<!-- <pre>{JSON.stringify(data.user)}</pre> -->
 
 <TwDebug />
 <LightSwitch class="absolute right-0 top-0 " />
