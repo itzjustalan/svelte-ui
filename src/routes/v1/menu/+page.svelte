@@ -8,6 +8,7 @@
 	import { menuNetwork } from '$lib/networks/menu.network';
 	import LoadingSpinner from '$lib/ui/LoadingSpinner.svelte';
 	import Category from './Category.svelte';
+	import { onMount } from 'svelte';
 	// export let data: PageData;
 	let seltectedMenu: MenuData;
 	const allmenus = createQuery<MenuData[], Error>({
@@ -17,6 +18,9 @@
 			seltectedMenu ??= data[0];
 		},
 	});
+	onMount(() => {
+		$allmenus.refetch();
+	});
 </script>
 
 <!-- 
@@ -25,7 +29,7 @@
     {$allmenus.status}
 </pre> -->
 <!-- <LoadingSpinner /> -->
-{#if $allmenus.isLoading}
+<!-- {#if $allmenus.isLoading}
 	<LoadingSpinner />
 {:else if $allmenus.isError}
 	<p>Error found</p>
@@ -35,7 +39,7 @@
 			<ListBoxItem bind:group={seltectedMenu} name="medium" value={menu}>{menu.title}</ListBoxItem>
 		{/each}
 	</ListBox>
-{/if}
+{/if} -->
 
 {#if seltectedMenu !== undefined}
 	<Accordion>

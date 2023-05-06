@@ -58,7 +58,10 @@ export const accessRoutes: {
 			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer, UserRoles.Guest],
 			access: {},
 		},
-
+		'/v1/menu': {
+			roles: [UserRoles.Guest],
+			access: {},
+		},
 		'/v1/auth/signin': {
 			roles: [UserRoles.Guest],
 			access: {},
