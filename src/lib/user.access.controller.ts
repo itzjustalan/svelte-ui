@@ -34,6 +34,18 @@ export const accessRoutes: {
 				update_menu: 0,
 			},
 		},
+		'v1/admin':{
+			roles:[UserRoles.Admin],
+			access: {
+				
+			},
+		},
+		'v1/admin/menu':{
+			roles:[UserRoles.Admin],
+			access: {
+				
+			},
+		},
 		'/v1/api/cart': {
 			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer],
 			access: {

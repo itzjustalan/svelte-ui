@@ -5,6 +5,7 @@ import { z } from 'zod';
 export type MenuItemTypeModel = z.infer<typeof menuItemTypeModelSchema>;
 export const menuItemTypeModelSchema = RecordSchema.extend({
 	id: z.string(),
+	clientId: z.string(),
 	title: z.string().min(1).trim(),
 	description: z.string().min(1).trim(),
 	createdAt: z.coerce.date(),
@@ -14,6 +15,7 @@ export const menuItemTypeModelSchema = RecordSchema.extend({
 export type MenuItemModel = z.infer<typeof menuItemModelSchema>;
 export const menuItemModelSchema = RecordSchema.extend({
 	id: z.string(),
+	clientId: z.string(),
 	title: z.string().min(1).trim(),
 	description: z.string().min(1).trim(),
 	amount: z.number().min(0).max(Number.MAX_SAFE_INTEGER),
@@ -26,6 +28,7 @@ export const menuItemModelSchema = RecordSchema.extend({
 export type CategoryModel = z.infer<typeof categoryModelSchema>;
 export const categoryModelSchema = RecordSchema.extend({
 	id: z.string(),
+	clientId: z.string(),
 	title: z.string().min(1).trim(),
 	menuItems: z.string().array(),
 	// items: menuItemSchema.array(),
@@ -36,6 +39,7 @@ export const categoryModelSchema = RecordSchema.extend({
 export type MenuModel = z.infer<typeof menuModelSchema>;
 export const menuModelSchema = RecordSchema.extend({
 	id: z.string(),
+	clientId: z.string(),
 	title: z.string().min(1).trim(),
 	categories: z.string().array(),
 	// categories: categorySchema.array(),
