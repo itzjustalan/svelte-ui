@@ -12,17 +12,15 @@
 		mutationKey: ['signin'],
 		mutationFn: authNetwork.signin,
 		onSuccess(data, variables, context) {
-			if (data.user.role == UserRoles.Admin)
-			goto('/v1/admin');
+			// if (data.user.role == UserRoles.Admin)
+			// goto('/v1/admin');
 		},
 	});
-	signin.subscribe(
-		(res) => {
-			if (!res) return;
-			if (!res.isSuccess) return;
-			auth.set(res.data);
-		}
-	)
+	signin.subscribe((res) => {
+		if (!res) return;
+		if (!res.isSuccess) return;
+		auth.set(res.data);
+	});
 	const handleSignin = (e: Event) => {
 		e.preventDefault();
 		$signin.mutate({ username, password });

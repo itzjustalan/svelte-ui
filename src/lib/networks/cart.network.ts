@@ -5,6 +5,6 @@ import defaultApi from './apis';
 class CartNetwork {
 	getCart = async () => (await defaultApi.get<CartData[]>('v1/api/cart')).data;
 	updateCart = async (data: CartUpdateInput) =>
-		await defaultApi.post<CartModel>('v1/api/cart', data);
+		(await defaultApi.put<CartModel>('v1/api/cart', data)).data;
 }
 export const cartNetwork = new CartNetwork();

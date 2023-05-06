@@ -92,6 +92,7 @@ export const accessRoutes: {
 		},
 	},
 	post: {
+		
 		'/v1/api/auth/signin': {
 			roles: [UserRoles.Guest],
 			access: {},

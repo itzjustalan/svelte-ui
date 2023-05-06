@@ -28,11 +28,9 @@ export const GET: RequestHandler = async (event) => {
 // };
 
 export const PUT: RequestHandler = async ({ request, locals }) => {
-    const result = cartUpdateInputSchema.safeParse(await request.json());
-    if (!result.success) return responseFromError(result.error);
-    log.warn(result);
-    const error = await cartController.updateCart(locals.user.uid, result.data);
-    if (error instanceof Error) return responseFromError(error);
-    return json(error);
-    // return json('ok');
+    const validation = cartUpdateInputSchema.safeParse(await request.json());
+    if (!validation.success) return responseFromError(validation.error);
+    const result = await cartController.updateCart(locals.user.uid, validation.data);
+    if (result instanceof Error) return responseFromError(result);
+    return json(result);
 }
