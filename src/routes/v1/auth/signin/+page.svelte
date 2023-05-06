@@ -12,8 +12,8 @@
 		mutationKey: ['signin'],
 		mutationFn: authNetwork.signin,
 		onSuccess(data, variables, context) {
-			// if (data.user.role == UserRoles.Admin)
-			// goto('/v1/admin');
+			if (data.user.role == UserRoles.Client)
+			goto('/v1/client/menuitem');
 		},
 	});
 	signin.subscribe((res) => {
