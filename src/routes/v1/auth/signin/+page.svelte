@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { authNetwork } from '$lib/networks/auth.network';
 	import { auth } from '$lib/stores/auth';
+	import { UserRoles } from '$lib/user.access.controller';
 	import { createMutation } from '@tanstack/svelte-query';
 
 	let username: string;
@@ -9,6 +11,10 @@
 	const signin = createMutation({
 		mutationKey: ['signin'],
 		mutationFn: authNetwork.signin,
+		onSuccess(data, variables, context) {
+			if (data.user.role == UserRoles.Admin)
+			goto('/v1/admin');
+		},
 	});
 	signin.subscribe(
 		(res) => {
