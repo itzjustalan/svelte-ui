@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { invalidate, invalidateAll } from "$app/navigation";
 	import { log } from "$lib/logger";
+	import { element } from "svelte/internal";
+	import { number } from "zod";
 // 	import { browser } from "$app/environment";
 // import { Drawer, drawerStore, type DrawerSettings } from "@skeletonlabs/skeleton";
 
@@ -16,16 +17,16 @@
 //};
 
 $: cartItems = [
-    { name: 'Product 1', price: 10.00, image: 'https://via.placeholder.com/48x48', quantity: 1,taxpercentage:10},
-    { name: 'Product 2', price: 15.00, image: 'https://via.placeholder.com/48x48',quantity: 1,taxpercentage:15 },
+    { name: 'Product 1',price: 0.00, pricePerQuantity: 10.00, image: 'https://via.placeholder.com/48x48', quantity: 1,taxpercentage:10,tax:0},
+    { name: 'Product 2',price: 0.00, pricePerQuantity: 15.00, image: 'https://via.placeholder.com/48x48',quantity: 1,taxpercentage:15,tax:0 },
 ];
-  $:tax= 0;
-  function calculateTax(amount:number,taxpercentage:number):number{
-	  tax+=(amount*taxpercentage)/100
-	return tax+amount;
-	
-  }
-  $: totalPrice= cartItems.reduce((sum, current) => sum + calculateTax(current.price*current.quantity,current.taxpercentage), 0);
+$: totalPrice= cartItems.reduce((sum, element) => {
+	element.price=element.pricePerQuantity*element.quantity;
+	element.tax=element.price*element.taxpercentage/100;
+	tax+=element.tax;
+	return sum + element.price+element.tax;
+}, 0);
+$:tax=cartItems.reduce((taxtsum,element)=>element.tax+taxtsum,0);
   export let addQuantity = (item:any) => {
 	const index=cartItems.findIndex(arrayitem=>arrayitem===item);
 	if (cartItems[index].quantity<10) 
@@ -73,7 +74,8 @@ function checkout() {
 			<img class="h-16 w-16 object-cover rounded" src={item.image} alt={item.name} />
 			<div class="ml-4">
 			  <p class="font-medium text-gray-900">{item.name}</p>
-			  <p class="text-gray-500">${item.price.toFixed(2)}</p>
+			  <p class="text-gray-500">Tax : {item.tax.toFixed(2)}</p>
+			  <p class="text-gray-500">£{item.pricePerQuantity.toFixed(2)}</p>
 			</div>
 		  </div>
 		  <div class="flex items-center">
@@ -81,7 +83,10 @@ function checkout() {
 			<span class="text-gray-900 font-medium ml-2">{item.quantity}</span>
 			<button class="text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 ml-2" on:click={() => addQuantity(item)}>Add</button>
 			<button class="text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 ml-2" on:click={() => removeItem(item)}><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24"><path d="M261 936q-24.75 0-42.375-17.625T201 876V306h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438V306ZM367 790h60V391h-60v399Zm166 0h60V391h-60v399ZM261 306v570-570Z"/></svg></button>
-		  </div>
+			<p class="font-medium">£{item.price.toFixed(2)}</p>
+		</div>
+
+		
 		  
 		</div>
 	  {/each}
@@ -89,14 +94,16 @@ function checkout() {
 	{#if cartItems.length === 0}
 	  <p class="mt-4 text-gray-500">Your cart is empty.</p>
 	{:else}
+
 	  <div class="mt-4 flex items-center justify-between">
 		<p class="text-gray-500">Tax:</p>
-		<p class="font-medium">${((totalPrice*18)/100).toFixed(2)}</p>
+		<p class="font-medium">£{tax.toFixed(2)}</p>
 	  </div>
 	  <div class="mt-4 flex items-center justify-between">
 		<p class="text-gray-500">Total:</p>
-		<p class="font-medium">${totalPrice.toFixed(2)}</p>
+		<p class="font-medium">£{totalPrice.toFixed(2)}</p>
 	  </div>
+	  
 	  <div class="mt-6">
 		<button class="w-full bg-blue-500 text-white py-3 rounded-lg font-medium hover:bg-blue-600" on:click={checkout}>Checkout</button>
 	  </div>
