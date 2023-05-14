@@ -51,11 +51,11 @@ class CartController {
 		const cart = await cartService.findOneById<CartModel>(cartId);
 		if (!cart) return new InternalServerError('error fetching cart');
 		//todo: should we just accept arbitary ids and quantities instead??
-	
+
 		if (data.add) {
 			const index = cart.items.findIndex((e) => e.menuItem === data.add);
 			if (index < 0) cart.items.push({ menuItem: data.add, quantity: 1 });
-			else if(cart.items[index].quantity!=10) cart.items[index].quantity++;
+			else if (cart.items[index].quantity != 10) cart.items[index].quantity++;
 		} else if (data.remove) {
 			log.warn('rm');
 			const index = cart.items.findIndex((e) => e.menuItem === data.remove);

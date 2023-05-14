@@ -35,12 +35,12 @@ export const categoryUpdateInputSchema = categoryModelSchema
 // menuItem
 export type MenuItemInput = z.infer<typeof menuItemInputSchema>;
 export const menuItemInputSchema = menuItemModelSchema
-	.omit({ id: true, createdAt: true, updatedAt: true })
+	.omit({ id: true, clientId: true, createdAt: true, updatedAt: true })
 	.strict();
 
 export type MenuItemUpdateInput = z.infer<typeof menuItemUpdateInputSchema>;
 export const menuItemUpdateInputSchema = menuItemModelSchema
-	.omit({ createdAt: true, updatedAt: true })
+	.omit({ clientId: true, createdAt: true, updatedAt: true })
 	.partial()
 	.extend({ id: z.string() })
 	.strict();

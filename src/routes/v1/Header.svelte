@@ -8,7 +8,7 @@
 </header>
 
 <!-- <pre>{JSON.stringify($auth?.user)}</pre> -->
-<div class="flex gap-3 center">
+<div class="center flex gap-3">
 	<UacLink href="/v1/about">about</UacLink>
 	<UacLink href="/v1/test">test</UacLink>
 	<UacLink href="/v1/protected">protected</UacLink>
@@ -16,5 +16,4 @@
 	<UacLink href="/v1">home</UacLink>
 	<UacLink href="/v1/cart">cart</UacLink>
 	<UacLink href="/v1/auth/signin">signin</UacLink>
-	
 </div>

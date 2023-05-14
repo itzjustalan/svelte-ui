@@ -6,19 +6,15 @@
 	import { Modal, modalStore } from '@skeletonlabs/skeleton';
 	import type { ModalSettings, ModalComponent } from '@skeletonlabs/skeleton';
 	import { createMutation } from '@tanstack/svelte-query';
-	import MenuItem from './MenuItem.svelte'
+	import MenuItem from './MenuItem.svelte';
 
 	export let category: CategoryData;
-
-
-
-
 </script>
 
 <Modal />
 <div class="grid w-full grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-3">
 	{#each category.menuItems as menuItem}
-	<MenuItem {menuItem}/>
+		<MenuItem {menuItem} />
 	{/each}
 </div>
 

@@ -2,8 +2,6 @@ import { type AuthInput, authInputSchema } from '$lib/models/input/user';
 import defaultApi from './apis';
 import type { AuthResponse } from '$lib/stores/auth';
 
-
-
 class AuthNetwork {
 	accessTimeout: NodeJS.Timeout | undefined;
 

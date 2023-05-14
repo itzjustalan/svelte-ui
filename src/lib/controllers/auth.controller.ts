@@ -93,7 +93,7 @@ class AuthController {
 		});
 		if (!nuser) return new InternalServerError('error creating user');
 		await unverifiedUserService.deleteOneById(user.id);
-		await cartController.createCartForUser(nuser.id); 
+		await cartController.createCartForUser(nuser.id);
 		const payload = { uid: nuser.id, role: nuser.role, access: nuser.access };
 		return {
 			user: { ...nuser, password: '' },

@@ -84,9 +84,12 @@ class MenuController {
 		);
 	}
 
-	async createMenuItem(menuItem: MenuItemInput): Promise<AppError | MenuItemModel> {
+	async createMenuItem(
+		menuItem: MenuItemInput,
+		clientId: string
+	): Promise<AppError | MenuItemModel> {
 		return (
-			(await menuItemService.createNew(menuItem)) ??
+			(await menuItemService.createNew({ ...menuItem, clientId })) ??
 			new InternalServerError('error creating menuItem')
 		);
 	}

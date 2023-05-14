@@ -6,5 +6,5 @@
 </script>
 
 {#if uacController.authorize($page.data.user, href, 'get') === undefined}
-	<a href={href}><slot /></a>
+	<a {href}><slot /></a>
 {/if}

@@ -38,12 +38,12 @@ const gen_users = async () => {
 				});
 			else log.error('error parsing user:', result.error);
 		}),
-		...carts.map(async cart => {
+		...carts.map(async (cart) => {
 			const ncart = { ...cart, createdAt: ndate, updatedAt: ndate };
 			const result = cartModelSchema.safeParse(ncart);
 			if (result.success) await cartService.overwrite(result.data);
 			else log.error('error parsing cart:', result.error);
-		})
+		}),
 	]);
 };
 

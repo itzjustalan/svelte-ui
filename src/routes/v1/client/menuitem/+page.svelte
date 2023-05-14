@@ -1,15 +1,30 @@
 <script lang="ts">
 	import { log } from '$lib/logger';
 	import type { MenuItemData } from '$lib/models/data/menu.data';
+	import type { MenuItemTypeModel } from '$lib/models/db/menu.model';
+	import { menuItemInputSchema, type MenuItemInput } from '$lib/models/input/menu';
 	import { menuNetwork } from '$lib/networks/menu.network';
-	import { createQuery } from '@tanstack/svelte-query';
+	import { auth } from '$lib/stores/auth';
+	import { dataFromFormData } from '$lib/utils';
+	import { createMutation, createQuery } from '@tanstack/svelte-query';
 	import { createSvelteTable, flexRender, getCoreRowModel } from '@tanstack/svelte-table';
 	import type { ColumnDef, TableOptions } from '@tanstack/table-core/src/types';
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 
 	let tdata: MenuItemData[] = [];
+	let ndata: MenuItemInput = {
+		title: '',
+		description: '',
+		amount: 0,
+		currency: 'GBP',
+		menuItemTypes: [],
+	};
 
+	const menuItemTypes = createQuery<MenuItemTypeModel[], Error>({
+		queryKey: ['menuitemtypes'],
+		queryFn: menuNetwork.getMenuItemTypes,
+	});
 	const menuItems = createQuery<MenuItemData[], Error>({
 		queryKey: ['menuitems'],
 		queryFn: menuNetwork.getMenuItems,
@@ -17,17 +32,12 @@
 			tdata = data;
 		},
 	});
+	const createMenuItem = createMutation({
+		mutationKey: ['create', 'menuitem'],
+		mutationFn: menuNetwork.createMenuItem,
+	});
 
 	const defaultColumns: ColumnDef<MenuItemData>[] = [
-		// {
-		// 	accessorFn: (row) => row.id,
-		// 	id: 'id',
-		// 	cell: (info) => info.getValue(),
-		// 	header: () => '#',
-		// },
-		{
-			accessorKey: 'clientId',
-		},
 		{
 			accessorKey: 'title',
 		},
@@ -42,15 +52,6 @@
 		{
 			accessorKey: 'amount',
 		},
-		{
-			accessorKey: 'currency',
-		},
-		{
-			accessorKey: 'createdAt',
-		},
-		{
-			accessorKey: 'updatedAt',
-		},
 	];
 
 	const options = writable<TableOptions<MenuItemData>>({
@@ -58,20 +59,6 @@
 		columns: defaultColumns,
 		getCoreRowModel: getCoreRowModel(),
 	});
-
-	// ?? [
-	// 		{
-	// 			id: '',
-	// 			clientId: '',
-	// 			title: '',
-	// 			description: '',
-	// 			amount: 0,
-	// 			currency: 'GBP',
-	// 			menuItemTypes: [],
-	// 			createdAt: new Date(),
-	// 			updatedAt: new Date(),
-	// 		},
-	// 	],
 
 	const rerender = () => {
 		options.update((options) => ({
@@ -86,92 +73,13 @@
 		$menuItems.refetch();
 		log.warn('refetchin done !!');
 	});
-
-	// type Person = {
-	// 	firstName: string;
-	// 	lastName: string;
-	// 	age: number;
-	// 	visits: number;
-	// 	status: string;
-	// 	progress: number;
-	// };
-
-	// const defaultData: Person[] = [
-	// 	{
-	// 		firstName: 'tanner',
-	// 		lastName: 'linsley',
-	// 		age: 24,
-	// 		visits: 100,
-	// 		status: 'In Relationship',
-	// 		progress: 50,
-	// 	},
-	// 	{
-	// 		firstName: 'tandy',
-	// 		lastName: 'miller',
-	// 		age: 40,
-	// 		visits: 40,
-	// 		status: 'Single',
-	// 		progress: 80,
-	// 	},
-	// 	{
-	// 		firstName: 'joe',
-	// 		lastName: 'dirte',
-	// 		age: 45,
-	// 		visits: 20,
-	// 		status: 'Complicated',
-	// 		progress: 10,
-	// 	},
-	// ];
-
-	// const defaultColumns: ColumnDef<Person>[] = [
-	// 	{
-	// 		accessorKey: 'firstName',
-	// 		cell: (info) => info.getValue(),
-	// 		footer: (info) => info.column.id,
-	// 	},
-	// 	{
-	// 		accessorFn: (row) => row.lastName,
-	// 		id: 'lastName',
-	// 		cell: (info) => info.getValue(),
-	// 		header: () => 'Last Name',
-	// 		footer: (info) => info.column.id,
-	// 	},
-	// 	{
-	// 		accessorKey: 'age',
-	// 		header: () => 'Age',
-	// 		footer: (info) => info.column.id,
-	// 	},
-	// 	{
-	// 		accessorKey: 'visits',
-	// 		header: () => 'Visits',
-	// 		footer: (info) => info.column.id,
-	// 	},
-	// 	{
-	// 		accessorKey: 'status',
-	// 		header: 'Status',
-	// 		footer: (info) => info.column.id,
-	// 	},
-	// 	{
-	// 		accessorKey: 'progress',
-	// 		header: 'Profile Progress',
-	// 		footer: (info) => info.column.id,
-	// 	},
-	// ];
-
-	// const options = writable<TableOptions<Person>>({
-	// 	data: defaultData,
-	// 	columns: defaultColumns,
-	// 	getCoreRowModel: getCoreRowModel(),
-	// });
-
-	// const rerender = () => {
-	// 	options.update((options) => ({
-	// 		...options,
-	// 		data: defaultData,
-	// 	}));
-	// };
-
-	// const table = createSvelteTable(options);
+	const addProduct = (e: SubmitEvent) => {
+		// $auth?.user.id ??
+		// dataFromFormData(new FormData(e.target as HTMLFormElement))
+		const result = menuItemInputSchema.safeParse(ndata);
+		if (!result.success) return alert(result.error);
+		$createMenuItem.mutate({ ...result.data });
+	};
 </script>
 
 <pre>{JSON.stringify($menuItems.status)}</pre>
@@ -225,3 +133,58 @@
 	<div class="h-4" />
 	<button on:click={() => rerender()} class="border p-2"> Rerender </button>
 </div>
+
+<form on:submit|preventDefault={addProduct}>
+	<!-- <input type="hidden" name="clientId" value={$auth?.user.id} />
+	<input type="hidden" name="menuItemTypes" value={[]} />
+	<input type="hidden" name="currency" value="GBP" /> -->
+	<div>
+		<label class="label" for="name"> Name </label>
+		<input
+			class="input px-4"
+			type="text"
+			bind:value={ndata.title}
+			placeholder="Enter product name"
+		/>
+	</div>
+	<div class="mt-4">
+		<label class="label" for="description"> Description </label>
+		<textarea
+			class="textarea"
+			rows="4"
+			bind:value={ndata.description}
+			placeholder="Enter product description"
+		/>
+	</div>
+	<div class="mt-4">
+		<label class="label" for="price"> Price </label>
+		<input class="input px-4" type="number" step="0.01" min="0" bind:value={ndata.amount} />
+	</div>
+	{#if $menuItemTypes.isLoading}
+		Loading menu items...
+	{:else if $menuItemTypes.status === 'error'}
+		<span>Error: {$menuItemTypes.error.message}</span>
+	{:else}
+		<select multiple bind:value={ndata.menuItemTypes}>
+			{#each $menuItemTypes.data as elm}
+				<option value={elm.id}>
+					{elm.title}
+				</option>
+			{/each}
+		</select>
+	{/if}
+
+	<!-- <div class="mt-4">
+	  <label class="label" for="image">
+		Image
+	  </label>
+	  <input
+		class="input px-4"
+		id="image"
+		type="file"
+	  />
+	</div> -->
+	<div class="mt-8">
+		<button class="btn variant-filled-primary" type="submit"> Add Product </button>
+	</div>
+</form>

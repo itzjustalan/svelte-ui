@@ -34,17 +34,13 @@ export const accessRoutes: {
 				update_menu: 0,
 			},
 		},
-		'v1/admin':{
-			roles:[UserRoles.Admin],
-			access: {
-				
-			},
+		'v1/admin': {
+			roles: [UserRoles.Admin],
+			access: {},
 		},
-		'v1/admin/menu':{
-			roles:[UserRoles.Admin],
-			access: {
-				
-			},
+		'v1/admin/menu': {
+			roles: [UserRoles.Admin],
+			access: {},
 		},
 		'/v1/api/auth/refresh': {
 			roles: [UserRoles.Guest],
@@ -68,7 +64,7 @@ export const accessRoutes: {
 		},
 		'/v1/client/menuitem': {
 			roles: [UserRoles.Client],
-			access: {}
+			access: {},
 		},
 		'/v1/cart': {
 			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer, UserRoles.Guest],
@@ -96,9 +92,12 @@ export const accessRoutes: {
 		},
 	},
 	post: {
-		
 		'/v1/api/auth/signin': {
 			roles: [UserRoles.Guest],
+			access: {},
+		},
+		'/v1/api/menu/menuitem': {
+			roles: [UserRoles.Client, UserRoles.Admin],
 			access: {},
 		},
 		'/v1/api/auth/signup': {

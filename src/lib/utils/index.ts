@@ -81,9 +81,18 @@ export const deleteUndefinedKeys = <T extends object>(data: T): void =>
 		v === undefined
 			? delete data[k as keyof T]
 			: v && typeof v === 'object'
-				? deleteUndefinedKeys(v)
-				: undefined
+			? deleteUndefinedKeys(v)
+			: undefined
 	);
+
+export const dataFromFormData = (formData: FormData): { [key: string]: any } => {
+	const data: { [key: string]: any } = {};
+	for (let field of formData) {
+		const [key, value] = field;
+		data[key] = value;
+	}
+	return data;
+};
 
 // export const prettyPrintMenuItemType = (itemType: MenuItemType) => {
 // 	switch (itemType) {

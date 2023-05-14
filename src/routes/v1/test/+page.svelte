@@ -114,22 +114,22 @@
 		<span>Error: {$menus.error.message}</span>
 	{:else}
 		<b>Menus</b> -->
-		<!-- {#each $menus.data as item} -->
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<!-- <div on:click|preventDefault={() => (selectedMenu = item)}>{item.title}</div> -->
-		<!-- {/each} -->
+	<!-- {#each $menus.data as item} -->
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- <div on:click|preventDefault={() => (selectedMenu = item)}>{item.title}</div> -->
+	<!-- {/each} -->
 	<!-- {/if} -->
 	<!-- <button type="button" disabled={$menu.isLoading} on:click={createNewMenu}>create new menu</button> -->
 </div>
 
 <!-- {#if selectedMenu} -->
-	<!-- <div class="card">
+<!-- <div class="card">
 		<b><u>Menu: {selectedMenu?.title}</u></b>
 		{#each selectedMenu.categories as category} -->
-			<!-- <u>{category}</u> -->
-			<!-- <br /><u>{category.title}</u> -->
-		<!-- {/each} -->
-	<!-- </div> -->
+<!-- <u>{category}</u> -->
+<!-- <br /><u>{category.title}</u> -->
+<!-- {/each} -->
+<!-- </div> -->
 <!-- {/if} -->
 
 <!-- <div class="card">
