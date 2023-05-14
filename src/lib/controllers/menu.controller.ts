@@ -62,9 +62,9 @@ class MenuController {
 		);
 	}
 
-	async createCategory(category: CategoryInput): Promise<AppError | CategoryModel> {
+	async createCategory(category: CategoryInput,clientId: string): Promise<AppError | CategoryModel> {
 		return (
-			(await categoryService.createNew(category)) ??
+			(await categoryService.createNew({...category,clientId})) ??
 			new InternalServerError('error creating category')
 		);
 	}

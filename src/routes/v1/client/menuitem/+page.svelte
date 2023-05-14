@@ -114,7 +114,7 @@
 				</tr>
 			{/each}
 		</tbody>
-		<!-- <tfoot>
+		<tfoot>
 			{#each $table.getFooterGroups() as footerGroup}
 				<tr>
 					{#each footerGroup.headers as header}
@@ -128,7 +128,7 @@
 					{/each}
 				</tr>
 			{/each}
-		</tfoot> -->
+		</tfoot>
 	</table>
 	<div class="h-4" />
 	<button on:click={() => rerender()} class="border p-2"> Rerender </button>
@@ -165,7 +165,7 @@
 	{:else if $menuItemTypes.status === 'error'}
 		<span>Error: {$menuItemTypes.error.message}</span>
 	{:else}
-		<select multiple bind:value={ndata.menuItemTypes}>
+		<select multiple bind:value={ndata.menuItemTypes} class="select" >
 			{#each $menuItemTypes.data as elm}
 				<option value={elm.id}>
 					{elm.title}

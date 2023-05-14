@@ -22,7 +22,7 @@ export const menuUpdateInputSchema = menuModelSchema
 // category
 export type CategoryInput = z.infer<typeof categoryInputSchema>;
 export const categoryInputSchema = categoryModelSchema
-	.omit({ id: true, createdAt: true, updatedAt: true })
+	.omit({ id: true,clientId: true, createdAt: true, updatedAt: true })
 	.strict();
 
 export type CategoryUpdateInput = z.infer<typeof categoryUpdateInputSchema>;

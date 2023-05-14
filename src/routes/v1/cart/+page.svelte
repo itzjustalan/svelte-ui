@@ -100,14 +100,14 @@
 <!-- </Drawer> -->
 <!-- {/if} -->
 
-<div class="rounded-lg bg-white px-4 py-5 shadow-md sm:p-6">
+<div class="rounded-lg card p-4 px-4 py-5 shadow-md sm:p-6">
 	<h2 class="mb-4 text-2xl font-semibold">Your Cart</h2>
 	{#if $userCart.isLoading}
 		Loading menu items...
 	{:else if $userCart.isError}
 		<span>Error: {$userCart.error.message}</span>
 	{:else}
-		<div class="divide-y divide-gray-200">
+		<div class="divide-y">
 			{#if !$userCart.data.items.length}
 				Your cart is empty
 			{:else}
