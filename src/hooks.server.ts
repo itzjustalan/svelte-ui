@@ -1,7 +1,7 @@
 import { authController } from '$lib/controllers/auth.controller';
+import { uacController } from '$lib/controllers/uac.controller';
 import { log } from '$lib/logger';
 import { conectDB } from '$lib/server/db';
-import { uacController } from '$lib/user.access.controller';
 import { urlWithoutParams } from '$lib/utils';
 import { seedDataDevMode } from '$lib/utils/seeder';
 import type { Handle } from '@sveltejs/kit';

@@ -1,7 +1,7 @@
 <script lang="ts">
 	const test = () => {
-		fetch('/')
-	}
+		fetch('/');
+	};
 </script>
 
 <svelte:head>

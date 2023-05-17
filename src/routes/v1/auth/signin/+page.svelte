@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { UserRoles } from '$lib/models/db/user.model';
 	import { authNetwork } from '$lib/networks/auth.network';
 	import { auth } from '$lib/stores/auth';
-	import { UserRoles } from '$lib/user.access.controller';
 	import { createMutation } from '@tanstack/svelte-query';
 
 	let username: string;

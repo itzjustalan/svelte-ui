@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { uacController } from '$lib/controllers/uac.controller';
 	import { auth } from '$lib/stores/auth';
-	import { uacController } from '$lib/user.access.controller';
 
 	export let href: string = '/';
 </script>

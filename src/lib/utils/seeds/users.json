@@ -5,21 +5,39 @@
 			"username": "admin01@mail.com",
 			"password": "admin01@mail.com",
 			"role": "admin",
-			"access": []
+			"access": [
+				"c_menu",
+				"r_menu",
+				"u_menu",
+				"d_menu",
+				"c_category",
+				"r_category",
+				"u_category",
+				"d_category"
+			]
 		},
 		{
 			"id": "users:seed_user_2",
 			"username": "client01@mail.com",
 			"password": "client01@mail.com",
 			"role": "client",
-			"access": []
+			"access": [
+				"c_menu",
+				"r_menu",
+				"u_menu",
+				"d_menu",
+				"c_category",
+				"r_category",
+				"u_category",
+				"d_category"
+			]
 		},
 		{
 			"id": "users:seed_user_3",
 			"username": "customer01@mail.com",
 			"password": "customer01@mail.com",
 			"role": "customer",
-			"access": []
+			"access": ["r_menu"]
 		}
 	],
 	"carts": [

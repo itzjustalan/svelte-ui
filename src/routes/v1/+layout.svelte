@@ -16,7 +16,6 @@
 	import TwDebug from '$lib/ui/TwDebug.svelte';
 	import { LightSwitch } from '@skeletonlabs/skeleton';
 	import { beforeNavigate } from '$app/navigation';
-	import { uacController } from '$lib/user.access.controller';
 	import { browser } from '$app/environment';
 	import { log } from '$lib/logger';
 
