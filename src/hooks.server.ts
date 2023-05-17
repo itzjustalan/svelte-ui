@@ -2,6 +2,7 @@ import { authController } from '$lib/controllers/auth.controller';
 import { log } from '$lib/logger';
 import { conectDB } from '$lib/server/db';
 import { uacController } from '$lib/user.access.controller';
+import { urlWithoutParams } from '$lib/utils';
 import { seedDataDevMode } from '$lib/utils/seeder';
 import type { Handle } from '@sveltejs/kit';
 
@@ -25,10 +26,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 			};
 		}
 	}
-	// const error = uacController.authorize(event);
 	const error = uacController.authorize(
 		event.locals.user,
-		event.url.pathname,
+		urlWithoutParams(event.url.pathname, event.params),
 		event.request.method
 	);
 	if (error) {

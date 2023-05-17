@@ -93,3 +93,11 @@ export const deleteUndefinedKeys = <T extends object>(data: T): void =>
 // 			return 'Not Specified';
 // 	}
 // };
+
+export const urlWithoutParams = (url: string, params: object): string => {
+	const vals = Object.values(params);
+	if (vals.length === 0) return url;
+	vals.map((e) => (url = url.replace(e, '')));
+	url = url.replace(/\/+$/, '');
+	return url;
+};

@@ -34,6 +34,10 @@ export const accessRoutes: {
 				update_menu: 0,
 			},
 		},
+		'/v1/auth/verify': {
+			roles: [UserRoles.Guest],
+			access: {},
+		},
 		'/v1/auth/signin': {
 			roles: [UserRoles.Guest],
 			access: {},
