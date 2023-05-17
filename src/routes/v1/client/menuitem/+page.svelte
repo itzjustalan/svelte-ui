@@ -165,7 +165,7 @@
 	{:else if $menuItemTypes.status === 'error'}
 		<span>Error: {$menuItemTypes.error.message}</span>
 	{:else}
-		<select multiple bind:value={ndata.menuItemTypes} class="select" >
+		<select multiple bind:value={ndata.menuItemTypes} class="select">
 			{#each $menuItemTypes.data as elm}
 				<option value={elm.id}>
 					{elm.title}

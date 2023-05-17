@@ -100,7 +100,7 @@
 <!-- </Drawer> -->
 <!-- {/if} -->
 
-<div class="rounded-lg card p-4 px-4 py-5 shadow-md sm:p-6">
+<div class="card rounded-lg p-4 px-4 py-5 shadow-md sm:p-6">
 	<h2 class="mb-4 text-2xl font-semibold">Your Cart</h2>
 	{#if $userCart.isLoading}
 		Loading menu items...

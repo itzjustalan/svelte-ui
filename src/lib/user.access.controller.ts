@@ -34,12 +34,12 @@ export const accessRoutes: {
 				update_menu: 0,
 			},
 		},
-		'v1/admin': {
+		'/v1/admin': {
 			roles: [UserRoles.Admin],
 			access: {},
 		},
-	
-		'v1/admin/menu': {
+
+		'/v1/admin/menu': {
 			roles: [UserRoles.Admin],
 			access: {},
 		},
@@ -68,26 +68,6 @@ export const accessRoutes: {
 			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer, UserRoles.Guest],
 			access: {},
 		},
-		'/v1/auth/verify': {
-			roles: [UserRoles.Guest],
-			access: {},
-		},
-		'/v1/client/menuitem': {
-			roles: [UserRoles.Client],
-			access: {},
-		},
-		'/v1/client/category': {
-			roles: [UserRoles.Client,UserRoles.Admin],
-			access: {},
-		},
-		'/v1/cart': {
-			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer, UserRoles.Guest],
-			access: {},
-		},
-		'/v1/menu': {
-			roles: [UserRoles.Guest],
-			access: {},
-		},
 		'/v1/auth/signin': {
 			roles: [UserRoles.Guest],
 			access: {},
@@ -96,12 +76,32 @@ export const accessRoutes: {
 			roles: [UserRoles.Guest],
 			access: {},
 		},
-		'/v1/test': {
-			roles: [UserRoles.Admin],
+		'/v1/auth/verify': {
+			roles: [UserRoles.Guest],
+			access: {},
+		},
+		'/v1/cart': {
+			roles: [UserRoles.Guest],
+			access: {},
+		},
+		'/v1/client/category': {
+			roles: [UserRoles.Client, UserRoles.Admin],
+			access: {},
+		},
+		'/v1/client/menuitem': {
+			roles: [UserRoles.Client],
+			access: {},
+		},
+		'/v1/menu': {
+			roles: [UserRoles.Guest],
 			access: {},
 		},
 		'/v1/protected': {
 			roles: [UserRoles.Client],
+			access: {},
+		},
+		'/v1/test': {
+			roles: [UserRoles.Admin],
 			access: {},
 		},
 	},
@@ -110,16 +110,16 @@ export const accessRoutes: {
 			roles: [UserRoles.Guest],
 			access: {},
 		},
-		'/v1/api/menu/menuitem': {
-			roles: [UserRoles.Client, UserRoles.Admin],
+		'/v1/api/auth/signup': {
+			roles: [UserRoles.Guest],
 			access: {},
 		},
 		'/v1/api/menu/category': {
 			roles: [UserRoles.Client, UserRoles.Admin],
 			access: {},
 		},
-		'/v1/api/auth/signup': {
-			roles: [UserRoles.Guest],
+		'/v1/api/menu/menuitem': {
+			roles: [UserRoles.Client, UserRoles.Admin],
 			access: {},
 		},
 	},

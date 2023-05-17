@@ -16,7 +16,7 @@
 		queryKey: ['menuitems'],
 		queryFn: menuNetwork.getMenuItems,
 	});
-    
+
 	let tdata: CategoryData[] = [];
 	let ndata: CategoryInput = {
 		title: '',
@@ -57,21 +57,21 @@
 			tdata = data;
 		},
 	});
-    const createCategory = createMutation({
-		mutationKey: ['create','category'],
+	const createCategory = createMutation({
+		mutationKey: ['create', 'category'],
 		mutationFn: menuNetwork.createCategory,
 		onSuccess() {
 			$categories.refetch();
 		},
 	});
-    const addCategory = async(e: SubmitEvent) => {
-        const result = categoryInputSchema.safeParse(ndata);
-        log.warn(result)
+	const addCategory = async (e: SubmitEvent) => {
+		const result = categoryInputSchema.safeParse(ndata);
+		log.warn(result);
 		if (!result.success) return alert(result.error);
-		const res= await $createCategory.mutateAsync({ ...result.data });
-        if (res.status==200) {
-            (e.target as HTMLFormElement).reset();
-        }
+		const res = await $createCategory.mutateAsync({ ...result.data });
+		if (res.status == 200) {
+			(e.target as HTMLFormElement).reset();
+		}
 	};
 </script>
 
