@@ -6,6 +6,6 @@
 	export let href: string = '/';
 </script>
 
-{#if uacController.authorize($auth?.user??undefined, href, 'get') === undefined}
+{#if uacController.authorize($auth?.user ?? undefined, href, 'get') === undefined}
 	<a {href}><slot /></a>
 {/if}

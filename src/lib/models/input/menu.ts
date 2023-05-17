@@ -9,7 +9,7 @@ import {
 // menu
 export type MenuInput = z.infer<typeof menuInputSchema>;
 export const menuInputSchema = menuModelSchema
-	.omit({ id: true, createdAt: true, updatedAt: true })
+	.omit({ id: true, clientId: true, createdAt: true, updatedAt: true })
 	.strict();
 
 export type MenuUpdateInput = z.infer<typeof menuUpdateInputSchema>;
@@ -48,7 +48,7 @@ export const menuItemUpdateInputSchema = menuItemModelSchema
 // menuItemType
 export type MenuItemTypeInput = z.infer<typeof menuItemTypeInputSchema>;
 export const menuItemTypeInputSchema = menuItemTypeModelSchema
-	.omit({ id: true, createdAt: true, updatedAt: true })
+	.omit({ id: true, clientId: true, createdAt: true, updatedAt: true })
 	.strict();
 
 export type MenuItemTypeUpdateInput = z.infer<typeof menuItemTypeUpdateInputSchema>;

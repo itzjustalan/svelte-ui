@@ -28,7 +28,7 @@ class AuthNetwork {
 		// this.autoRefresh(response.data.jwt.accessToken);
 		return response.data;
 	};
-	
+
 	signout = async (): Promise<void> => {
 		return await defaultApi.get('v1/api/auth/signout');
 	};

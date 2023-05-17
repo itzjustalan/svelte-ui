@@ -10,10 +10,10 @@ export const GET: RequestHandler = async () => {
 	return json(error);
 };
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({ request, locals }) => {
 	const result = menuItemTypeInputSchema.safeParse(await request.json());
 	if (!result.success) return responseFromError(result.error);
-	const error = await menuController.createMenuItemType(result.data);
+	const error = await menuController.createMenuItemType(result.data, locals.user.id);
 	if (error instanceof Error) return responseFromError(error);
 	return json(error);
 };

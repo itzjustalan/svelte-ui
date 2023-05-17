@@ -15,6 +15,7 @@
 	<UacLink href="/v1/menu">menu</UacLink>
 	<UacLink href="/v1">home</UacLink>
 	<UacLink href="/v1/cart">cart</UacLink>
+	<UacLink href="/v1/client">client</UacLink>
 	{#if $auth === undefined}
 		<UacLink href="/v1/auth/signin">Sign in</UacLink>
 	{:else}

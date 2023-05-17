@@ -12,10 +12,6 @@
 		flexRender,
 	} from '@tanstack/svelte-table';
 	import { categoryInputSchema, type CategoryInput } from '$lib/models/input/menu';
-	const menuItems = createQuery<MenuItemData[], Error>({
-		queryKey: ['menuitems'],
-		queryFn: menuNetwork.getMenuItems,
-	});
 
 	let tdata: CategoryData[] = [];
 	let ndata: CategoryInput = {
@@ -25,6 +21,7 @@
 	const defaultColumns: ColumnDef<CategoryData>[] = [
 		{
 			accessorKey: 'title',
+			header: 'Name',
 		},
 		{
 			accessorKey: 'menuItems',
@@ -43,12 +40,6 @@
 			data: tdata,
 		}));
 	};
-	const options = writable<TableOptions<CategoryData>>({
-		data: tdata,
-		columns: defaultColumns,
-		getCoreRowModel: getCoreRowModel(),
-	});
-	const table = createSvelteTable(options);
 
 	const categories = createQuery<CategoryData[], Error>({
 		queryKey: ['categories'],
@@ -57,6 +48,12 @@
 			tdata = data;
 		},
 	});
+
+	const menuItems = createQuery<MenuItemData[], Error>({
+		queryKey: ['menuitems'],
+		queryFn: menuNetwork.getMenuItems,
+	});
+
 	const createCategory = createMutation({
 		mutationKey: ['create', 'category'],
 		mutationFn: menuNetwork.createCategory,
@@ -64,6 +61,14 @@
 			$categories.refetch();
 		},
 	});
+
+	const options = writable<TableOptions<CategoryData>>({
+		data: tdata,
+		columns: defaultColumns,
+		getCoreRowModel: getCoreRowModel(),
+	});
+	const table = createSvelteTable(options);
+
 	const addCategory = async (e: SubmitEvent) => {
 		const result = categoryInputSchema.safeParse(ndata);
 		log.warn(result);
@@ -78,7 +83,7 @@
 <button on:click={() => $categories.refetch()}>refetch</button>
 
 <div class="p-2">
-	<table>
+	<table class="table">
 		<thead>
 			{#each $table.getHeaderGroups() as headerGroup}
 				<tr>

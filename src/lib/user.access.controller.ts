@@ -85,15 +85,23 @@ export const accessRoutes: {
 			access: {},
 		},
 		'/v1/cart': {
-			roles: [UserRoles.Admin,UserRoles.Client,UserRoles.Customer],
+			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer],
 			access: {},
 		},
 		'/v1/client/category': {
 			roles: [UserRoles.Client, UserRoles.Admin],
 			access: {},
 		},
+		'/v1/client/menu': {
+			roles: [UserRoles.Client, UserRoles.Admin],
+			access: {},
+		},
 		'/v1/client/menuitem': {
-			roles: [UserRoles.Client],
+			roles: [UserRoles.Client, UserRoles.Admin],
+			access: {},
+		},
+		'/v1/client/menuitemtype': {
+			roles: [UserRoles.Client, UserRoles.Admin],
 			access: {},
 		},
 		'/v1/menu': {
@@ -123,6 +131,10 @@ export const accessRoutes: {
 			access: {},
 		},
 		'/v1/api/menu/menuitem': {
+			roles: [UserRoles.Client, UserRoles.Admin],
+			access: {},
+		},
+		'/v1/api/menu/menuitemtype': {
 			roles: [UserRoles.Client, UserRoles.Admin],
 			access: {},
 		},

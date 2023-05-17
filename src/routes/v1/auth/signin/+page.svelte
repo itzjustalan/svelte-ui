@@ -12,7 +12,7 @@
 		mutationKey: ['signin'],
 		mutationFn: authNetwork.signin,
 		onSuccess(data, variables, context) {
-			if (data.user.role == UserRoles.Client) goto('/v1/client/menuitem');
+			if (data.user.role == UserRoles.Client) goto('/v1/client');
 		},
 	});
 	signin.subscribe((res) => {
