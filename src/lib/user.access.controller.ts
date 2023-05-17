@@ -17,11 +17,33 @@ export type AccessRoute = {
 	};
 };
 
+// const g: {
+// 	[key: string]: {
+// 		[key in AccessRouteMethod]?: AccessRoute;
+// 	};
+// } = {
+// 	'/v1/sdfgs': {
+// 		get: {
+// 			roles: [UserRoles.Guest],
+// 			access: {},
+// 		},
+// 		post: {
+// 			roles: ['admin'],
+// 			access: {},
+// 		},
+// 	},
+// };
+
 export const accessRoutes: {
 	[key in AccessRouteMethod]: {
 		[key: string]: AccessRoute;
 	};
 } = {
+	// export const accessRoutes: {
+	// 	[key: string]: {
+	// 		[key in AccessRouteMethod]?: AccessRoute
+	// 	}
+	// } = {
 	get: {
 		'/': {
 			roles: [UserRoles.Guest],
@@ -113,7 +135,7 @@ export const accessRoutes: {
 			access: {},
 		},
 		'/v1/test': {
-			roles: [UserRoles.Admin],
+			roles: [UserRoles.Guest],
 			access: {},
 		},
 	},
