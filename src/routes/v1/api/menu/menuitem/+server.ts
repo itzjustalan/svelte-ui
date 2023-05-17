@@ -13,7 +13,7 @@ export const GET: RequestHandler = async () => {
 export const POST: RequestHandler = async ({ request, locals }) => {
 	const result = menuItemInputSchema.safeParse(await request.json());
 	if (!result.success) return responseFromError(result.error);
-	const error = await menuController.createMenuItem(result.data, locals.user.uid);
+	const error = await menuController.createMenuItem(result.data, locals.user.id);
 	if (error instanceof Error) return responseFromError(error);
 	return json(error);
 };

@@ -15,5 +15,9 @@
 	<UacLink href="/v1/menu">menu</UacLink>
 	<UacLink href="/v1">home</UacLink>
 	<UacLink href="/v1/cart">cart</UacLink>
-	<UacLink href="/v1/auth/signin">signin</UacLink>
+	{#if $auth === undefined}
+		<UacLink href="/v1/auth/signin">Sign in</UacLink>
+	{:else}
+		<button class="btn variant-filled" on:click={auth.signout}>Sign out</button>
+	{/if}
 </div>

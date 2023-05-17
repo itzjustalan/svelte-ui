@@ -16,7 +16,7 @@ export const compareHash = async (text: string, hash: string): Promise<boolean> 
 	await argon2.verify(hash, text);
 
 export interface JwtPayload {
-	uid: string;
+	id: string;
 	role: string;
 	access: string[];
 	iat?: number;

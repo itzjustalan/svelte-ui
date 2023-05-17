@@ -9,7 +9,7 @@ class AuthNetwork {
 	// signin = async (data: AuthData): Promise<AuthResponse> =>
 	//   (await defaultApi.post("v1/api/auth/signin", authSchema.parse(data))).data;
 
-	signout = () => clearInterval(this.accessTimeout);
+	// signout = () => clearInterval(this.accessTimeout);
 
 	signup = async (data: AuthInput) => {
 		authInputSchema.parse(data);
@@ -28,7 +28,10 @@ class AuthNetwork {
 		// this.autoRefresh(response.data.jwt.accessToken);
 		return response.data;
 	};
-
+	
+	signout = async (): Promise<void> => {
+		return await defaultApi.get('v1/api/auth/signout');
+	};
 	// autoRefresh = (accessToken: string) => {
 	// 	const decodedToken = decodeJwt(accessToken);
 	// 	clearTimeout(this.accessTimeout);

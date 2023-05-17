@@ -15,7 +15,7 @@ export const withTimeout = (p: object, msg = 'time out', ms = 1000) =>
 // export const decodeJwt = (token: string) => jwt.decode(token); // needs polyfills
 
 export interface JwtPayload {
-	uid: string;
+	id: string;
 	role: string;
 	iat: number;
 	exp: number;

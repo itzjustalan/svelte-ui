@@ -6,7 +6,7 @@ import { cartUpdateInputSchema } from '$lib/models/input/cart';
 import { log } from '$lib/logger';
 
 export const GET: RequestHandler = async (event) => {
-	const error = await cartController.getUserCart(event.locals.user.uid);
+	const error = await cartController.getUserCart(event.locals.user.id);
 	if (error instanceof Error) return responseFromError(error);
 	return json(error);
 };
@@ -30,7 +30,7 @@ export const GET: RequestHandler = async (event) => {
 export const PUT: RequestHandler = async ({ request, locals }) => {
 	const validation = cartUpdateInputSchema.safeParse(await request.json());
 	if (!validation.success) return responseFromError(validation.error);
-	const result = await cartController.updateCart(locals.user.uid, validation.data);
+	const result = await cartController.updateCart(locals.user.id, validation.data);
 	if (result instanceof Error) return responseFromError(result);
 	return json(result);
 };

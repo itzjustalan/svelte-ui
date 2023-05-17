@@ -20,7 +20,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 			// const { iat, exp, ...user } = dtoken;
 			// e.locals.user = user;
 			event.locals.user = {
-				uid: dtoken.uid,
+				id: dtoken.id,
 				role: dtoken.role,
 				access: dtoken.access,
 			};

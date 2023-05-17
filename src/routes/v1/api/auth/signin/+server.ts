@@ -27,6 +27,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		return new Response(result.error.toString(), { status: HttpStatusCodes.BadRequest });
 	const payload = await authController.signinWithEmail(result.data);
 	if (payload instanceof Error) return responseFromError(payload);
+
 	cookies.set('access-token', payload.jwt.accessToken, { ...authCookieAttributes, maxAge: 3600 });
 	cookies.set('refresh-token', payload.jwt.refreshToken, {
 		...authCookieAttributes,

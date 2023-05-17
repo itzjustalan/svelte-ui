@@ -29,7 +29,7 @@ class AuthController {
 		if (!(await compareHash(password, user.password))) {
 			return new BadRequestError('invalid credentials');
 		}
-		const payload = { uid: user.id, role: user.role, access: user.access };
+		const payload = { id: user.id, role: user.role, access: user.access };
 		return {
 			user: { ...user, password: '' },
 			jwt: genJwts(payload),
@@ -73,14 +73,14 @@ class AuthController {
 	}
 
 	async verifyEmail({
-		uid,
+		id,
 		code,
 	}: {
-		uid: string;
+		id: string;
 		code: string;
 	}): Promise<AppError | { user: UserModel; jwt: { accessToken: string; refreshToken: string } }> {
 		//todo: show already verified?? but that would err out if the user opens the link twice..
-		const user = await unverifiedUserService.findOneById(uid);
+		const user = await unverifiedUserService.findOneById(id);
 		if (!user) return new BadRequestError('invalid link');
 		const time2hrAgo = Date.now() - 1000 * 60 * 60 * 2;
 		if (user.createdAt.getTime() < time2hrAgo) return new BadRequestError('link expired!');
@@ -94,7 +94,7 @@ class AuthController {
 		if (!nuser) return new InternalServerError('error creating user');
 		await unverifiedUserService.deleteOneById(user.id);
 		await cartController.createCartForUser(nuser.id);
-		const payload = { uid: nuser.id, role: nuser.role, access: nuser.access };
+		const payload = { id: nuser.id, role: nuser.role, access: nuser.access };
 		return {
 			user: { ...nuser, password: '' },
 			jwt: genJwts(payload),
@@ -109,9 +109,9 @@ class AuthController {
 			// if (Date.now() >= decodedToken.exp! * 1000) return new BadRequestError('token expired');
 			if (!decodedToken.exp || Date.now() >= decodedToken.exp * 1000)
 				return new BadRequestError('token expired');
-			const user = await userService.findOneById<UserModel>(decodedToken.uid);
+			const user = await userService.findOneById<UserModel>(decodedToken.id);
 			if (!user) return new BadRequestError('invalid token');
-			const payload = { uid: user.id, role: user.role, access: user.access };
+			const payload = { id: user.id, role: user.role, access: user.access };
 			return {
 				user: { ...user, password: '' },
 				jwt: genJwts(payload),

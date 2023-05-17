@@ -37,6 +37,13 @@ function createStore() {
 	return {
 		set,
 		subscribe,
+		signout: () => {
+			authNetwork.signout().then(() => {
+				set(undefined);
+				clearTimeout(accessTimeout);
+				localStorage.removeItem('auth_store');
+			}).catch(log.error);
+		}
 	};
 }
 

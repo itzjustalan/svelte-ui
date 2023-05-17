@@ -48,6 +48,10 @@ export const accessRoutes: {
 			roles: [UserRoles.Guest],
 			access: {},
 		},
+		'/v1/api/auth/signout': {
+			roles: [UserRoles.Guest],
+			access: {},
+		},
 		'/v1/api/cart': {
 			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer],
 			access: {},
@@ -81,7 +85,7 @@ export const accessRoutes: {
 			access: {},
 		},
 		'/v1/cart': {
-			roles: [UserRoles.Guest],
+			roles: [UserRoles.Admin,UserRoles.Client,UserRoles.Customer],
 			access: {},
 		},
 		'/v1/client/category': {
