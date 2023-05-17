@@ -1,14 +1,19 @@
 <script lang="ts">
-	import Link from '$lib/ui/Link.svelte';
+	import { auth } from '$lib/stores/auth';
+	import UacLink from '$lib/ui/UacLink.svelte';
 </script>
 
 <header>
 	<div class="text-center text-2xl">Header</div>
 </header>
 
-<Link path="/v1">home</Link>
-<Link path="/v1/about">about</Link>
-<Link path="/v1/test">test</Link>
-<Link path="/v1/protected">protected</Link>
-<Link path="/v1/menu">menu</Link>
-<Link path="/v1/auth/signin">signin</Link>
+<!-- <pre>{JSON.stringify($auth?.user)}</pre> -->
+<div class="center flex gap-3">
+	<UacLink href="/v1/about">about</UacLink>
+	<UacLink href="/v1/test">test</UacLink>
+	<UacLink href="/v1/protected">protected</UacLink>
+	<UacLink href="/v1/menu">menu</UacLink>
+	<UacLink href="/v1">home</UacLink>
+	<UacLink href="/v1/cart">cart</UacLink>
+	<UacLink href="/v1/auth/signin">signin</UacLink>
+</div>

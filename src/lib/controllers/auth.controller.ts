@@ -14,6 +14,7 @@ import { log } from '$lib/logger';
 import { mailService } from '$lib/services/mail.service';
 import { AppError, BadRequestError, InternalServerError } from '$lib/errors';
 import type { UserModel } from '$lib/models/db/user.model';
+import { cartController } from './cart.controller';
 
 class AuthController {
 	async signinWithEmail({
@@ -50,12 +51,11 @@ class AuthController {
 		} else if (await userService.findOneByUsername(username)) {
 			return new BadRequestError('email already taken');
 		}
-		log.info('say whaaa');
 		const code = nanoid(32);
 		const pwhash = await genHash(password);
 		const user = await unverifiedUserService.createNew(username, pwhash, code);
 		if (!user) return new InternalServerError('error registering user');
-		const url = `${host}/v1/auth/verify/${user.id}/${code}`;
+		const url = `${host}/v1/api/auth/verify/${user.id}/${code}`;
 		if (dev) {
 			log.info('verification email:', url);
 		} else {
@@ -93,6 +93,7 @@ class AuthController {
 		});
 		if (!nuser) return new InternalServerError('error creating user');
 		await unverifiedUserService.deleteOneById(user.id);
+		await cartController.createCartForUser(nuser.id);
 		const payload = { uid: nuser.id, role: nuser.role, access: nuser.access };
 		return {
 			user: { ...nuser, password: '' },
@@ -108,7 +109,7 @@ class AuthController {
 			// if (Date.now() >= decodedToken.exp! * 1000) return new BadRequestError('token expired');
 			if (!decodedToken.exp || Date.now() >= decodedToken.exp * 1000)
 				return new BadRequestError('token expired');
-			const user = await userService.findOneById(decodedToken.uid);
+			const user = await userService.findOneById<UserModel>(decodedToken.uid);
 			if (!user) return new BadRequestError('invalid token');
 			const payload = { uid: user.id, role: user.role, access: user.access };
 			return {

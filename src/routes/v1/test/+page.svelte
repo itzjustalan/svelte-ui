@@ -1,104 +1,105 @@
 <script lang="ts">
-	import { log } from '$lib/logger';
-	import { menuNetwork } from '$lib/networks/menu.network';
-	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
-	import {
-		menuItemInputSchema,
-		type MenuItemInput,
-		type MenuItemTypeInput,
-		menuItemTypeInputSchema,
-	} from '$lib/models/input/menu';
-	import type { MenuData } from '$lib/models/data/menu.data';
-	import type { MenuItemModel, MenuItemTypeModel } from '$lib/models/db/menu.model';
-	import { prettyPrintV } from '$lib/utils';
+	// import { log } from '$lib/logger';
+	// import { menuNetwork } from '$lib/networks/menu.network';
+	// import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
+	// import {
+	// 	menuItemInputSchema,
+	// 	type MenuItemInput,
+	// 	type MenuItemTypeInput,
+	// 	menuItemTypeInputSchema,
+	// } from '$lib/models/input/menu';
+	// import type { MenuData } from '$lib/models/data/menu.data';
+	// import type { MenuItemModel, MenuItemTypeModel } from '$lib/models/db/menu.model';
+	// import { prettyPrintV } from '$lib/utils';
 
-	let selectedMenu: MenuData;
-	let newItem: MenuItemInput = {
-		title: '',
-		description: '',
-		price: 0,
-		menuItemTypes: [],
-	};
-	let newItemType: MenuItemTypeInput = {
-		title: '',
-		description: '',
-	};
-	const client = useQueryClient();
-	const menu = createMutation({
-		mutationKey: ['menu'],
-		mutationFn: menuNetwork.createMenu,
-		onSuccess: () => {
-			client.invalidateQueries({
-				queryKey: ['menus'],
-			});
-		},
-	});
-	const category = createMutation({
-		mutationKey: ['category'],
-		mutationFn: menuNetwork.createCategory,
-		onSuccess: () => {
-			client.invalidateQueries({
-				//todo: and selected menu?
-				queryKey: ['menus'],
-			});
-		},
-	});
-	const menuItem = createMutation({
-		mutationKey: ['create', 'menuitem'],
-		mutationFn: menuNetwork.createMenuItem,
-		onSuccess: () => {
-			client.invalidateQueries({
-				queryKey: ['menuitems'],
-			});
-		},
-	});
-	const menuItemType = createMutation({
-		mutationKey: ['create', 'menuitemtype'],
-		mutationFn: menuNetwork.createMenuItemType,
-		onSuccess: () => {
-			client.invalidateQueries({
-				queryKey: ['menuitemtypes'],
-			});
-		},
-	});
-	const menuItemTypes = createQuery<MenuItemTypeModel[], Error>({
-		queryKey: ['menuitemtypes'],
-		queryFn: menuNetwork.getMenuItemTypes,
-	});
-	const menuItems = createQuery<MenuItemModel[], Error>({
-		queryKey: ['menuitems'],
-		queryFn: menuNetwork.getMenuItems,
-	});
-	const menus = createQuery<MenuData[], Error>({
-		queryKey: ['menus'],
-		queryFn: menuNetwork.getMenus,
-	});
-	const addMenuItem = () => {
-		log.info(JSON.stringify(newItem));
-		const result = menuItemInputSchema.safeParse(newItem);
-		if (!result.success) {
-			log.error(result.error);
-			return alert('error validating input chk console');
-		} else {
-			$menuItem.mutate(newItem);
-		}
-	};
-	const addMenuItemType = () => {
-		const result = menuItemTypeInputSchema.safeParse(newItemType);
-		if (!result.success) {
-			log.error(result.error);
-			return alert('errror while validation menu item type');
-		} else {
-			$menuItemType.mutate(newItemType);
-		}
-	};
-	const createCategory = async (title: string) =>
-		await $category.mutateAsync({ title, menuItems: [] });
-	const createNewMenu = async () => {
-		log.info('Okj');
-		let cat = (await createCategory('default_category')).data;
-		$menu.mutate({ title: 'default_menu', categories: [cat.id] });
-	};
+	// let selectedMenu: MenuData;
+	// let newItem: MenuItemInput = {
+	// 	title: '',
+	// 	description: '',
+	// 	amount: 0,
+	// 	currency: "GBP",
+	// 	menuItemTypes: [],
+	// };
+	// let newItemType: MenuItemTypeInput = {
+	// 	title: '',
+	// 	description: '',
+	// };
+	// const client = useQueryClient();
+	// const menu = createMutation({
+	// 	mutationKey: ['menu'],
+	// 	mutationFn: menuNetwork.createMenu,
+	// 	onSuccess: () => {
+	// 		client.invalidateQueries({
+	// 			queryKey: ['menus'],
+	// 		});
+	// 	},
+	// });
+	// const category = createMutation({
+	// 	mutationKey: ['category'],
+	// 	mutationFn: menuNetwork.createCategory,
+	// 	onSuccess: () => {
+	// 		client.invalidateQueries({
+	// 			//todo: and selected menu?
+	// 			queryKey: ['menus'],
+	// 		});
+	// 	},
+	// });
+	// const menuItem = createMutation({
+	// 	mutationKey: ['create', 'menuitem'],
+	// 	mutationFn: menuNetwork.createMenuItem,
+	// 	onSuccess: () => {
+	// 		client.invalidateQueries({
+	// 			queryKey: ['menuitems'],
+	// 		});
+	// 	},
+	// });
+	// const menuItemType = createMutation({
+	// 	mutationKey: ['create', 'menuitemtype'],
+	// 	mutationFn: menuNetwork.createMenuItemType,
+	// 	onSuccess: () => {
+	// 		client.invalidateQueries({
+	// 			queryKey: ['menuitemtypes'],
+	// 		});
+	// 	},
+	// });
+	// const menuItemTypes = createQuery<MenuItemTypeModel[], Error>({
+	// 	queryKey: ['menuitemtypes'],
+	// 	queryFn: menuNetwork.getMenuItemTypes,
+	// });
+	// const menuItems = createQuery<MenuItemModel[], Error>({
+	// 	queryKey: ['menuitems'],
+	// 	queryFn: menuNetwork.getMenuItems,
+	// });
+	// const menus = createQuery<MenuData[], Error>({
+	// 	queryKey: ['menus'],
+	// 	queryFn: menuNetwork.getMenus,
+	// });
+	// const addMenuItem = () => {
+	// 	log.info(JSON.stringify(newItem));
+	// 	const result = menuItemInputSchema.safeParse(newItem);
+	// 	if (!result.success) {
+	// 		log.error(result.error);
+	// 		return alert('error validating input chk console');
+	// 	} else {
+	// 		$menuItem.mutate(newItem);
+	// 	}
+	// };
+	// const addMenuItemType = () => {
+	// 	const result = menuItemTypeInputSchema.safeParse(newItemType);
+	// 	if (!result.success) {
+	// 		log.error(result.error);
+	// 		return alert('errror while validation menu item type');
+	// 	} else {
+	// 		$menuItemType.mutate(newItemType);
+	// 	}
+	// };
+	// const createCategory = async (title: string) =>
+	// 	await $category.mutateAsync({ title, menuItems: [] });
+	// const createNewMenu = async () => {
+	// 	log.info('Okj');
+	// 	let cat = (await createCategory('default_category')).data;
+	// 	$menu.mutate({ title: 'default_menu', categories: [cat.id] });
+	// };
 </script>
 
 <svelte:head>
@@ -107,31 +108,31 @@
 
 <div class="card">
 	<!-- <pre>selected Menu: {selectedMenu?.title}</pre> -->
-	{#if $menus.isLoading}
+	<!-- {#if $menus.isLoading}
 		Loading menus...
 	{:else if $menus.status === 'error'}
 		<span>Error: {$menus.error.message}</span>
 	{:else}
-		<b>Menus</b>
-		{#each $menus.data as item}
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div on:click|preventDefault={() => (selectedMenu = item)}>{item.title}</div>
-		{/each}
-	{/if}
-	<button type="button" disabled={$menu.isLoading} on:click={createNewMenu}>create new menu</button>
+		<b>Menus</b> -->
+	<!-- {#each $menus.data as item} -->
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- <div on:click|preventDefault={() => (selectedMenu = item)}>{item.title}</div> -->
+	<!-- {/each} -->
+	<!-- {/if} -->
+	<!-- <button type="button" disabled={$menu.isLoading} on:click={createNewMenu}>create new menu</button> -->
 </div>
 
-{#if selectedMenu}
-	<div class="card">
+<!-- {#if selectedMenu} -->
+<!-- <div class="card">
 		<b><u>Menu: {selectedMenu?.title}</u></b>
-		{#each selectedMenu.categories as category}
-			<!-- <u>{category}</u> -->
-			<br /><u>{category.title}</u>
-		{/each}
-	</div>
-{/if}
+		{#each selectedMenu.categories as category} -->
+<!-- <u>{category}</u> -->
+<!-- <br /><u>{category.title}</u> -->
+<!-- {/each} -->
+<!-- </div> -->
+<!-- {/if} -->
 
-<div class="card">
+<!-- <div class="card">
 	<pre>{JSON.stringify($menuItemType.status)}</pre>
 	{#if $menuItemType.isLoading}
 		loading...
@@ -158,7 +159,7 @@
 	<form>
 		Title <input type="text" bind:value={newItem.title} />
 		<br />Description <input type="text" bind:value={newItem.description} />
-		<br />price <input type="number" bind:value={newItem.price} />
+		<br />price <input type="number" bind:value={newItem.amount} />
 		<br />itemType
 		{#if $menuItemTypes.isLoading}
 			Loading menu items...
@@ -191,7 +192,7 @@
 			<div>{item.title}</div>
 		{/each}
 	{/if}
-</div>
+</div> -->
 
 <style>
 	.card {

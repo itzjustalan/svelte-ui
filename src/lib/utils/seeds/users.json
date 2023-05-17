@@ -1,22 +1,39 @@
 {
 	"users": [
 		{
+			"id": "users:seed_user_1",
 			"username": "admin01@mail.com",
 			"password": "admin01@mail.com",
 			"role": "admin",
 			"access": []
 		},
 		{
+			"id": "users:seed_user_2",
 			"username": "client01@mail.com",
 			"password": "client01@mail.com",
 			"role": "client",
 			"access": []
 		},
 		{
+			"id": "users:seed_user_3",
 			"username": "customer01@mail.com",
 			"password": "customer01@mail.com",
 			"role": "customer",
 			"access": []
+		}
+	],
+	"carts": [
+		{
+			"id": "carts:seed_user_1",
+			"items": []
+		},
+		{
+			"id": "carts:seed_user_2",
+			"items": []
+		},
+		{
+			"id": "carts:seed_user_3",
+			"items": []
 		}
 	]
 }

@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 export type UserModel = z.infer<typeof userModelSchema>;
 export const userModelSchema = RecordSchema.extend({
+	id: z.string(),
 	username: z.string().max(255).email(),
 	password: z.string().min(12).max(255),
 	role: z.nativeEnum(UserRoles),

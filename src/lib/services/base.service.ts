@@ -24,11 +24,14 @@ export class BaseService<T extends { id: string }> {
 		}
 	}
 
-	async findOneById(id: string): Promise<T | undefined> {
+	async findOneById<T>(id: string, fetch: string[] = [], schema?: ZodType): Promise<T | undefined> {
 		try {
 			const res = await db.execute({
-				schema: this.tableschema,
-				query: select().from(this.tablename).where({ id }),
+				schema: schema ?? this.tableschema,
+				query: select()
+					.from(this.tablename)
+					.where({ id })
+					.fetch(...fetch),
 			});
 			return res[0];
 		} catch (error) {
@@ -36,13 +39,20 @@ export class BaseService<T extends { id: string }> {
 		}
 	}
 
-	async findOneByKey(data: Partial<T>): Promise<T | undefined> {
+	async findOneByKey<T>(
+		data: Partial<T>,
+		fetch: string[] = [],
+		schema?: ZodType
+	): Promise<T | undefined> {
 		//todo: dis wrk?
 		try {
 			deleteUndefinedKeys(data);
 			const res = await db.execute({
-				schema: this.tableschema,
-				query: select().from(this.tablename).where(data),
+				schema: schema ?? this.tableschema,
+				query: select()
+					.from(this.tablename)
+					.where(data)
+					.fetch(...fetch),
 			});
 			return res[0];
 		} catch (error) {

@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-	import { log } from '$lib/logger';
+	import { goto } from '$app/navigation';
 	import { authNetwork } from '$lib/networks/auth.network';
+	import { auth } from '$lib/stores/auth';
+	import { UserRoles } from '$lib/user.access.controller';
 	import { createMutation } from '@tanstack/svelte-query';
 
 	let username: string;
@@ -11,8 +12,13 @@
 		mutationKey: ['signin'],
 		mutationFn: authNetwork.signin,
 		onSuccess(data, variables, context) {
-			log.info(browser && document.cookie);
+			if (data.user.role == UserRoles.Client) goto('/v1/client/menuitem');
 		},
+	});
+	signin.subscribe((res) => {
+		if (!res) return;
+		if (!res.isSuccess) return;
+		auth.set(res.data);
 	});
 	const handleSignin = (e: Event) => {
 		e.preventDefault();

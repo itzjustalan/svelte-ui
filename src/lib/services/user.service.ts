@@ -12,6 +12,7 @@ class UserService extends BaseService<UserModel> {
 
 	async findOneByUsername(username: string): Promise<UserModel | undefined> {
 		try {
+			//todo: try that new fn
 			const res = await db.execute({
 				schema: this.tableschema,
 				query: select().from(this.tablename).where({ username }),

@@ -24,17 +24,18 @@
 	// import { page } from '$app/stores';
 	// console.log('$page', $page.data.user ?? '----!!');
 
-	beforeNavigate((navigation) => {
-		const error = uacController.authorize(data.user, navigation.to?.url.pathname ?? '', 'get');
-		if (browser && error) {
-			navigation.cancel();
-			alert(error.message);
-		}
-		log.cl_nav(navigation.to?.url.pathname ?? '-', error?.message ?? 'ok', data.user);
-	});
+	// beforeNavigate((navigation) => {
+	// 	//todo: check if we own the url
+	// 	const error = uacController.authorize(data.user, navigation.to?.url.pathname ?? '', 'get');
+	// 	if (browser && error) {
+	// 		navigation.cancel();
+	// 		alert(error.message);
+	// 	}
+	// 	log.cl_nav(navigation.to?.url.pathname ?? '-', error?.message ?? 'ok', data.user);
+	// });
 </script>
 
-<pre>{JSON.stringify(data.user)}</pre>
+<!-- <pre>{JSON.stringify(data.user)}</pre> -->
 
 <TwDebug />
 <LightSwitch class="absolute right-0 top-0 " />

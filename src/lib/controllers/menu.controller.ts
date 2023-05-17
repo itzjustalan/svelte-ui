@@ -1,4 +1,4 @@
-import { InternalServerError } from '$lib/errors';
+import { AppError, InternalServerError } from '$lib/errors';
 import { categoryService } from '$lib/services/category.service';
 import { menuService } from '$lib/services/menu.service';
 import { menuItemService } from '$lib/services/menuitem.service';
@@ -30,7 +30,7 @@ import { menuItemTypeService } from '$lib/services/menuitemtype.service';
 
 class MenuController {
 	// menu
-	async getMenus(): Promise<Error | MenuData[]> {
+	async getMenus(): Promise<AppError | MenuData[]> {
 		return (
 			(await menuService.findAll<MenuData>(
 				['categories', 'categories.menuItems', 'categories.menuItems.menuItemTypes'],
@@ -39,13 +39,13 @@ class MenuController {
 		);
 	}
 
-	async createMenu(menuItem: MenuInput): Promise<Error | MenuModel> {
+	async createMenu(menuItem: MenuInput): Promise<AppError | MenuModel> {
 		return (
 			(await menuService.createNew(menuItem)) ?? new InternalServerError('error creating menu')
 		);
 	}
 
-	async updateMenu(menuItem: MenuUpdateInput): Promise<Error | MenuModel> {
+	async updateMenu(menuItem: MenuUpdateInput): Promise<AppError | MenuModel> {
 		return (
 			(await menuService.updateById(menuItem.id, menuItem)) ??
 			new InternalServerError('error updating menu')
@@ -53,7 +53,7 @@ class MenuController {
 	}
 
 	// category
-	async getCategories(): Promise<Error | CategoryData[]> {
+	async getCategories(): Promise<AppError | CategoryData[]> {
 		return (
 			(await categoryService.findAll<CategoryData>(
 				['menuItems', 'menuItems.menuItemTypes'],
@@ -62,14 +62,14 @@ class MenuController {
 		);
 	}
 
-	async createCategory(category: CategoryInput): Promise<Error | CategoryModel> {
+	async createCategory(category: CategoryInput,clientId: string): Promise<AppError | CategoryModel> {
 		return (
-			(await categoryService.createNew(category)) ??
+			(await categoryService.createNew({...category,clientId})) ??
 			new InternalServerError('error creating category')
 		);
 	}
 
-	async updateCategory(category: CategoryUpdateInput): Promise<Error | CategoryModel> {
+	async updateCategory(category: CategoryUpdateInput): Promise<AppError | CategoryModel> {
 		return (
 			(await categoryService.updateById(category.id, category)) ??
 			new InternalServerError('error updating category')
@@ -77,21 +77,24 @@ class MenuController {
 	}
 
 	// menuItem
-	async getMenuItems(): Promise<Error | MenuItemData[]> {
+	async getMenuItems(): Promise<AppError | MenuItemData[]> {
 		return (
 			(await menuItemService.findAll(['menuItemTypes'], menuItemDataSchema)) ??
 			new InternalServerError('error fetching menuItems')
 		);
 	}
 
-	async createMenuItem(menuItem: MenuItemInput): Promise<Error | MenuItemModel> {
+	async createMenuItem(
+		menuItem: MenuItemInput,
+		clientId: string
+	): Promise<AppError | MenuItemModel> {
 		return (
-			(await menuItemService.createNew(menuItem)) ??
+			(await menuItemService.createNew({ ...menuItem, clientId })) ??
 			new InternalServerError('error creating menuItem')
 		);
 	}
 
-	async updateMenuItem(menuItem: MenuItemUpdateInput): Promise<Error | MenuItemModel> {
+	async updateMenuItem(menuItem: MenuItemUpdateInput): Promise<AppError | MenuItemModel> {
 		return (
 			(await menuItemService.updateById(menuItem.id, menuItem)) ??
 			new InternalServerError('error updating menuItem')
@@ -99,14 +102,14 @@ class MenuController {
 	}
 
 	// menuItemType
-	async getMenuItemTypes(): Promise<Error | MenuItemTypeModel[]> {
+	async getMenuItemTypes(): Promise<AppError | MenuItemTypeModel[]> {
 		return (
 			(await menuItemTypeService.findAll()) ??
 			new InternalServerError('error fetching menuItemType')
 		);
 	}
 
-	async createMenuItemType(menuItemType: MenuItemTypeInput): Promise<Error | MenuItemTypeModel> {
+	async createMenuItemType(menuItemType: MenuItemTypeInput): Promise<AppError | MenuItemTypeModel> {
 		return (
 			(await menuItemTypeService.createNew(menuItemType)) ??
 			new InternalServerError('error creating menuItemType')
@@ -115,7 +118,7 @@ class MenuController {
 
 	async updateMenuItemType(
 		menuItemType: MenuItemTypeUpdateInput
-	): Promise<Error | MenuItemTypeModel> {
+	): Promise<AppError | MenuItemTypeModel> {
 		return (
 			(await menuItemTypeService.updateById(menuItemType.id, menuItemType)) ??
 			new InternalServerError('error updating menuItemType')

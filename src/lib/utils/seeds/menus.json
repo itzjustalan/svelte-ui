@@ -2,6 +2,7 @@
 	"menus": [
 		{
 			"id": "menus:seed_menu_1",
+			"clientId": "users:seed_user_2",
 			"title": "Menu",
 			"categories": [
 				"categories:seed_cat_3",
@@ -13,11 +14,13 @@
 		},
 		{
 			"id": "menus:seed_menu_2",
+			"clientId": "users:seed_user_2",
 			"title": "menu one",
 			"categories": ["categories:seed_cat_1", "categories:seed_cat_2"]
 		},
 		{
 			"id": "menus:seed_menu_3",
+			"clientId": "users:seed_user_2",
 			"title": "menu two",
 			"categories": ["categories:seed_cat_1"]
 		}
@@ -25,16 +28,19 @@
 	"categories": [
 		{
 			"id": "categories:seed_cat_1",
+			"clientId": "users:seed_user_2",
 			"title": "seed cat one",
 			"menuItems": ["menuitems:menu_item_1"]
 		},
 		{
 			"id": "categories:seed_cat_2",
+			"clientId": "users:seed_user_2",
 			"title": "seed cat two",
 			"menuItems": ["menuitems:menu_item_2"]
 		},
 		{
 			"id": "categories:seed_cat_3",
+			"clientId": "users:seed_user_2",
 			"title": "Recomended",
 			"menuItems": [
 				"menuitems:menu_item_5",
@@ -45,16 +51,19 @@
 		},
 		{
 			"id": "categories:seed_cat_4",
+			"clientId": "users:seed_user_2",
 			"title": "Salads",
 			"menuItems": ["menuitems:menu_item_3", "menuitems:menu_item_4"]
 		},
 		{
 			"id": "categories:seed_cat_5",
+			"clientId": "users:seed_user_2",
 			"title": "Biriyanis",
 			"menuItems": ["menuitems:menu_item_5", "menuitems:menu_item_6"]
 		},
 		{
 			"id": "categories:seed_cat_6",
+			"clientId": "users:seed_user_2",
 			"title": "Pizzas",
 			"menuItems": ["menuitems:menu_item_7", "menuitems:menu_item_8"]
 		}
@@ -62,79 +71,99 @@
 	"menuItems": [
 		{
 			"id": "menuitems:menu_item_1",
+			"clientId": "users:seed_user_2",
 			"description": "nalla menu item",
 			"menuItemTypes": ["menuitemtypes:menu_item_type_1"],
-			"price": 0,
+			"amount": 10,
+			"currency": "GBP",
 			"title": "Chicken Biriyani"
 		},
 		{
 			"id": "menuitems:menu_item_2",
+			"clientId": "users:seed_user_2",
 			"description": "nalla menu item",
 			"menuItemTypes": ["menuitemtypes:menu_item_type_2"],
-			"price": 0,
+			"currency": "GBP",
+			"amount": 20,
 			"title": "vada"
 		},
 		{
 			"id": "menuitems:menu_item_3",
+			"clientId": "users:seed_user_2",
 			"description": "Clouds are free. They just float around the sky all day and have fun. With something so strong, a little bit can go a long way.",
 			"menuItemTypes": ["menuitemtypes:menu_item_type_2", "menuitemtypes:menu_item_type_4"],
-			"price": 0,
+			"currency": "GBP",
+			"amount": 15,
 			"title": "Greek Salad"
 		},
 		{
 			"id": "menuitems:menu_item_4",
+			"clientId": "users:seed_user_2",
 			"description": "Let's put a touch more of the magic here. Just pretend you are a whisper floating across a mountain. That's a son of a gun of a cloud. Talk to trees, look at the birds. Whatever it takes. Poor old tree. Put it in, leave it alone. Steve wants reflections, so let's give him reflections. Isn't it fantastic that you can change your mind and create all these happy things?",
 			"menuItemTypes": ["menuitemtypes:menu_item_type_2"],
-			"price": 0,
+			"amount": 12,
+			"currency": "GBP",
 			"title": "Russian Salad"
 		},
 		{
 			"id": "menuitems:menu_item_5",
+			"clientId": "users:seed_user_2",
 			"description": "There we are. Didn't you know you had that much power? You can move mountains. You can do anything. If it's not what you want - stop and change it. Don't just keep going and expect it will get better. I'm gonna start with a little Alizarin crimson and a touch of Prussian blue Maybe we got a few little happy bushes here, just covered with snow.",
 			"menuItemTypes": ["menuitemtypes:menu_item_type_1"],
-			"price": 0,
+			"amount": 13,
+			"currency": "GBP",
 			"title": "Beef Biriyani"
 		},
 		{
 			"id": "menuitems:menu_item_6",
+			"clientId": "users:seed_user_2",
 			"description": "Paint anything you want on the canvas. Create your own world. A fan brush is a fantastic piece of equipment. Use it. Make friends with it. Isn't that fantastic? Let your imagination just wonder around when you're doing these things.",
 			"menuItemTypes": ["menuitemtypes:menu_item_type_3"],
-			"price": 0,
+			"amount": 18,
+			"currency": "GBP",
 			"title": "Thalassery Dum Biriyani"
 		},
 		{
 			"id": "menuitems:menu_item_7",
+			"clientId": "users:seed_user_2",
 			"description": "It's almost like something out of a fairytale book. Nothing wrong with washing your brush. We'll make some happy little bushes here. You can spend all day playing with mountains.",
 			"menuItemTypes": ["menuitemtypes:menu_item_type_1"],
-			"price": 0,
+			"amount": 5,
+			"currency": "GBP",
 			"title": "Pepperoni Pizza"
 		},
 		{
 			"id": "menuitems:menu_item_8",
+			"clientId": "users:seed_user_2",
 			"description": "We must be quiet, soft and gentle. Here we're limited by the time we have. We'll do another happy little painting. Have fun with it. Almost everything is going to happen for you automatically - you don't have to spend any time working or worrying.",
 			"menuItemTypes": ["menuitemtypes:menu_item_type_1"],
-			"price": 0,
+			"amount": 100,
+			"currency": "GBP",
 			"title": "Neapolitan Pizza"
 		}
 	],
 	"menuItemTypes": [
 		{
 			"id": "menuitemtypes:menu_item_type_1",
+			"clientId": "users:seed_user_2",
 			"title": "non-vegetarian",
 			"description": "animel cruel bois"
 		},
 		{
 			"id": "menuitemtypes:menu_item_type_2",
+			"clientId": "users:seed_user_2",
 			"title": "vegetarian",
 			"description": "100% shudha bhramin fooddh"
 		},
 		{
 			"id": "menuitemtypes:menu_item_type_3",
+			"clientId": "users:seed_user_2",
 			"title": "halal",
 			"description": "alpham bois"
 		},
 		{
 			"id": "menuitemtypes:menu_item_type_4",
+			"clientId": "users:seed_user_2",
 			"title": "vegan",
 			"description": "punyalathi gaals"
 		}

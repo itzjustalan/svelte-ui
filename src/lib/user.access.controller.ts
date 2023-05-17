@@ -1,4 +1,4 @@
-import { NotFoundError, type AppError, UnauthorizedError } from '$lib/errors';
+import { NotFoundError, type AppError, UnauthorizedError, InternalServerError } from '$lib/errors';
 
 export const UserRoles = {
 	Admin: 'admin',
@@ -34,7 +34,57 @@ export const accessRoutes: {
 				update_menu: 0,
 			},
 		},
+		'v1/admin': {
+			roles: [UserRoles.Admin],
+			access: {},
+		},
+	
+		'v1/admin/menu': {
+			roles: [UserRoles.Admin],
+			access: {},
+		},
+
+		'/v1/api/auth/refresh': {
+			roles: [UserRoles.Guest],
+			access: {},
+		},
+		'/v1/api/cart': {
+			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer],
+			access: {},
+		},
+		'/v1/api/menu': {
+			roles: [UserRoles.Guest],
+			access: {},
+		},
+		'/v1/api/menu/category': {
+			roles: [UserRoles.Guest],
+			access: {},
+		},
+		'/v1/api/menu/menuitem': {
+			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer, UserRoles.Guest],
+			access: {},
+		},
+		'/v1/api/menu/menuitemtype': {
+			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer, UserRoles.Guest],
+			access: {},
+		},
 		'/v1/auth/verify': {
+			roles: [UserRoles.Guest],
+			access: {},
+		},
+		'/v1/client/menuitem': {
+			roles: [UserRoles.Client],
+			access: {},
+		},
+		'/v1/client/category': {
+			roles: [UserRoles.Client,UserRoles.Admin],
+			access: {},
+		},
+		'/v1/cart': {
+			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer, UserRoles.Guest],
+			access: {},
+		},
+		'/v1/menu': {
 			roles: [UserRoles.Guest],
 			access: {},
 		},
@@ -43,10 +93,6 @@ export const accessRoutes: {
 			access: {},
 		},
 		'/v1/auth/signup': {
-			roles: [UserRoles.Guest],
-			access: {},
-		},
-		'/v1/auth/refresh': {
 			roles: [UserRoles.Guest],
 			access: {},
 		},
@@ -64,12 +110,25 @@ export const accessRoutes: {
 			roles: [UserRoles.Guest],
 			access: {},
 		},
+		'/v1/api/menu/menuitem': {
+			roles: [UserRoles.Client, UserRoles.Admin],
+			access: {},
+		},
+		'/v1/api/menu/category': {
+			roles: [UserRoles.Client, UserRoles.Admin],
+			access: {},
+		},
 		'/v1/api/auth/signup': {
 			roles: [UserRoles.Guest],
 			access: {},
 		},
 	},
-	put: {},
+	put: {
+		'/v1/api/cart': {
+			roles: [UserRoles.Admin, UserRoles.Client, UserRoles.Customer],
+			access: {},
+		},
+	},
 	delete: {},
 };
 
@@ -80,7 +139,7 @@ class UserAccessController {
 		method: string
 	): AppError | undefined {
 		const route = this._pick_route(method, url);
-		if (route === undefined) return new NotFoundError();
+		if (route === undefined) return new InternalServerError('uac not defined!');
 		if (route.roles.find((e) => e === UserRoles.Guest || e === user?.role)) return;
 		if (this._has_access_to_route(user?.access ?? [], route)) return;
 		return new UnauthorizedError();
