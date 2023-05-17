@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import { log } from '$lib/logger';
 import type { UserModel } from '$lib/models/db/user.model';
 import { authNetwork } from '$lib/networks/auth.network';
@@ -11,7 +12,9 @@ export interface AuthResponse {
 		refreshToken: string;
 	};
 }
+
 let accessTimeout: NodeJS.Timeout | undefined;
+
 const autoRefresh = (accessToken: string) => {
 	const decodedToken = decodeJwt(accessToken);
 	clearTimeout(accessTimeout);
@@ -25,8 +28,11 @@ const autoRefresh = (accessToken: string) => {
 	}, (decodedToken.exp - decodedToken.iat) * 1000);
 };
 
+const init = (): AuthResponse | undefined =>
+	browser ? JSON.parse(localStorage.getItem('auth_store') ?? 'null') ?? undefined : undefined;
+
 function createStore() {
-	const { subscribe, set, update } = writable<AuthResponse | undefined>(undefined);
+	const { subscribe, set, update } = writable<AuthResponse | undefined>(init());
 
 	return {
 		set,
@@ -39,4 +45,5 @@ export const auth = createStore();
 auth.subscribe((res) => {
 	if (!res?.jwt.accessToken) return;
 	autoRefresh(res?.jwt.accessToken);
+	if (browser) localStorage.setItem('auth_store', JSON.stringify(res ?? 'null'));
 });
