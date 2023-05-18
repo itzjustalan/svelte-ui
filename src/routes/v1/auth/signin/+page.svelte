@@ -44,4 +44,7 @@ user<input type="text" name="username" bind:value={username} required />
 <button disabled={$signin.isLoading} on:click={handleSignin}>summit</button>
 this is - signIN
 <br />
-no account? <a href="/v1/auth/signup">signUP</a>
+no account?
+<span class="btn btn-lg">
+	<a href="/v1/auth/signup">signUP</a>
+</span>

@@ -46,12 +46,12 @@ export const handle = (async ({ event, resolve }) => {
 			event.url.pathname,
 			performance.now() - start
 		);
-		return _error.respond();
+		// return _error.respond();
 		// throw error(_error.statusCode, _error);
-		// throw redirect(
-		// 	HttpStatusCodes.TemporaryRedirect,
-		// 	`/v1/error?msg=${_error.message}&cde=${_error.statusCode}`
-		// );
+		throw redirect(
+			HttpStatusCodes.TemporaryRedirect,
+			`/v1/error?msg=${_error.message}&cde=${_error.statusCode}`
+		);
 	}
 	const response: Response = await resolve(event);
 	log.endpoint(
@@ -67,7 +67,7 @@ export const handleError = ((input) => {
 	// handles unexpected errors - throw new Error('myrr);
 
 	// log.error(input.error, input.event);
-	log.error(JSON.stringify(input.error));
+	log.error('hooks.server.ts: handleError', JSON.stringify(input.error));
 
 	return {
 		message: 'Whoops! Something went wrong.',

@@ -27,11 +27,13 @@
 
 	//todo: check if we own the url
 	beforeNavigate((navigation) => {
-		const error = uacController.authorize($auth?.user, navigation.to?.url.pathname ?? '', 'get');
-		log.cl_nav(navigation.to?.url.pathname ?? '-', error?.message ?? 'ok', data.user);
-		if (browser && error) {
-			navigation.cancel();
-			goto(`/v1/error?msg=${error.message}&cde=${error.statusCode}`);
+		if (navigation.to) {
+			const error = uacController.authorize($auth?.user, navigation.to.url.pathname ?? '', 'get');
+			log.cl_nav(navigation.to.url.pathname ?? '-', error?.message ?? 'ok', data.user);
+			if (browser && error) {
+				navigation.cancel();
+				goto(`/v1/error?msg=${error.message}&cde=${error.statusCode}`);
+			}
 		}
 	});
 </script>

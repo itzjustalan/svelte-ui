@@ -30,13 +30,6 @@ const autoRefresh = (accessToken: string) => {
 	}, (decodedToken.exp - decodedToken.iat) * 1000);
 };
 
-// const deleteAuthCookies = () => {
-// 	if (browser) {
-// 		document.cookie = 'access-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-// 		document.cookie = 'refresh-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-// 	}
-// };
-
 const init = (): AuthResponse | undefined =>
 	browser ? JSON.parse(localStorage.getItem('auth_store') ?? 'null') ?? undefined : undefined;
 
@@ -46,20 +39,16 @@ function createStore() {
 	return {
 		set,
 		subscribe,
-		signout: () => {
-			authNetwork
-				.signout()
+		signout: () =>
+			goto('/v1/auth/signin')
 				.then(() => {
 					set(undefined);
-					// deleteAuthCookies();
+					invalidateAll();
 					clearTimeout(accessTimeout);
 					localStorage.removeItem('auth_store');
-					goto('/v1/auth/signin');
-					invalidateAll();
-					// invalidateAll().then(() => goto('/v1/auth/signin'));
+					authNetwork.signout().catch(log.error);
 				})
-				.catch(log.error);
-		},
+				.catch(log.error),
 	};
 }
 
@@ -70,3 +59,20 @@ auth.subscribe((res) => {
 	autoRefresh(res?.jwt.accessToken);
 	if (browser) localStorage.setItem('auth_store', JSON.stringify(res ?? 'null'));
 });
+
+// activates hooks.client.ts
+
+// authNetwork.signout().then(() => {
+// 	set(undefined);
+// 	invalidateAll();
+// 	clearTimeout(accessTimeout);
+// 	localStorage.removeItem('auth_store');
+// 	goto('/v1/auth/signin');
+// }),
+
+// const deleteAuthCookies = () => {
+// 	if (browser) {
+// 		document.cookie = 'access-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+// 		document.cookie = 'refresh-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+// 	}
+// };
