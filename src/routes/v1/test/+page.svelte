@@ -42,6 +42,8 @@
 	<title>test_page</title>
 </svelte:head>
 
+<img alt="test preview" src="/v1/test/tree.png" />
+
 <form on:submit|preventDefault={handleFileUpload} class="card">
 	<label for="file" class="label m-2">select file</label>
 	<input
