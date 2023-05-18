@@ -1,7 +1,8 @@
 import { PUBLIC_ADMIN_API_URL } from '$env/static/public';
 import { log } from '$lib/logger';
+import { auth } from '$lib/stores/auth';
 import axios, { type AxiosInstance } from 'axios';
-// export { type AxiosInstance } from 'axios';
+import { get } from 'svelte/store';
 
 const defaultApi: AxiosInstance = axios.create({
 	baseURL: PUBLIC_ADMIN_API_URL,
@@ -11,6 +12,7 @@ const defaultApi: AxiosInstance = axios.create({
 defaultApi.defaults.headers.common['Content-Type'] = 'application/json';
 defaultApi.interceptors.request.use(
 	(config) => {
+		// config.headers.Authorization = get(auth)?.jwt.accessToken;
 		log.cl_req(config.method ?? '-', config.url ?? '-', config.data);
 		return config;
 	},

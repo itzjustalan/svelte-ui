@@ -1,5 +1,5 @@
 import { type AppError, InternalServerError } from '$lib/errors';
-// import { log } from '$lib/logger';
+import { log } from '$lib/logger';
 import { UserRoles, type UserAccess } from '$lib/models/db/user.model';
 import { userAccessRoutes } from '$lib/user.access.control';
 

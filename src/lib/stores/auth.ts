@@ -1,4 +1,6 @@
 import { browser } from '$app/environment';
+import { goto } from '$app/navigation';
+import { invalidateAll } from '$app/navigation';
 import { log } from '$lib/logger';
 import type { UserModel } from '$lib/models/db/user.model';
 import { authNetwork } from '$lib/networks/auth.network';
@@ -28,6 +30,13 @@ const autoRefresh = (accessToken: string) => {
 	}, (decodedToken.exp - decodedToken.iat) * 1000);
 };
 
+// const deleteAuthCookies = () => {
+// 	if (browser) {
+// 		document.cookie = 'access-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+// 		document.cookie = 'refresh-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+// 	}
+// };
+
 const init = (): AuthResponse | undefined =>
 	browser ? JSON.parse(localStorage.getItem('auth_store') ?? 'null') ?? undefined : undefined;
 
@@ -42,8 +51,10 @@ function createStore() {
 				.signout()
 				.then(() => {
 					set(undefined);
+					// deleteAuthCookies();
 					clearTimeout(accessTimeout);
 					localStorage.removeItem('auth_store');
+					invalidateAll().then(() => goto('/v1/auth/signin'));
 				})
 				.catch(log.error);
 		},
