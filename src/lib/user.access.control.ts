@@ -158,5 +158,8 @@ export const userAccessRoutes: UserAccessRoutes = {
 		get: {
 			roles: [UserRoles.Guest],
 		},
+		post: {
+			roles: [UserRoles.Guest],
+		},
 	},
 };
