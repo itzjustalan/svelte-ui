@@ -139,6 +139,11 @@ export const userAccessRoutes: UserAccessRoutes = {
 			roles: [UserRoles.Client, UserRoles.Admin],
 		},
 	},
+	'/v1/error': {
+		get: {
+			roles: [UserRoles.Guest],
+		},
+	},
 	'/v1/menu': {
 		get: {
 			roles: [UserRoles.Guest],

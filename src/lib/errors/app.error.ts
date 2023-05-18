@@ -9,4 +9,5 @@ export class AppError extends Error {
 	}
 
 	respond = (): Response => new Response(this.message, { status: this.statusCode });
+	toError = (): Error => new Error(this.message, { cause: this.cause });
 }

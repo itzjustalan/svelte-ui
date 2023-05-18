@@ -12,6 +12,7 @@
 		mutationKey: ['signin'],
 		mutationFn: authNetwork.signin,
 		onSuccess(data, variables, context) {
+			auth.set(data);
 			if (data.user.role == UserRoles.Client) goto('/v1/client');
 		},
 	});

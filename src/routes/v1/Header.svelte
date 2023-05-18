@@ -7,7 +7,8 @@
 	<div class="text-center text-2xl">Header</div>
 </header>
 
-<pre>{$auth?.user.role}</pre>
+<!-- <pre>{$auth?.user.role}</pre> -->
+
 <div class="center flex gap-3">
 	<UacLink href="/v1/about">about</UacLink>
 	<UacLink href="/v1/test">test</UacLink>

@@ -9,7 +9,10 @@ declare global {
 				access: string[];
 			};
 		}
-		// interface Error {}
+		// interface Error {
+		// 	statusCode: number;
+		// 	message: string;
+		// }
 		// interface PageData {}
 		// interface Platform {}
 	}

@@ -15,23 +15,25 @@
 	import type { LayoutData } from './$types';
 	import TwDebug from '$lib/ui/TwDebug.svelte';
 	import { LightSwitch } from '@skeletonlabs/skeleton';
-	import { beforeNavigate } from '$app/navigation';
+	import { beforeNavigate, goto } from '$app/navigation';
 	import { browser } from '$app/environment';
 	import { log } from '$lib/logger';
+	import { uacController } from '$lib/controllers/uac.controller';
+	import { auth } from '$lib/stores/auth';
 
 	export let data: LayoutData;
 	// import { page } from '$app/stores';
 	// console.log('$page', $page.data.user ?? '----!!');
 
-	// beforeNavigate((navigation) => {
-	// 	//todo: check if we own the url
-	// 	const error = uacController.authorize(data.user, navigation.to?.url.pathname ?? '', 'get');
-	// 	if (browser && error) {
-	// 		navigation.cancel();
-	// 		alert(error.message);
-	// 	}
-	// 	log.cl_nav(navigation.to?.url.pathname ?? '-', error?.message ?? 'ok', data.user);
-	// });
+	//todo: check if we own the url
+	beforeNavigate((navigation) => {
+		const error = uacController.authorize($auth?.user, navigation.to?.url.pathname ?? '', 'get');
+		log.cl_nav(navigation.to?.url.pathname ?? '-', error?.message ?? 'ok', data.user);
+		if (browser && error) {
+			navigation.cancel();
+			goto(`/v1/error?msg=${error.message}&cde=${error.statusCode}`);
+		}
+	});
 </script>
 
 <!-- <pre>{JSON.stringify(data.user)}</pre> -->

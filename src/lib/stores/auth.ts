@@ -54,7 +54,9 @@ function createStore() {
 					// deleteAuthCookies();
 					clearTimeout(accessTimeout);
 					localStorage.removeItem('auth_store');
-					invalidateAll().then(() => goto('/v1/auth/signin'));
+					goto('/v1/auth/signin');
+					invalidateAll();
+					// invalidateAll().then(() => goto('/v1/auth/signin'));
 				})
 				.catch(log.error);
 		},
