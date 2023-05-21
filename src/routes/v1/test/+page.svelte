@@ -4,6 +4,7 @@
 
 	let fileData: string | undefined;
 	const allowedExts = ['.jpg', '.jpeg', '.png', '.webp'];
+	// let fileInput: HTMLInputElement, preview: HTMLImageElement;
 
 	if (browser) {
 		const fileInput = document.getElementById('file');
@@ -30,9 +31,10 @@
 
 	const handleFileUpload = async (event: SubmitEvent) => {
 		const formData = new FormData(event.target as HTMLFormElement);
-		const file = formData.get('file') as File;
-		fileData = await readFile(file);
-		await defaultApi.post('/v1/test', { fileData, fileName: file.name });
+		// const file = formData.get('file') as File;
+		// fileData = await readFile(file);
+		// await defaultApi.post('/v1/test', { fileData, fileName: file.name });
+		await defaultApi.post('/v1/test', formData);
 		(event.target as HTMLFormElement).reset();
 		fileData = undefined;
 	};
@@ -42,7 +44,9 @@
 	<title>test_page</title>
 </svelte:head>
 
-<img alt="test preview" src="/v1/test/tree.png" />
+<!-- <img alt="test preview" src="/v1/test/tree.png" /> -->
+<!-- <img alt="test preview" src="/v1/test/biwMVvc-IrYRjBtpCZ5Vc.jpg" /> -->
+<img alt="test preview" src="/v1/test/xVyo5LNFUN3nNPFlv73ms.png" />
 
 <form on:submit|preventDefault={handleFileUpload} class="card">
 	<label for="file" class="label m-2">select file</label>
@@ -54,6 +58,7 @@
 		class="input m-2"
 		accept={allowedExts.join(',')}
 	/>
+	<!-- bind:this={fileInput} -->
 	<button type="submit" class="btn btn-sm variant-filled-primary m-2">submit</button>
 </form>
 

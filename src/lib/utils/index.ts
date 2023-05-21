@@ -114,3 +114,9 @@ export const urlWithoutParams = (url: string, params: object): string => {
 	url = url.replace(/\/+$/, '');
 	return url;
 };
+
+export const extFromName = (name: string): string | undefined => {
+	const splits = name.split('.');
+	if (splits.length === 1) return;
+	return splits[splits.length - 1];
+};
