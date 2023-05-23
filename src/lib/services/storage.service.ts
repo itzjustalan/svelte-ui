@@ -5,6 +5,7 @@ import {
 	AWS_SECRET_ACCESS_KEY,
 } from '$env/static/private';
 import { log } from '$lib/logger';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import type internal from 'stream';
 // import { Credentials } from 'aws-sdk';
@@ -12,12 +13,12 @@ import type internal from 'stream';
 // import { createReadStream } from 'fs';
 
 class StorageService {
-	private s3: S3Client;
+	private client: S3Client;
 	private bucket: string;
 
 	constructor() {
 		this.bucket = AWS_BUCKET_NAME;
-		this.s3 = new S3Client({
+		this.client = new S3Client({
 			region: AWS_BUCKET_REGION,
 			credentials: {
 				accessKeyId: AWS_ACCESS_KEY_ID,
@@ -36,7 +37,7 @@ class StorageService {
 				Key: fileName,
 				Body: fileData,
 			});
-			return await this.s3.send(command);
+			return await this.client.send(command);
 		} catch (error) {
 			log.error(error);
 		}
@@ -44,11 +45,17 @@ class StorageService {
 
 	async download(fileName: string) {
 		try {
-			const command = new GetObjectCommand({
-				Bucket: this.bucket,
-				Key: fileName,
-			});
-			return await this.s3.send(command);
+			const command = new GetObjectCommand({ Bucket: this.bucket, Key: fileName });
+			return await this.client.send(command);
+		} catch (error) {
+			log.error(error);
+		}
+	}
+
+	async presign(fileName: string, expiresIn: number = 3600) {
+		try {
+			const command = new GetObjectCommand({ Bucket: this.bucket, Key: fileName });
+			return await getSignedUrl(this.client, command, { expiresIn });
 		} catch (error) {
 			log.error(error);
 		}

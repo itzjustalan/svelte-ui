@@ -3,6 +3,7 @@ import { storageService } from '$lib/services/storage.service';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ params }) => {
+	// const response = await storageService.presign(params.id ?? '');
 	if (!params.id) return new InternalServerError().respond();
 	const response = await storageService.download(params.id);
 	const buffer = await response?.Body?.transformToByteArray();
